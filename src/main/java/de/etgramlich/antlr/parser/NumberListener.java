@@ -1,4 +1,4 @@
-// Generated from C:/Users/Spiel/IdeaProjects/antlrtest/src/main/resources\Number.g4 by ANTLR 4.7.2
+// Generated from /home/eti/IdeaProjects/AntlrTest/src/main/resources/Number.g4 by ANTLR 4.7.2
 package de.etgramlich.antlr.parser;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
@@ -87,6 +87,26 @@ public interface NumberListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitOperation_kind(NumberParser.Operation_kindContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link NumberParser#brack_left}.
+	 * @param ctx the parse tree
+	 */
+	void enterBrack_left(NumberParser.Brack_leftContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link NumberParser#brack_left}.
+	 * @param ctx the parse tree
+	 */
+	void exitBrack_left(NumberParser.Brack_leftContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link NumberParser#brack_right}.
+	 * @param ctx the parse tree
+	 */
+	void enterBrack_right(NumberParser.Brack_rightContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link NumberParser#brack_right}.
+	 * @param ctx the parse tree
+	 */
+	void exitBrack_right(NumberParser.Brack_rightContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link NumberParser#operation}.
 	 * @param ctx the parse tree

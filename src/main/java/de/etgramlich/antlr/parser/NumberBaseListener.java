@@ -1,4 +1,4 @@
-// Generated from C:/Users/Spiel/IdeaProjects/antlrtest/src/main/resources\Number.g4 by ANTLR 4.7.2
+// Generated from /home/eti/IdeaProjects/AntlrTest/src/main/resources/Number.g4 by ANTLR 4.7.2
 package de.etgramlich.antlr.parser;
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -107,6 +107,30 @@ public class NumberBaseListener implements NumberListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitOperation_kind(NumberParser.Operation_kindContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterBrack_left(NumberParser.Brack_leftContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitBrack_left(NumberParser.Brack_leftContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterBrack_right(NumberParser.Brack_rightContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitBrack_right(NumberParser.Brack_rightContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
