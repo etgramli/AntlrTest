@@ -18,6 +18,9 @@
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="MacroExpansionManager">
     <option name="directoryName" value="EKbpeNyw" />
   </component>
@@ -32,6 +35,7 @@
     <option name="version" value="1" />
   </component>
   <component name="ProjectId" id="1RJtN2PDXZHU2XxEXDAFKSEvIwJ" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent">
     <property name="$PROJECT_DIR$/src/main/resources/Number.g4::/auto-gen" value="false" />
     <property name="$PROJECT_DIR$/src/main/resources/Number.g4::/gen-listener" value="true" />
@@ -45,6 +49,7 @@
     <property name="$PROJECT_DIR$/src/main/resources/number.g4::/language" value="Java" />
     <property name="$PROJECT_DIR$/src/main/resources/number.g4::/output-dir" value="C:\Users\Spiel\IdeaProjects\antlrtest\src\main\java" />
     <property name="$PROJECT_DIR$/src/main/resources/number.g4::/package" value="de.etgramlich.antlr.parser" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/java" />
@@ -103,11 +108,22 @@
       <workItem from="1569402770771" duration="10000" />
       <workItem from="1569572618897" duration="892000" />
       <workItem from="1569573533513" duration="1050000" />
-      <workItem from="1569581050882" duration="451000" />
+      <workItem from="1569581050882" duration="1108000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>
