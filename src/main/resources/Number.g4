@@ -10,4 +10,9 @@ op_multiply: '*' | ' * ';
 op_divide: '/' | ' / ';
 operation_kind: op_plus | op_minus | op_multiply | op_divide;
 
-operation: number operation_kind operation;
+brack_left: '(' | ' ( ';
+brack_right: ')' | ' ) ';
+operation: number operation_kind number
+         | brack_left operation brack_right
+         | number operation_kind operation
+         | operation operation_kind number;

@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="202a2078-aa03-4fbb-a3b7-1ba078a6315d" name="Default Changelist" comment="" />
+    <list default="true" id="202a2078-aa03-4fbb-a3b7-1ba078a6315d" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/Number.g4" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/Number.g4" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,7 +47,7 @@
     <property name="$PROJECT_DIR$/src/main/resources/Number.g4::/gen-listener" value="true" />
     <property name="$PROJECT_DIR$/src/main/resources/Number.g4::/gen-visitor" value="false" />
     <property name="$PROJECT_DIR$/src/main/resources/Number.g4::/language" value="Java" />
-    <property name="$PROJECT_DIR$/src/main/resources/Number.g4::/output-dir" value="C:\Users\Spiel\IdeaProjects\antlrtest\src\main\java" />
+    <property name="$PROJECT_DIR$/src/main/resources/Number.g4::/output-dir" value="$PROJECT_DIR$/src/main/java" />
     <property name="$PROJECT_DIR$/src/main/resources/Number.g4::/package" value="de.etgramlich.antlr.parser" />
     <property name="$PROJECT_DIR$/src/main/resources/number.g4::/auto-gen" value="false" />
     <property name="$PROJECT_DIR$/src/main/resources/number.g4::/gen-listener" value="true" />
@@ -56,9 +62,9 @@
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="project.structure.last.edited" value="Modules" />
-    <property name="project.structure.proportion" value="0.0" />
-    <property name="project.structure.side.proportion" value="0.0" />
-    <property name="settings.editor.selected.configurable" value="preferences.customizations" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -79,8 +85,10 @@
   </component>
   <component name="RunManager">
     <configuration name="Main" type="Application" factoryName="Application" nameIsGenerated="true">
+      <option name="ALTERNATIVE_JRE_PATH" value="13" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="de.etgramlich.antlr.Main" />
-      <module name="antlrtest" />
+      <module name="AntlrTest" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="de.etgramlich.antlr.*" />
@@ -109,6 +117,9 @@
       <workItem from="1569572618897" duration="892000" />
       <workItem from="1569573533513" duration="1050000" />
       <workItem from="1569581050882" duration="1108000" />
+      <workItem from="1569582984286" duration="48000" />
+      <workItem from="1569583045634" duration="210000" />
+      <workItem from="1569592913963" duration="1187000" />
     </task>
     <servers />
   </component>
@@ -120,7 +131,9 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>
