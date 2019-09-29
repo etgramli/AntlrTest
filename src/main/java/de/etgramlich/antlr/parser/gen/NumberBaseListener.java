@@ -28,6 +28,18 @@ public class NumberBaseListener implements NumberListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterOperation_expr(NumberParser.Operation_exprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitOperation_expr(NumberParser.Operation_exprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterTerm(NumberParser.TermContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -35,6 +47,18 @@ public class NumberBaseListener implements NumberListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitTerm(NumberParser.TermContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterOperation_term(NumberParser.Operation_termContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitOperation_term(NumberParser.Operation_termContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

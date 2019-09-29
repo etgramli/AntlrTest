@@ -12,6 +12,8 @@ OP_MINUS: '-';
 OP_MULTIPLY: '*';
 OP_DIVIDE: '/';
 
-expr: term ( (OP_PLUS | OP_MINUS) term)*;
-term: factor ( (OP_MULTIPLY | OP_DIVIDE) factor )*;
+expr: term ( (operation_expr) term)*;
+operation_expr: (OP_PLUS | OP_MINUS);
+term: factor ( (operation_term) factor )*;
+operation_term: (OP_MULTIPLY | OP_DIVIDE);
 factor: NUMBER;

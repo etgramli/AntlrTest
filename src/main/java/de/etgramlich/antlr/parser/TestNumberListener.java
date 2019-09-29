@@ -9,11 +9,23 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 public class TestNumberListener implements NumberListener {
     @Override
     public void enterExpr(NumberParser.ExprContext ctx) {
+        final int numTerms = ctx.term().size();
+
         System.out.println(ctx);
     }
 
     @Override
     public void exitExpr(NumberParser.ExprContext ctx) {
+        System.out.println(ctx);
+    }
+
+    @Override
+    public void enterOperation_expr(NumberParser.Operation_exprContext ctx) {
+        System.out.println(ctx);
+    }
+
+    @Override
+    public void exitOperation_expr(NumberParser.Operation_exprContext ctx) {
         System.out.println(ctx);
     }
 
@@ -24,6 +36,16 @@ public class TestNumberListener implements NumberListener {
 
     @Override
     public void exitTerm(NumberParser.TermContext ctx) {
+        System.out.println(ctx);
+    }
+
+    @Override
+    public void enterOperation_term(NumberParser.Operation_termContext ctx) {
+        System.out.println(ctx);
+    }
+
+    @Override
+    public void exitOperation_term(NumberParser.Operation_termContext ctx) {
         System.out.println(ctx);
     }
 

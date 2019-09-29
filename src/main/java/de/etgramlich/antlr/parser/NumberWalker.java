@@ -7,7 +7,7 @@ public class NumberWalker extends NumberBaseListener {
 
     @Override
     public void enterExpr(NumberParser.ExprContext ctx) {
-        System.out.println("EXPRESSION: " + ctx.getText());
+        System.out.println("EXPRESSION: " + ctx.getText() + "\t has " + ctx.term().size() + " terms!");
     }
 
     @Override

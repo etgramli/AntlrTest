@@ -18,6 +18,16 @@ public interface NumberListener extends ParseTreeListener {
 	 */
 	void exitExpr(NumberParser.ExprContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link NumberParser#operation_expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterOperation_expr(NumberParser.Operation_exprContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link NumberParser#operation_expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitOperation_expr(NumberParser.Operation_exprContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link NumberParser#term}.
 	 * @param ctx the parse tree
 	 */
@@ -27,6 +37,16 @@ public interface NumberListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitTerm(NumberParser.TermContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link NumberParser#operation_term}.
+	 * @param ctx the parse tree
+	 */
+	void enterOperation_term(NumberParser.Operation_termContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link NumberParser#operation_term}.
+	 * @param ctx the parse tree
+	 */
+	void exitOperation_term(NumberParser.Operation_termContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link NumberParser#factor}.
 	 * @param ctx the parse tree
