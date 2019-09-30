@@ -15,23 +15,20 @@ public class ExprListener extends NumberBaseListener {
     @Override
     public void enterExpr(NumberParser.ExprContext ctx) {
         TermListener tl = new TermListener();
-        final List<Integer> termResults = ctx.term().stream().map(f -> {f.enterRule(tl); return tl.getResult();})
-                .collect(Collectors.toUnmodifiableList());
+        final List<Integer> termResults = ctx.term().stream().map(f -> {
+            f.enterRule(tl);
+            return tl.getResult();
+        }).collect(Collectors.toUnmodifiableList());
 
         if (termResults.size() == 0) {
             System.err.println("Expression empty!!!! " + ctx);
-            return;
-        }
-        if (termResults.size() == 1) {
-            result = Optional.of(termResults.get(0));
         } else {
             OperationExprListener oel = new OperationExprListener();
             int term_left = termResults.get(0);
             for (int i = 1; i < termResults.size(); ++i) {
-                int term_right = termResults.get(i);
-                ctx.operation_expr(i-1).enterRule(oel);
+                ctx.operation_expr(i - 1).enterRule(oel);
 
-                term_left = oel.getResult(term_left, term_right);
+                term_left = oel.getResult(term_left, termResults.get(i));
             }
             result = Optional.of(term_left);
         }

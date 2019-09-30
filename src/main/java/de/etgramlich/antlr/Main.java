@@ -15,8 +15,11 @@ public final class Main {
 
         ExprListener listener = new ExprListener();
         parser.expr().enterRule(listener);
-        System.out.println("Result: " + listener.getResult().get());
 
-        //ParseTreeWalker.DEFAULT.walk(new NumberWalker(), ctx);
+        if (listener.getResult().isEmpty()) {
+            System.err.println("Error parsing expression!!! " + LEXER_INPUT);
+        } else {
+            System.out.println("Result: " + listener.getResult().get());
+        }
     }
 }

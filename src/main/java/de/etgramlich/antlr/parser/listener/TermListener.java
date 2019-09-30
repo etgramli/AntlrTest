@@ -18,21 +18,15 @@ public class TermListener extends NumberBaseListener {
         final List<Integer> factors = ctx.factor().stream().map(f -> {
             f.enterRule(fl);
             return fl.getFactor();
-        })
-                .collect(Collectors.toUnmodifiableList());
+        }).collect(Collectors.toUnmodifiableList());
 
-        if (factors.size() == 1) {
-            result = factors.get(0);
-        } else {
-            int factor_left = factors.get(0);
+        result = factors.get(0);
+        if (factors.size() > 1) {
             OperationTermListener otl = new OperationTermListener();
             for (int i = 1; i < factors.size(); ++i) {
-                int factor_right = factors.get(i);
                 ctx.operation_term(i - 1).enterRule(otl);
-
-                factor_left = otl.getResult(factor_left, factor_right);
+                result = otl.getResult(result, factors.get(i));
             }
-            result = factor_left;
         }
     }
 
