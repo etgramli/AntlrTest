@@ -1,4 +1,4 @@
-package de.etgramlich.antlr.parser;
+package de.etgramlich.antlr.parser.walker;
 
 import de.etgramlich.antlr.parser.gen.NumberBaseListener;
 import de.etgramlich.antlr.parser.gen.NumberParser;

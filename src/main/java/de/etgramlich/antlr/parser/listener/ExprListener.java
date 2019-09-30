@@ -35,6 +35,10 @@ public class ExprListener extends NumberBaseListener {
             }
             result = Optional.of(term_left);
         }
+    }
+
+    @Override
+    public void exitExpr(NumberParser.ExprContext ctx) {
         System.out.println("EXPRESSION: " + ctx.getText() + "\t has result: " + result);
     }
 

@@ -10,11 +10,15 @@ public class FactorListener extends NumberBaseListener {
     @Override
     public void enterFactor(NumberParser.FactorContext ctx) {
         factor = Integer.parseInt(ctx.getText());
+    }
+
+    @Override
+    public void exitFactor(NumberParser.FactorContext ctx) {
         System.out.println("FACTOR: " + factor);
     }
+
 
     public int getFactor() {
         return factor;
     }
-
 }

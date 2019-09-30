@@ -15,7 +15,7 @@ public final class Main {
 
         ExprListener listener = new ExprListener();
         parser.expr().enterRule(listener);
-        System.out.println("Result: " + listener.getResult());
+        System.out.println("Result: " + listener.getResult().get());
 
         //ParseTreeWalker.DEFAULT.walk(new NumberWalker(), ctx);
     }

@@ -12,10 +12,13 @@ public class TermListener extends NumberBaseListener {
 
     @Override
     public void enterTerm(NumberParser.TermContext ctx) {
-        assert(ctx.factor().size() == ctx.operation_term().size()+1);
+        assert (ctx.factor().size() == ctx.operation_term().size() + 1);
 
         FactorListener fl = new FactorListener();
-        final List<Integer> factors = ctx.factor().stream().map(f -> {f.enterRule(fl); return fl.getFactor();})
+        final List<Integer> factors = ctx.factor().stream().map(f -> {
+            f.enterRule(fl);
+            return fl.getFactor();
+        })
                 .collect(Collectors.toUnmodifiableList());
 
         if (factors.size() == 1) {
@@ -25,13 +28,16 @@ public class TermListener extends NumberBaseListener {
             OperationTermListener otl = new OperationTermListener();
             for (int i = 1; i < factors.size(); ++i) {
                 int factor_right = factors.get(i);
-                ctx.operation_term(i-1).enterRule(otl);
+                ctx.operation_term(i - 1).enterRule(otl);
 
                 factor_left = otl.getResult(factor_left, factor_right);
             }
             result = factor_left;
         }
+    }
 
+    @Override
+    public void exitTerm(NumberParser.TermContext ctx) {
         System.out.println("TERM: " + ctx.getText() + "\t has result: " + result);
     }
 
