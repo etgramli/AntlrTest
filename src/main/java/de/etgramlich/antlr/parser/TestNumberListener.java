@@ -9,8 +9,6 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 public class TestNumberListener implements NumberListener {
     @Override
     public void enterExpr(NumberParser.ExprContext ctx) {
-        final int numTerms = ctx.term().size();
-
         System.out.println(ctx);
     }
 

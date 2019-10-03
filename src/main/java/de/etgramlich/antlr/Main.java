@@ -3,6 +3,7 @@ package de.etgramlich.antlr;
 import de.etgramlich.antlr.parser.gen.NumberLexer;
 import de.etgramlich.antlr.parser.gen.NumberParser;
 import de.etgramlich.antlr.parser.listener.ExprListener;
+import de.etgramlich.antlr.parser.visitor.ExprVisitor;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 
@@ -15,11 +16,16 @@ public final class Main {
 
         ExprListener listener = new ExprListener();
         parser.expr().enterRule(listener);
-
         if (listener.getResult().isEmpty()) {
             System.err.println("Error parsing expression!!! " + LEXER_INPUT);
         } else {
             System.out.println("Result: " + listener.getResult().get());
         }
+
+        lexer = new NumberLexer(CharStreams.fromString(LEXER_INPUT));
+        parser = new NumberParser(new CommonTokenStream(lexer));
+        ExprVisitor ev = new ExprVisitor();
+        int result = ev.visitExpr(parser.expr());
+        System.out.println("Vistor result: " + result);
     }
 }

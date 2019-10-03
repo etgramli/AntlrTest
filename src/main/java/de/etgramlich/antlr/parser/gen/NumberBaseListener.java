@@ -1,4 +1,4 @@
-// Generated from C:/Users/Spiel/IdeaProjects/antlrtest/src/main/resources\Number.g4 by ANTLR 4.7.2
+// Generated from /home/eti/IdeaProjects/AntlrTest/src/main/resources/Number.g4 by ANTLR 4.7.2
 package de.etgramlich.antlr.parser.gen;
 
 import org.antlr.v4.runtime.ParserRuleContext;

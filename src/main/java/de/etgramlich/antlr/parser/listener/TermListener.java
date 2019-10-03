@@ -12,22 +12,22 @@ public class TermListener extends NumberBaseListener {
 
     @Override
     public void enterTerm(NumberParser.TermContext ctx) {
-        assert (ctx.factor().size() == ctx.operation_term().size() + 1);
-
         FactorListener fl = new FactorListener();
-        final List<Integer> factors = ctx.factor().stream().map(f -> {
-            f.enterRule(fl);
-            return fl.getFactor();
-        }).collect(Collectors.toUnmodifiableList());
+        ctx.factor().enterRule(fl);
+        int factor = fl.getFactor();
 
-        result = factors.get(0);
-        if (factors.size() > 1) {
-            OperationTermListener otl = new OperationTermListener();
-            for (int i = 1; i < factors.size(); ++i) {
-                ctx.operation_term(i - 1).enterRule(otl);
-                result = otl.getResult(result, factors.get(i));
-            }
+        if (ctx.term() == null) {
+            result = factor;
+            return;
         }
+
+        TermListener tl = new TermListener();
+        ctx.term().enterRule(tl);
+        int termResult = tl.getResult();
+
+        OperationTermListener otl = new OperationTermListener();
+        ctx.operation_term().enterRule(otl);
+        result = otl.getResult(factor, termResult);
     }
 
     @Override
