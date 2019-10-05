@@ -3,7 +3,7 @@ package de.etgramlich.antlr;
 import de.etgramlich.antlr.parser.gen.NumberLexer;
 import de.etgramlich.antlr.parser.gen.NumberParser;
 import de.etgramlich.antlr.parser.listener.ExprListener;
-import de.etgramlich.antlr.parser.visitor.ExprVisitor;
+import de.etgramlich.antlr.parser.visitor.NumberVisitor;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 
@@ -24,8 +24,6 @@ public final class Main {
 
         lexer = new NumberLexer(CharStreams.fromString(LEXER_INPUT));
         parser = new NumberParser(new CommonTokenStream(lexer));
-        ExprVisitor ev = new ExprVisitor();
-        int result = ev.visitExpr(parser.expr());
-        System.out.println("Vistor result: " + result);
+        System.out.println("Vistor result: " + new NumberVisitor().visitExpr(parser.expr()));
     }
 }
