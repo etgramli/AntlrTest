@@ -1,13 +1,28 @@
 package de.etgramlich.antlr.parser.listener;
 
-import de.etgramlich.antlr.parser.gen.NumberBaseListener;
-import de.etgramlich.antlr.parser.gen.NumberParser;
+import de.etgramlich.antlr.parser.gen.number.NumberBaseListener;
+import de.etgramlich.antlr.parser.gen.number.NumberParser;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class ExprListener extends NumberBaseListener {
+    private static final int EXPR_NEUTRAL_ELEMENT = 0;
+
+    private enum Op {
+        ADDITION, SUBTRACTION;
+    }
+
+    private Op op = Op.ADDITION;
+
+    @Override
+    public void enterOperation_term(NumberParser.Operation_termContext ctx) {
+        final String operation = ctx.getText();
+        op = operation.trim().equals("+") ? Op.ADDITION : Op.SUBTRACTION;
+    }
+
+    private int getResult(int left, int right) {
+        return op.equals(Op.ADDITION) ? left + right : left - right;
+    }
 
     // Has no default value, because it is the uppermost node and not used recursively
     private Optional<Integer> result = Optional.empty();
@@ -20,16 +35,14 @@ public class ExprListener extends NumberBaseListener {
 
         if (ctx.expr() == null) {
             result = Optional.of(termResult);
-            return;
+        } else {
+            ExprListener el = new ExprListener();
+            ctx.expr().enterRule(el);
+            int exprValue = el.getResult().orElse(EXPR_NEUTRAL_ELEMENT);
+
+            ctx.operation_expr().enterRule(this);
+            result = Optional.of(getResult(termResult, exprValue));
         }
-
-        ExprListener el = new ExprListener();
-        ctx.expr().enterRule(el);
-        int exprResult = el.getResult().get();
-
-        OperationExprListener oel = new OperationExprListener();
-        ctx.operation_expr().enterRule(oel);
-        result = Optional.of(oel.getResult(termResult, exprResult));
     }
 
     @Override

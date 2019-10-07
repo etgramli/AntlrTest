@@ -1,14 +1,14 @@
 package de.etgramlich.antlr;
 
-import de.etgramlich.antlr.parser.gen.NumberLexer;
-import de.etgramlich.antlr.parser.gen.NumberParser;
+import de.etgramlich.antlr.parser.gen.number.NumberLexer;
+import de.etgramlich.antlr.parser.gen.number.NumberParser;
 import de.etgramlich.antlr.parser.listener.ExprListener;
 import de.etgramlich.antlr.parser.visitor.NumberVisitor;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 
 public final class Main {
-    private static final String LEXER_INPUT = "999+15*33";
+    private static final String LEXER_INPUT = "900+90+9+15*33*1*1*1";
 
     public static void main(String[] args) {
         NumberLexer lexer = new NumberLexer(CharStreams.fromString(LEXER_INPUT));

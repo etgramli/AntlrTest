@@ -1,7 +1,7 @@
 package de.etgramlich.antlr.parser.visitor;
 
-import de.etgramlich.antlr.parser.gen.NumberBaseVisitor;
-import de.etgramlich.antlr.parser.gen.NumberParser;
+import de.etgramlich.antlr.parser.gen.number.NumberBaseVisitor;
+import de.etgramlich.antlr.parser.gen.number.NumberParser;
 
 public class NumberVisitor extends NumberBaseVisitor<Integer> {
 

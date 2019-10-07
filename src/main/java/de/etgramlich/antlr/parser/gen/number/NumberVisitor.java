@@ -1,5 +1,5 @@
 // Generated from /home/eti/IdeaProjects/AntlrTest/src/main/resources/Number.g4 by ANTLR 4.7.2
-package de.etgramlich.antlr.parser.gen;
+package de.etgramlich.antlr.parser.gen.number;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
 /**
