@@ -1,0 +1,2 @@
+expr(left,right,operator_add_sub) ::= "<left> <operator_add_sub> <right>"
+term(left,right,operator_mul_div) ::= "<left> <operator_mul_div> <right>"

@@ -8,6 +8,16 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
  */
 public interface NumberListener extends ParseTreeListener {
 	/**
+	 * Enter a parse tree produced by {@link NumberParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterExpression(NumberParser.ExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link NumberParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitExpression(NumberParser.ExpressionContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link NumberParser#expr}.
 	 * @param ctx the parse tree
 	 */

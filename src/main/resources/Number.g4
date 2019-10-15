@@ -12,6 +12,7 @@ OP_MINUS: '-';
 OP_MULTIPLY: '*';
 OP_DIVIDE: '/';
 
+expression: expr EOF;
 expr: left=expr operation_expr right=term
     | right=term;
 operation_expr: (OP_PLUS | OP_MINUS);

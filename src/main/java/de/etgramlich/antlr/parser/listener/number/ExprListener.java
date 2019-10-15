@@ -1,7 +1,9 @@
-package de.etgramlich.antlr.parser.listener;
+package de.etgramlich.antlr.parser.listener.number;
 
 import de.etgramlich.antlr.parser.gen.number.NumberBaseListener;
 import de.etgramlich.antlr.parser.gen.number.NumberParser;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
@@ -15,11 +17,12 @@ public class ExprListener extends NumberBaseListener {
     private Op op = Op.ADDITION;
 
     @Override
-    public void enterOperation_term(NumberParser.Operation_termContext ctx) {
+    public void enterOperation_expr(@NotNull NumberParser.Operation_exprContext ctx) {
         final String operation = ctx.getText();
         op = operation.trim().equals("+") ? Op.ADDITION : Op.SUBTRACTION;
     }
 
+    @Contract(pure = true)
     private int getResult(int left, int right) {
         return op.equals(Op.ADDITION) ? left + right : left - right;
     }
@@ -28,26 +31,21 @@ public class ExprListener extends NumberBaseListener {
     private Optional<Integer> result = Optional.empty();
 
     @Override
-    public void enterExpr(NumberParser.ExprContext ctx) {
+    public void enterExpr(@NotNull NumberParser.ExprContext ctx) {
         TermListener tl = new TermListener();
         ctx.term().enterRule(tl);
-        int termResult = tl.getResult();
+        final int termResult = tl.getResult();
 
         if (ctx.expr() == null) {
             result = Optional.of(termResult);
         } else {
             ExprListener el = new ExprListener();
             ctx.expr().enterRule(el);
-            int exprValue = el.getResult().orElse(EXPR_NEUTRAL_ELEMENT);
+            final int exprValue = el.getResult().orElse(EXPR_NEUTRAL_ELEMENT);
 
             ctx.operation_expr().enterRule(this);
             result = Optional.of(getResult(termResult, exprValue));
         }
-    }
-
-    @Override
-    public void exitExpr(NumberParser.ExprContext ctx) {
-        System.out.println("EXPRESSION: " + ctx.getText() + "\t has result: " + result);
     }
 
     public Optional<Integer> getResult() {

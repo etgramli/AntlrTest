@@ -1,7 +1,9 @@
-package de.etgramlich.antlr.parser.listener;
+package de.etgramlich.antlr.parser.listener.number;
 
 import de.etgramlich.antlr.parser.gen.number.NumberBaseListener;
 import de.etgramlich.antlr.parser.gen.number.NumberParser;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 public class TermListener extends NumberBaseListener {
 
@@ -10,13 +12,15 @@ public class TermListener extends NumberBaseListener {
     }
 
     private Op op = Op.MULTIPLY;
+    private int factor = 1; // Default value is 1, because in multiplication/division 1 is the neutral element
 
     @Override
-    public void enterOperation_term(NumberParser.Operation_termContext ctx) {
+    public void enterOperation_term(@NotNull NumberParser.Operation_termContext ctx) {
         final String operation = ctx.getText();
         op = operation.trim().equals("*") ? Op.MULTIPLY : Op.DIVIDE;
     }
 
+    @Contract(pure = true)
     private int getResult(int left, int right) {
         return op.equals(Op.MULTIPLY) ? left * right : left / right;
     }
@@ -24,7 +28,7 @@ public class TermListener extends NumberBaseListener {
     private int result = 0; // Default value 0, because in addition/subtraction 0 is the neutral element
 
     @Override
-    public void enterTerm(NumberParser.TermContext ctx) {
+    public void enterTerm(@NotNull NumberParser.TermContext ctx) {
         ctx.factor().enterRule(this);
 
         if (ctx.term() == null) {
@@ -32,26 +36,19 @@ public class TermListener extends NumberBaseListener {
         } else {
             TermListener tl = new TermListener();
             ctx.term().enterRule(tl);
-            int termResult = tl.getResult();
+            final int termResult = tl.getResult();
 
             ctx.operation_term().enterRule(this);
             result = getResult(factor, termResult);
         }
     }
 
-    @Override
-    public void exitTerm(NumberParser.TermContext ctx) {
-        System.out.println("TERM: " + ctx.getText() + "\t has result: " + result);
-    }
-
     public int getResult() {
         return result;
     }
 
-    private int factor = 1; // Default value is 1, because in multiplication/division 1 is the neutral element
-
     @Override
-    public void enterFactor(NumberParser.FactorContext ctx) {
+    public void enterFactor(@NotNull NumberParser.FactorContext ctx) {
         factor = Integer.parseInt(ctx.getText());
     }
 }

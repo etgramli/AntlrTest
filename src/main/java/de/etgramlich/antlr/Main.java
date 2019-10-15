@@ -2,17 +2,20 @@ package de.etgramlich.antlr;
 
 import de.etgramlich.antlr.parser.gen.number.NumberLexer;
 import de.etgramlich.antlr.parser.gen.number.NumberParser;
-import de.etgramlich.antlr.parser.listener.ExprListener;
+import de.etgramlich.antlr.parser.listener.number.ExprListener;
+import de.etgramlich.antlr.parser.listener.number.ExprToXML;
 import de.etgramlich.antlr.parser.visitor.NumberVisitor;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 
 public final class Main {
-    private static final String LEXER_INPUT = "900+90+9+15*33*1*1*1";
+    private static final String LEXER_INPUT = "900+90+9+15*33*1*1*1*1*1*1*1*1*1*1*1*1*1*1*1*1*1*1*1";
+    private static NumberParser newNumberParser() {
+        return new NumberParser(new CommonTokenStream(new NumberLexer(CharStreams.fromString(LEXER_INPUT))));
+    }
 
     public static void main(String[] args) {
-        NumberLexer lexer = new NumberLexer(CharStreams.fromString(LEXER_INPUT));
-        NumberParser parser = new NumberParser(new CommonTokenStream(lexer));
+        NumberParser parser = newNumberParser();
 
         ExprListener listener = new ExprListener();
         parser.expr().enterRule(listener);
@@ -22,8 +25,12 @@ public final class Main {
             System.out.println("Result: " + listener.getResult().get());
         }
 
-        lexer = new NumberLexer(CharStreams.fromString(LEXER_INPUT));
-        parser = new NumberParser(new CommonTokenStream(lexer));
+        parser = newNumberParser();
         System.out.println("Vistor result: " + new NumberVisitor().visitExpr(parser.expr()));
+
+        parser = newNumberParser();
+        ExprToXML toXML = new ExprToXML("./out.xml");
+        parser.expression().exitRule(toXML);
+        System.out.println(toXML.getXml().get(parser.expr()));
     }
 }

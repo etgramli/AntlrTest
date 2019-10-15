@@ -11,6 +11,12 @@ import org.antlr.v4.runtime.tree.ParseTreeVisitor;
  */
 public interface NumberVisitor<T> extends ParseTreeVisitor<T> {
 	/**
+	 * Visit a parse tree produced by {@link NumberParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExpression(NumberParser.ExpressionContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link NumberParser#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
