@@ -116,7 +116,7 @@ public final class ExprToXML extends NumberBaseListener {
         final String xml = getXML(ctx.getChild(0));
         setXml(ctx, xml);
         try {
-            Files.writeString(Paths.get(outFileName), xml, StandardOpenOption.CREATE_NEW);
+            Files.writeString(Paths.get(outFileName), xml, StandardOpenOption.TRUNCATE_EXISTING);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -137,7 +137,10 @@ public final class ExprToXML extends NumberBaseListener {
         }
     }
     private static void print(final String string, @NotNull final Color color) {
-        System.out.println((char)27 + "[" + color.getValue() + "m" + string + (char)27 + "[" + Color.DEFAULT.getValue() + "m");
+        final char esc = 27;
+        final String setToColor = esc + "[" + color.getValue() + "m";
+        final String resetColor = esc + "[" + Color.DEFAULT.getValue() + "m";
+        System.out.println(setToColor + string + resetColor);
     }
     private static void printRed(final String str) {
         print(str, Color.RED);

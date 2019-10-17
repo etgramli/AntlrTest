@@ -1,0 +1,37 @@
+<op-addition>
+  ::= add
+<op-subtraction>
+  ::= sub
+<op-multiplication>
+  ::= mul
+<op-division>
+  ::= div
+
+<op>
+  ::= <op-addition>
+    | <op-subtraction>
+    | <op-division>
+    | <op-multiplication>
+
+<zero>
+  ::= zero
+<digit-nonzero>
+  ::= one
+    | two
+    | three
+    | four
+    | five
+    | six
+    | seven
+    | eight
+    | nine
+<digit>
+  ::= <zero>
+    | <digit-nonzero>
+<number>
+  ::= <digit>
+    | <digit> <number>
+
+<term>
+  ::= <number>
+    | <number> <op> <term>

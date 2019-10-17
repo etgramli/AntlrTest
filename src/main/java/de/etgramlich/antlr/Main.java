@@ -7,9 +7,14 @@ import de.etgramlich.antlr.parser.listener.number.ExprToXML;
 import de.etgramlich.antlr.parser.visitor.NumberVisitor;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 public final class Main {
-    private static final String LEXER_INPUT = "900+90+9+15*33*1*1*1*1*1*1*1*1*1*1*1*1*1*1*1*1*1*1*1";
+    private static final String LEXER_INPUT = "900+90+9+15*33";
+
+    @NotNull
+    @Contract(" -> new")
     private static NumberParser newNumberParser() {
         return new NumberParser(new CommonTokenStream(new NumberLexer(CharStreams.fromString(LEXER_INPUT))));
     }
@@ -26,7 +31,7 @@ public final class Main {
         }
 
         parser = newNumberParser();
-        System.out.println("Vistor result: " + new NumberVisitor().visitExpr(parser.expr()));
+        System.out.println("Visitor result: " + new NumberVisitor().visitExpr(parser.expr()));
 
         parser = newNumberParser();
         ExprToXML toXML = new ExprToXML("./out.xml");
