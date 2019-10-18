@@ -8,6 +8,25 @@ import static org.junit.jupiter.api.Assertions.*;
 class IdListenerTest {
 
     @Test
+    void enterText_normalText_returnsTextItself() {
+        final String expectedId = "some-text is here with spaces inside";
+
+        IdListener listener = new IdListener();
+
+        listener.enterText(new TextMock(expectedId));
+        assertEquals(expectedId, listener.getText());
+    }
+
+    @Test
+    void enterText_endsWithEmptySpaces_returnsTrimmed() {
+        final String expectedId = "some-id-without-spaces in the end";
+
+        IdListener listener = new IdListener();
+        listener.enterText(new TextMock(expectedId + "   "));
+        assertEquals(expectedId, listener.getText());
+    }
+
+    @Test
     void enterRuleid_normalId_returnsIdItself() {
         final String expectedId = "some-id";
 
@@ -18,7 +37,7 @@ class IdListenerTest {
     }
 
     @Test
-    void enterRuleid_idWithEmptySpaces_returnsTrimmed() {
+    void enterRuleid_endsWithEmptySpaces_returnsTrimmed() {
         final String expectedId = "some-id-without-spaces";
 
         IdListener listener = new IdListener();
@@ -47,9 +66,22 @@ class IdListenerTest {
     }
 
 
+    // Mock to set a static text (characters and - sign and spaces), set text in constructor and query only afterwards
+    private static class TextMock extends bnfParser.TextContext {
+        private final String text;
+        TextMock(final String text) {
+            super(null, 0);
+            this.text = text;
+        }
+        @Override
+        public String getText() {
+            return text;
+        }
+    }
+
     // Mock to set a static id (text with <> around) and query that id
     private static class IdMock extends bnfParser.IdContext {
-        private String text;
+        private final String text;
         IdMock(final String text) {
             super(null, 0);
             this.text = text;
@@ -62,7 +94,7 @@ class IdListenerTest {
 
     // Mock for a rule id (text, and - sign), the id can be set in constructor and only be queried
     private static class RuleIdMock extends bnfParser.RuleidContext {
-        private String text;
+        private final String text;
         RuleIdMock(final String text) {
             super(null, 0);
             this.text = text;

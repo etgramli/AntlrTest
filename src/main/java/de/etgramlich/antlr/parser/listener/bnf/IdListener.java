@@ -5,8 +5,22 @@ import de.etgramlich.antlr.parser.gen.bnf.bnfParser;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Listener that queries the IDs (ruleid and id) and text rules of the ANTLR4 BNF grammar.
+ * The rule function must be called according to the current rule. The (unescaped id) string can be queried with getText().
+ */
 public final class IdListener extends bnfBaseListener {
     private String text;
+
+    @Override
+    public void enterText(@NotNull bnfParser.TextContext ctx) {
+        this.text = ctx.getText().trim();
+    }
+
+    @Override
+    public void exitText(bnfParser.TextContext ctx) {
+        super.exitText(ctx);
+    }
 
     @Override
     public void enterRuleid(@NotNull bnfParser.RuleidContext ctx) {
