@@ -2,50 +2,45 @@
 package de.etgramlich.antlr.parser.gen.bnf;
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.Token;
-import org.antlr.v4.runtime.TokenStream;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
-import org.antlr.v4.runtime.misc.*;
+import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class bnfLexer extends Lexer {
 	static { RuntimeMetaData.checkVersion("4.7.2", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
-	protected static final PredictionContextCache _sharedContextCache =
-		new PredictionContextCache();
+	protected static final PredictionContextCache _sharedContextCache = new PredictionContextCache();
 	public static final int
-		ASSIGN=1, LPAREN=2, RPAREN=3, LBRACE=4, RBRACE=5, LEND=6, REND=7, BAR=8, 
-		GT=9, LT=10, ID=11, WS=12;
-	public static String[] channelNames = {
-		"DEFAULT_TOKEN_CHANNEL", "HIDDEN"
-	};
+		ASSIGN=1, LPAREN=2, RPAREN=3, LBRACE=4, RBRACE=5, LEND=6, REND=7, BAR=8, GT=9, LT=10, ID=11, WS=12;
+	public static String[] channelNames = {"DEFAULT_TOKEN_CHANNEL", "HIDDEN"};
 
-	public static String[] modeNames = {
-		"DEFAULT_MODE"
-	};
+	public static String[] modeNames = {"DEFAULT_MODE"};
 
+	@NotNull
+	@Contract(value = " -> new", pure = true)
 	private static String[] makeRuleNames() {
 		return new String[] {
-			"ASSIGN", "LPAREN", "RPAREN", "LBRACE", "RBRACE", "LEND", "REND", "BAR", 
-			"GT", "LT", "ID", "WS"
+			"ASSIGN", "LPAREN", "RPAREN", "LBRACE", "RBRACE", "LEND", "REND", "BAR", "GT", "LT", "ID", "WS"
 		};
 	}
 	public static final String[] ruleNames = makeRuleNames();
 
+	@NotNull
+	@Contract(value = " -> new", pure = true)
 	private static String[] makeLiteralNames() {
-		return new String[] {
-			null, "'::='", "')'", "'('", "'}'", "'{'", "']'", "'['", "'|'", "'>'", 
-			"'<'"
-		};
+		return new String[] {null, "'::='", "')'", "'('", "'}'", "'{'", "']'", "'['", "'|'", "'>'", "'<'"};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
+	@NotNull
+	@Contract(value = " -> new", pure = true)
 	private static String[] makeSymbolicNames() {
 		return new String[] {
-			null, "ASSIGN", "LPAREN", "RPAREN", "LBRACE", "RBRACE", "LEND", "REND", 
-			"BAR", "GT", "LT", "ID", "WS"
+			null, "ASSIGN", "LPAREN", "RPAREN", "LBRACE", "RBRACE", "LEND", "REND", "BAR", "GT", "LT", "ID", "WS"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -59,14 +54,8 @@ public class bnfLexer extends Lexer {
 	static {
 		tokenNames = new String[_SYMBOLIC_NAMES.length];
 		for (int i = 0; i < tokenNames.length; i++) {
-			tokenNames[i] = VOCABULARY.getLiteralName(i);
-			if (tokenNames[i] == null) {
-				tokenNames[i] = VOCABULARY.getSymbolicName(i);
-			}
-
-			if (tokenNames[i] == null) {
-				tokenNames[i] = "<INVALID>";
-			}
+			tokenNames[i] = StringUtils.firstNonEmpty(
+					VOCABULARY.getLiteralName(i), VOCABULARY.getSymbolicName(i), "<INVALID>");
 		}
 	}
 
@@ -124,8 +113,7 @@ public class bnfLexer extends Lexer {
 		"\2\2\62\64\t\3\2\2\63\62\3\2\2\2\64\65\3\2\2\2\65\63\3\2\2\2\65\66\3\2"+
 		"\2\2\66\30\3\2\2\2\678\t\4\2\289\3\2\2\29:\b\r\2\2:\32\3\2\2\2\4\2\65"+
 		"\3\b\2\2";
-	public static final ATN _ATN =
-		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
+	public static final ATN _ATN = new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {
 		_decisionToDFA = new DFA[_ATN.getNumberOfDecisions()];
 		for (int i = 0; i < _ATN.getNumberOfDecisions(); i++) {

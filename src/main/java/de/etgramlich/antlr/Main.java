@@ -32,10 +32,5 @@ public final class Main {
 
         parser = newNumberParser();
         System.out.println("Visitor result: " + new NumberVisitor().visitExpr(parser.expr()));
-
-        parser = newNumberParser();
-        ExprToXML toXML = new ExprToXML("./out.xml");
-        parser.expression().exitRule(toXML);
-        System.out.println(toXML.getXml().get(parser.expr()));
     }
 }

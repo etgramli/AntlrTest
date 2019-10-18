@@ -3,26 +3,26 @@ package de.etgramlich.antlr.parser.gen.bnf;
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.misc.*;
 import org.antlr.v4.runtime.tree.*;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
-import java.util.Iterator;
-import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class bnfParser extends Parser {
 	static { RuntimeMetaData.checkVersion("4.7.2", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
-	protected static final PredictionContextCache _sharedContextCache =
-		new PredictionContextCache();
+	protected static final PredictionContextCache _sharedContextCache = new PredictionContextCache();
 	public static final int
-		ASSIGN=1, LPAREN=2, RPAREN=3, LBRACE=4, RBRACE=5, LEND=6, REND=7, BAR=8, 
-		GT=9, LT=10, ID=11, WS=12;
+		ASSIGN=1, LPAREN=2, RPAREN=3, LBRACE=4, RBRACE=5, LEND=6, REND=7, BAR=8, GT=9, LT=10, ID=11, WS=12;
 	public static final int
-		RULE_rulelist = 0, RULE_rule_ = 1, RULE_lhs = 2, RULE_rhs = 3, RULE_alternatives = 4, 
-		RULE_alternative = 5, RULE_element = 6, RULE_optional = 7, RULE_zeroormore = 8, 
-		RULE_oneormore = 9, RULE_text = 10, RULE_id = 11, RULE_ruleid = 12;
+		RULE_rulelist = 0, RULE_rule_ = 1, RULE_lhs = 2, RULE_rhs = 3, RULE_alternatives = 4, RULE_alternative = 5,
+		RULE_element = 6, RULE_optional = 7, RULE_zeroormore = 8, RULE_oneormore = 9, RULE_text = 10, RULE_id = 11,
+		RULE_ruleid = 12;
+	@NotNull
+	@Contract(value = " -> new", pure = true)
 	private static String[] makeRuleNames() {
 		return new String[] {
 			"rulelist", "rule_", "lhs", "rhs", "alternatives", "alternative", "element", 
@@ -31,13 +31,14 @@ public class bnfParser extends Parser {
 	}
 	public static final String[] ruleNames = makeRuleNames();
 
+	@NotNull
+	@Contract(value = " -> new", pure = true)
 	private static String[] makeLiteralNames() {
-		return new String[] {
-			null, "'::='", "')'", "'('", "'}'", "'{'", "']'", "'['", "'|'", "'>'", 
-			"'<'"
-		};
+		return new String[] {null, "'::='", "')'", "'('", "'}'", "'{'", "']'", "'['", "'|'", "'>'", "'<'"};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
+	@NotNull
+	@Contract(value = " -> new", pure = true)
 	private static String[] makeSymbolicNames() {
 		return new String[] {
 			null, "ASSIGN", "LPAREN", "RPAREN", "LBRACE", "RBRACE", "LEND", "REND", 
@@ -122,6 +123,7 @@ public class bnfParser extends Parser {
 		}
 	}
 
+	@NotNull
 	public final RulelistContext rulelist() throws RecognitionException {
 		RulelistContext _localctx = new RulelistContext(_ctx, getState());
 		enterRule(_localctx, 0, RULE_rulelist);
@@ -185,6 +187,7 @@ public class bnfParser extends Parser {
 		}
 	}
 
+	@NotNull
 	public final Rule_Context rule_() throws RecognitionException {
 		Rule_Context _localctx = new Rule_Context(_ctx, getState());
 		enterRule(_localctx, 2, RULE_rule_);
@@ -233,6 +236,7 @@ public class bnfParser extends Parser {
 		}
 	}
 
+	@NotNull
 	public final LhsContext lhs() throws RecognitionException {
 		LhsContext _localctx = new LhsContext(_ctx, getState());
 		enterRule(_localctx, 4, RULE_lhs);
@@ -277,6 +281,7 @@ public class bnfParser extends Parser {
 		}
 	}
 
+	@NotNull
 	public final RhsContext rhs() throws RecognitionException {
 		RhsContext _localctx = new RhsContext(_ctx, getState());
 		enterRule(_localctx, 6, RULE_rhs);
@@ -328,6 +333,7 @@ public class bnfParser extends Parser {
 		}
 	}
 
+	@NotNull
 	public final AlternativesContext alternatives() throws RecognitionException {
 		AlternativesContext _localctx = new AlternativesContext(_ctx, getState());
 		enterRule(_localctx, 8, RULE_alternatives);
@@ -392,6 +398,7 @@ public class bnfParser extends Parser {
 		}
 	}
 
+	@NotNull
 	public final AlternativeContext alternative() throws RecognitionException {
 		AlternativeContext _localctx = new AlternativeContext(_ctx, getState());
 		enterRule(_localctx, 10, RULE_alternative);
@@ -463,6 +470,7 @@ public class bnfParser extends Parser {
 		}
 	}
 
+	@NotNull
 	public final ElementContext element() throws RecognitionException {
 		ElementContext _localctx = new ElementContext(_ctx, getState());
 		enterRule(_localctx, 12, RULE_element);
@@ -545,6 +553,7 @@ public class bnfParser extends Parser {
 		}
 	}
 
+	@NotNull
 	public final OptionalContext optional() throws RecognitionException {
 		OptionalContext _localctx = new OptionalContext(_ctx, getState());
 		enterRule(_localctx, 14, RULE_optional);
@@ -595,6 +604,7 @@ public class bnfParser extends Parser {
 		}
 	}
 
+	@NotNull
 	public final ZeroormoreContext zeroormore() throws RecognitionException {
 		ZeroormoreContext _localctx = new ZeroormoreContext(_ctx, getState());
 		enterRule(_localctx, 16, RULE_zeroormore);
@@ -645,6 +655,7 @@ public class bnfParser extends Parser {
 		}
 	}
 
+	@NotNull
 	public final OneormoreContext oneormore() throws RecognitionException {
 		OneormoreContext _localctx = new OneormoreContext(_ctx, getState());
 		enterRule(_localctx, 18, RULE_oneormore);
@@ -691,6 +702,7 @@ public class bnfParser extends Parser {
 		}
 	}
 
+	@NotNull
 	public final TextContext text() throws RecognitionException {
 		TextContext _localctx = new TextContext(_ctx, getState());
 		enterRule(_localctx, 20, RULE_text);
@@ -737,6 +749,7 @@ public class bnfParser extends Parser {
 		}
 	}
 
+	@NotNull
 	public final IdContext id() throws RecognitionException {
 		IdContext _localctx = new IdContext(_ctx, getState());
 		enterRule(_localctx, 22, RULE_id);
@@ -783,6 +796,7 @@ public class bnfParser extends Parser {
 		}
 	}
 
+	@NotNull
 	public final RuleidContext ruleid() throws RecognitionException {
 		RuleidContext _localctx = new RuleidContext(_ctx, getState());
 		enterRule(_localctx, 24, RULE_ruleid);
