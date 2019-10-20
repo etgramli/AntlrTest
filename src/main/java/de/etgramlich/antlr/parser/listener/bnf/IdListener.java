@@ -2,6 +2,9 @@ package de.etgramlich.antlr.parser.listener.bnf;
 
 import de.etgramlich.antlr.parser.gen.bnf.bnfBaseListener;
 import de.etgramlich.antlr.parser.gen.bnf.bnfParser;
+import de.etgramlich.antlr.parser.listener.bnf.type.terminal.Id;
+import de.etgramlich.antlr.parser.listener.bnf.type.terminal.RuleId;
+import de.etgramlich.antlr.parser.listener.bnf.type.terminal.Text;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -10,11 +13,14 @@ import org.jetbrains.annotations.NotNull;
  * The rule function must be called according to the current rule. The (unescaped id) string can be queried with getText().
  */
 public final class IdListener extends bnfBaseListener {
-    private String text;
+    private Id id;
+    private RuleId ruleId;
+    private Text text;
 
     @Override
     public void enterText(@NotNull bnfParser.TextContext ctx) {
-        this.text = ctx.getText().trim();
+        String textString = ctx.getText().trim();
+        text = new Text(textString);
     }
 
     @Override
@@ -24,7 +30,8 @@ public final class IdListener extends bnfBaseListener {
 
     @Override
     public void enterRuleid(@NotNull bnfParser.RuleidContext ctx) {
-        this.text = ctx.getText().trim();
+        String trimmedRuleId = ctx.getText().trim();
+        ruleId = new RuleId(trimmedRuleId);
     }
 
     @Override
@@ -34,7 +41,8 @@ public final class IdListener extends bnfBaseListener {
 
     @Override
     public void enterId(@NotNull bnfParser.IdContext ctx) {
-        this.text = stripLTGT(ctx.getText());
+        String strippedId = stripLTGT(ctx.getText());
+        id = new Id(strippedId);
     }
 
     @NotNull
@@ -49,8 +57,19 @@ public final class IdListener extends bnfBaseListener {
         super.exitId(ctx);
     }
 
+
     @Contract(pure = true)
-    public String getText() {
+    public Id getId() {
+        return id;
+    }
+
+    @Contract(pure = true)
+    public RuleId getRuleId() {
+        return ruleId;
+    }
+
+    @Contract(pure = true)
+    public Text getText() {
         return text;
     }
 }
