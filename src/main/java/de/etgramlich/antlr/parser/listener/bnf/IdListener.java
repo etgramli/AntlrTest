@@ -38,7 +38,7 @@ public final class IdListener extends bnfBaseListener {
     }
 
     @NotNull
-    private static String stripLTGT(@NotNull final String string) {
+    public static String stripLTGT(@NotNull final String string) {
         final String trimmed = string.trim();
         final String noLTGT = trimmed.substring(1, trimmed.length()-1);
         return noLTGT.trim();
