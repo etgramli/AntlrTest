@@ -1,8 +1,6 @@
 package de.etgramlich.antlr.parser.listener.bnf.type.terminal;
 
-import de.etgramlich.antlr.parser.listener.bnf.IdListener;
-
-public class Id extends RuleId {
+public final class Id extends AbstractId {
     public Id(String id) {
         super(id);
     }

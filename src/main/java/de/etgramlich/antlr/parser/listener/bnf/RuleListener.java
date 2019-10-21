@@ -4,7 +4,7 @@ import de.etgramlich.antlr.parser.gen.bnf.bnfBaseListener;
 import de.etgramlich.antlr.parser.gen.bnf.bnfParser;
 import de.etgramlich.antlr.parser.listener.bnf.type.Alternatives;
 import de.etgramlich.antlr.parser.listener.bnf.type.Rule;
-import de.etgramlich.antlr.parser.listener.bnf.type.terminal.Id;
+import de.etgramlich.antlr.parser.listener.bnf.type.terminal.ID;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -16,7 +16,7 @@ public class RuleListener extends bnfBaseListener {
         // LHS
         IdListener idListener = new IdListener();
         idListener.enterId(ctx.lhs().id());
-        Id lhs = idListener.getId();
+        ID lhs = idListener.getId();
 
         // RHS
         AlternativesListener alternativesListener = new AlternativesListener();

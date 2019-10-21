@@ -2,6 +2,7 @@ package de.etgramlich.antlr.parser.listener.bnf;
 
 import de.etgramlich.antlr.parser.gen.bnf.bnfBaseListener;
 import de.etgramlich.antlr.parser.gen.bnf.bnfParser;
+import de.etgramlich.antlr.parser.listener.bnf.type.terminal.ID;
 import de.etgramlich.antlr.parser.listener.bnf.type.terminal.Id;
 import de.etgramlich.antlr.parser.listener.bnf.type.terminal.RuleId;
 import de.etgramlich.antlr.parser.listener.bnf.type.terminal.Text;
@@ -13,14 +14,12 @@ import org.jetbrains.annotations.NotNull;
  * The rule function must be called according to the current rule. The (unescaped id) string can be queried with getText().
  */
 public final class IdListener extends bnfBaseListener {
-    private Id id;
-    private RuleId ruleId;
-    private Text text;
+    private ID id;
 
     @Override
     public void enterText(@NotNull bnfParser.TextContext ctx) {
         String textString = ctx.getText().trim();
-        text = new Text(textString);
+        id = new Text(textString);
     }
 
     @Override
@@ -31,7 +30,7 @@ public final class IdListener extends bnfBaseListener {
     @Override
     public void enterRuleid(@NotNull bnfParser.RuleidContext ctx) {
         String trimmedRuleId = ctx.getText().trim();
-        ruleId = new RuleId(trimmedRuleId);
+        id = new RuleId(trimmedRuleId);
     }
 
     @Override
@@ -59,17 +58,7 @@ public final class IdListener extends bnfBaseListener {
 
 
     @Contract(pure = true)
-    public Id getId() {
+    public ID getId() {
         return id;
-    }
-
-    @Contract(pure = true)
-    public RuleId getRuleId() {
-        return ruleId;
-    }
-
-    @Contract(pure = true)
-    public Text getText() {
-        return text;
     }
 }

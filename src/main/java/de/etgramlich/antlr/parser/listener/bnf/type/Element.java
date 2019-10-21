@@ -7,19 +7,19 @@ import org.jetbrains.annotations.Contract;
 import java.util.Objects;
 
 public class Element {
-    private ID id;
-    private Repetition repetition;
+    private final ID id;
+    private final Alternatives alternatives;
 
     @Contract(pure = true)
     public Element(final ID id) {
         this.id = id;
-        repetition = null;
+        alternatives = null;
     }
 
     @Contract(pure = true)
-    public Element(final Repetition repetition) {
+    public Element(final Alternatives alternatives) {
         id = null;
-        this.repetition = repetition;
+        this.alternatives = alternatives;
     }
 
 
@@ -27,8 +27,8 @@ public class Element {
         return id;
     }
 
-    public Repetition getRepetition() {
-        return repetition;
+    public Alternatives getAlternatives() {
+        return alternatives;
     }
 
 
@@ -41,13 +41,13 @@ public class Element {
         Element element = (Element) o;
 
         if (!Objects.equals(id, element.id)) return false;
-        return Objects.equals(repetition, element.repetition);
+        return Objects.equals(alternatives, element.alternatives);
     }
 
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (repetition != null ? repetition.hashCode() : 0);
+        result = 31 * result + (alternatives != null ? alternatives.hashCode() : 0);
         return result;
     }
 }

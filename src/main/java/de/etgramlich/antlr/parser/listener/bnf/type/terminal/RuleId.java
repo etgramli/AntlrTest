@@ -2,17 +2,9 @@ package de.etgramlich.antlr.parser.listener.bnf.type.terminal;
 
 import org.jetbrains.annotations.Contract;
 
-public class RuleId implements ID {
-
-    private final String id;
-
+public final class RuleId extends AbstractId {
     @Contract(pure = true)
-    public RuleId(String id) {
-        this.id = id;
-    }
-
-    @Override
-    public String getText() {
-        return id;
+    public RuleId(final String id) {
+        super(id);
     }
 }

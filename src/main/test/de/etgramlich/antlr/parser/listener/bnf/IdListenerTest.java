@@ -14,7 +14,7 @@ class IdListenerTest {
         IdListener listener = new IdListener();
 
         listener.enterText(new TextMock(expectedId));
-        assertEquals(expectedId, listener.getText());
+        assertEquals(expectedId, listener.getId().getText());
     }
 
     @Test
@@ -23,7 +23,7 @@ class IdListenerTest {
 
         IdListener listener = new IdListener();
         listener.enterText(new TextMock(expectedId + "   "));
-        assertEquals(expectedId, listener.getText());
+        assertEquals(expectedId, listener.getId().getText());
     }
 
     @Test
@@ -33,7 +33,7 @@ class IdListenerTest {
         IdListener listener = new IdListener();
 
         listener.enterRuleid(new RuleIdMock(expectedId));
-        assertEquals(expectedId, listener.getText());
+        assertEquals(expectedId, listener.getId().getText());
     }
 
     @Test
@@ -42,7 +42,7 @@ class IdListenerTest {
 
         IdListener listener = new IdListener();
         listener.enterRuleid(new RuleIdMock(expectedId + "   "));
-        assertEquals(expectedId, listener.getText());
+        assertEquals(expectedId, listener.getId().getText());
     }
 
     @Test
@@ -52,7 +52,7 @@ class IdListenerTest {
         IdListener listener = new IdListener();
 
         listener.enterId(new IdMock("<new-id>"));
-        assertEquals(expectedId, listener.getText());
+        assertEquals(expectedId, listener.getId().getText());
     }
 
     @Test
@@ -62,7 +62,7 @@ class IdListenerTest {
         IdListener listener = new IdListener();
 
         listener.enterId(new IdMock(" <new-id   > "));
-        assertEquals(expectedId, listener.getText());
+        assertEquals(expectedId, listener.getId().getText());
     }
 
 

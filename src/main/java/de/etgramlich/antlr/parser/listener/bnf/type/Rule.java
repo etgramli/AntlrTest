@@ -1,7 +1,6 @@
 package de.etgramlich.antlr.parser.listener.bnf.type;
 
 import de.etgramlich.antlr.parser.listener.bnf.type.terminal.ID;
-import de.etgramlich.antlr.parser.listener.bnf.type.terminal.RuleId;
 import org.jetbrains.annotations.Contract;
 
 public final class Rule {
@@ -13,7 +12,6 @@ public final class Rule {
         this.lhs = lhs;
         this.rhs = rhs;
     }
-
 
     @Contract(pure = true)
     public ID getLhs() {

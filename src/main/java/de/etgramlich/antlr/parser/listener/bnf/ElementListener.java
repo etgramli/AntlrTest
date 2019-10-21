@@ -2,8 +2,8 @@ package de.etgramlich.antlr.parser.listener.bnf;
 
 import de.etgramlich.antlr.parser.gen.bnf.bnfBaseListener;
 import de.etgramlich.antlr.parser.gen.bnf.bnfParser;
+import de.etgramlich.antlr.parser.listener.bnf.repetition.RepetitionListener;
 import de.etgramlich.antlr.parser.listener.bnf.type.Element;
-import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -15,16 +15,26 @@ public class ElementListener extends bnfBaseListener {
 
     @Override
     public void enterElement(@NotNull bnfParser.ElementContext ctx)  {
-        IdListener listener = new IdListener();
-        if (ctx.id() != null) {
-            listener.enterId(ctx.id());
+        if (ctx.id() != null || ctx.text() != null) {
+            IdListener listener = new IdListener();
+            if (ctx.id() != null) {
+                listener.enterId(ctx.id());
+            } else {
+                listener.enterText(ctx.text());
+            }
             element = new Element(listener.getId());
-        } else if (ctx.text() != null) {
-            listener.enterText(ctx.text());
-            element = new Element(listener.getText());
         } else {
-            // ToDo
-            throw new UnsupportedOperationException("Elements of optional, ueroormore and oneormore are not implemented yet!");
+            RepetitionListener repetitionListener = new RepetitionListener();
+            if (ctx.optional() != null) {
+                repetitionListener.enterOptional(ctx.optional());
+            } else if (ctx.zeroormore() != null) {
+                repetitionListener.enterZeroormore(ctx.zeroormore());
+            } else if (ctx.oneormore() != null) {
+                repetitionListener.enterOneormore(ctx.oneormore());
+            } else {
+                throw new UnsupportedOperationException("Elements of optional, ueroormore and oneormore are not implemented yet!");
+            }
+            element = new Element(repetitionListener.getAlternatives());
         }
     }
 
