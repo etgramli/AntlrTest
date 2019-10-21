@@ -1,5 +1,6 @@
 package de.etgramlich.antlr.parser.stringtemplate;
 
+import org.jetbrains.annotations.NotNull;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroupFile;
 
@@ -7,7 +8,7 @@ public final class ExprST {
     private static final String ST_FILENAME = "templates.stg";
     private static final STGroupFile GROUP_FILE = new STGroupFile(ST_FILENAME);
 
-    public static String getExprString(final String left, final String operator, final String right) {
+    public static String getExprString(final String left, @NotNull final String operator, final String right) {
         if (!(operator.equals("+") | operator.equals("-"))) {
             throw new IllegalArgumentException("Operator must be + or -, but was: " + operator);
         }
@@ -18,7 +19,7 @@ public final class ExprST {
         st.add("operator_add_sub", operator);
         return st.render();
     }
-    public static String getTermString(final String left, final String operator, final String right) {
+    public static String getTermString(final String left, @NotNull final String operator, final String right) {
         if (!(operator.equals("*") || operator.equals("/"))) {
             throw new IllegalArgumentException("Operator must be * or /, but was: " + operator);
         }

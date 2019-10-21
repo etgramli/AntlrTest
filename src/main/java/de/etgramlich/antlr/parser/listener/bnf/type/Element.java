@@ -1,11 +1,14 @@
 package de.etgramlich.antlr.parser.listener.bnf.type;
 
 import de.etgramlich.antlr.parser.listener.bnf.type.terminal.ID;
+import de.etgramlich.antlr.util.BnfElement;
+import de.etgramlich.antlr.util.BnfTypeVisitor;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-public class Element {
+public final class Element implements BnfElement {
     private final ID id;
     private final Alternatives alternatives;
 
@@ -22,10 +25,12 @@ public class Element {
     }
 
 
+    @Contract(pure = true)
     public ID getId() {
         return id;
     }
 
+    @Contract(pure = true)
     public Alternatives getAlternatives() {
         return alternatives;
     }
@@ -48,5 +53,13 @@ public class Element {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (alternatives != null ? alternatives.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public void accept(@NotNull BnfTypeVisitor visitor) {
+        if (id != null) id.accept(visitor);
+        if (alternatives != null) alternatives.accept(visitor);
+
+        visitor.visit(this);
     }
 }
