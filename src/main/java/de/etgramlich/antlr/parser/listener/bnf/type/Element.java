@@ -1,6 +1,5 @@
 package de.etgramlich.antlr.parser.listener.bnf.type;
 
-import de.etgramlich.antlr.parser.listener.bnf.type.repetition.Repetition;
 import de.etgramlich.antlr.parser.listener.bnf.type.terminal.ID;
 import org.jetbrains.annotations.Contract;
 
