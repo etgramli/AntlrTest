@@ -1,19 +1,22 @@
 package de.etgramlich.antlr.parser.listener.bnf.type;
 
 import de.etgramlich.antlr.parser.listener.bnf.type.terminal.ID;
-import de.etgramlich.antlr.util.BnfElement;
-import de.etgramlich.antlr.util.BnfTypeVisitor;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.HashSet;
+import java.util.Set;
 
 
 /**
  * ToDo: lhs -> Interface
- * ToDo: rhs -> Methods
+ * ToDo: rhs -> Methods (return types may be interfaces or simple types)
+ *
+ * ToDo: Keep track of all types and make them return types in RHS
  *
  * Rhs: respect call sequence and mutual exclusive rules
  */
-public final class Rule implements BnfElement {
+public final class Rule implements BnfType {
     private final ID lhs;
     private final Alternatives rhs;
 
@@ -33,10 +36,32 @@ public final class Rule implements BnfElement {
         return rhs;
     }
 
-    @Override
-    public void accept(@NotNull BnfTypeVisitor visitor) {
-        lhs.accept(visitor);
-        rhs.accept(visitor);
-        visitor.visit(this);
+
+    private static final String NEWLINE = "\n";
+    private static final String TABULATOR = "\t";
+    private static final String METHOD_END = "();";
+    private static final String INT_TYPE = "int ";
+
+    @NotNull
+    public String buildInterface() {
+        StringBuilder sb = new StringBuilder("interface ");
+
+        sb.append(lhs.getText()).append(" {").append(NEWLINE);
+
+        Set<String> encounteredNames = new HashSet<>();
+        for (Alternative alternative : rhs.getAlternatives()) {
+            for (Element element : alternative.getElements()) {
+                // ToDo: test for alternatives in element (is recursive)
+                if (element.getId() != null && encounteredNames.add(element.getId().getText())) {
+                    sb.append(TABULATOR)
+                            .append(INT_TYPE)
+                            .append(element.getId().getText())
+                            .append(METHOD_END)
+                            .append(NEWLINE);
+                }
+            }
+        }
+
+        return sb.append("}\n").toString();
     }
 }

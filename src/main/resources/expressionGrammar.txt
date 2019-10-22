@@ -25,9 +25,11 @@
     | seven
     | eight
     | nine
+
 <digit>
   ::= <zero>
     | <digit-nonzero>
+
 <number>
   ::= <digit>
     | <digit> <number>

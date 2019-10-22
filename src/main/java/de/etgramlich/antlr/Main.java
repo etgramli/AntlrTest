@@ -36,6 +36,7 @@ public final class Main {
         parser.rulelist().enterRule(listener);
         RuleList ruleList = listener.getRuleList();
         System.out.println(ruleList);
+        ruleList.saveInterfaces();
     }
 
 

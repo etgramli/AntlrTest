@@ -16,9 +16,4 @@ public abstract class AbstractId implements ID {
     public String getText() {
         return id;
     }
-
-    @Override
-    public void accept(@NotNull BnfTypeVisitor visitor) {
-        visitor.visit(this);
-    }
 }

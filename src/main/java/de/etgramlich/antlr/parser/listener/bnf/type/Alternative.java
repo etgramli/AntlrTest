@@ -1,15 +1,12 @@
 package de.etgramlich.antlr.parser.listener.bnf.type;
 
-import de.etgramlich.antlr.util.BnfElement;
-import de.etgramlich.antlr.util.BnfTypeVisitor;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
-public final class Alternative implements BnfElement {
-    private List<Element> elements;
+public final class Alternative implements BnfType {
+    private final List<Element> elements;
 
     public Alternative(final Collection<Element> elements) {
         this.elements = List.copyOf(elements);
@@ -21,9 +18,4 @@ public final class Alternative implements BnfElement {
         return elements;
     }
 
-    @Override
-    public void accept(@NotNull BnfTypeVisitor visitor) {
-        elements.forEach(element -> accept(visitor));
-        visitor.visit(this);
-    }
 }

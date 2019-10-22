@@ -1,14 +1,14 @@
 package de.etgramlich.antlr.parser.listener.bnf.type;
 
-import de.etgramlich.antlr.util.BnfElement;
-import de.etgramlich.antlr.util.BnfTypeVisitor;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.List;
 
-public final class RuleList implements BnfElement {
+public final class RuleList implements BnfType {
     private final List<Rule> rules;
 
     public RuleList(final Collection<Rule> rules) {
@@ -21,9 +21,13 @@ public final class RuleList implements BnfElement {
         return rules;
     }
 
-    @Override
-    public void accept(@NotNull BnfTypeVisitor visitor) {
-        rules.forEach(rule -> rule.accept(visitor));
-        visitor.visit(this);
+    public void saveInterfaces() {
+        for (Rule rule : rules) {
+            try (PrintWriter pw = new PrintWriter(rule.getLhs().getText())) {
+                pw.write(rule.buildInterface());
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
