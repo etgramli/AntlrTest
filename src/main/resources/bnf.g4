@@ -24,6 +24,9 @@
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+// ToDo: Change grammar to match expressions like:
+// nonterminal = "terminal" | nonterminal
+
 grammar bnf;
 
 rulelist

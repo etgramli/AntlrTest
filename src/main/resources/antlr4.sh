@@ -4,8 +4,9 @@ java -cp $CLSSPTH org.antlr.v4.Tool $*
 echo "Generated Lexer and Parser"
 javac -cp $CLSSPTH *.java
 echo "Compiled Lexer and Parser"
-java -cp $CLSSPTH org.antlr.v4.gui.TestRig bnf rulelist -tokens -gui < $*
+tail -n +32 $* > $*-rulesOnly.g4
+java -cp $CLSSPTH org.antlr.v4.gui.TestRig bnf rulelist -tokens -tree -gui < $*-rulesOnly.g4
 echo "Built parse tree"
 
-rm *.class *.java *.tokens *.interp
+rm *.class *.java *.tokens *.interp $*-rulesOnly.g4
 echo "Cleaned up"
