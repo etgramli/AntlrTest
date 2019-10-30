@@ -24,8 +24,7 @@
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-// ToDo: Change grammar to match expressions like:
-// nonterminal = "terminal" | nonterminal
+// ToDo: Change grammar to non-left-recursive
 
 grammar bnf;
 
@@ -74,7 +73,7 @@ oneormore
     ;
 
 text
-    : ID
+    : TEXT
     ;
 
 id
@@ -124,9 +123,12 @@ GT
 LT
     : '<'
     ;
+TEXT
+    : '\''('a'..'z'|'A'..'Z')('a'..'z'|'A'..'Z'|'0'..'9'|':'|'-'|'_'|' ')+'\''
+    ;
 
 ID
-    : ('a'..'z'|'A'..'Z') ('a'..'z'|'A'..'Z'|'0'..'9'|'-'|' ')+
+    : ('a'..'z'|'A'..'Z') ('a'..'z'|'A'..'Z'|'0'..'9'|'-'|' '|'_')+
     ;
 
 WS

@@ -21,9 +21,9 @@ public final class RuleList implements BnfType {
         return rules;
     }
 
-    public void saveInterfaces() {
+    public void saveInterfaces(final String directory) {
         for (Rule rule : rules) {
-            try (PrintWriter pw = new PrintWriter(rule.getLhs().getText())) {
+            try (PrintWriter pw = new PrintWriter(directory + "/" + rule.getLhs().getText())) {
                 pw.write(rule.buildInterface());
             } catch (FileNotFoundException e) {
                 e.printStackTrace();

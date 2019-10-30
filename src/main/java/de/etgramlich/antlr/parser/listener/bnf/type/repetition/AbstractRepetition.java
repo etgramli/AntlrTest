@@ -15,6 +15,6 @@ public abstract class AbstractRepetition implements BnfType {
     }
 
     public List<Alternative> getAlternatives() {
-        return Collections.unmodifiableList(alternatives);
+        return alternatives;
     }
 }

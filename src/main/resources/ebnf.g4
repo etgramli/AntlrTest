@@ -26,12 +26,12 @@
 
 grammar ebnf;
 
-<rulelist> ::= <rule_>* <EOF>
+<rulelist> ::= <RBRACE><rule_><LBRACE> <EOF>
 <rule_> ::= <lhs> <ASSIGN> <rhs>
 <lhs> ::= <id>
 <rhs> ::= <alternatives>
-<alternatives> ::= <alternative> (<BAR> <alternative>)*
-<alternative> ::= <element>*
+<alternatives> ::= <alternative> <RBRACE>(<BAR> <alternative>)<LBRACE>
+<alternative> ::= <RBRACE><element><LBRACE>
 <element> ::= <optional> | <zeroormore> | <oneormore> | <text> | <id>
 <optional>  ::= <REND> <alternatives> <LEND>
 <zeroormore>  ::= <RBRACE> <alternatives> <LBRACE>
@@ -39,7 +39,7 @@ grammar ebnf;
 <text> ::= <ID>
 <id> ::= <LT> <ruleid> <GT>
 <ruleid> ::= <ID>
-<ASSIGN> ::= ::=
+<ASSIGN> ::= '::='
 <LPAREN> ::= )
 <RPAREN> ::= (
 <LBRACE> ::= }

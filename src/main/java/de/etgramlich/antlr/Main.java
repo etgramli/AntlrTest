@@ -10,33 +10,61 @@ import de.etgramlich.antlr.parser.listener.number.ExprListener;
 import de.etgramlich.antlr.parser.visitor.NumberVisitor;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.cli.*;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Collections;
+import java.util.List;
 
 public final class Main {
     private static final String LEXER_INPUT = "900+90+9+15*33";
 
     public static void main(String[] args) {
-        String numberGrammar = StringUtils.EMPTY;
+        Options options = new Options();
+        options.addOption("t", true, "Target directory for generated sources");
+        options.addOption("g", true, "Grammar file path");
+        CommandLineParser cliParser = new DefaultParser();
+        String targetDirectory = "./";
+        final String grammarFilePath;
+        List<String> grammar = Collections.emptyList();
         try {
-            numberGrammar = Files.readString(Paths.get("src/main/resources/expressionGrammar.txt"));
+            CommandLine cmd = cliParser.parse(options, args);
+            if (cmd.hasOption("t")) {
+                targetDirectory = cmd.getOptionValue("t");
+            }
+            if (cmd.hasOption("g")) {
+                grammarFilePath = cmd.getOptionValue("g");
+                grammar = Files.readAllLines(Paths.get(grammarFilePath));
+                for (String line : grammar) {
+                    if (line.matches("grammar .*;")) {
+                        grammar = grammar.subList(grammar.indexOf(line)+1, grammar.size()-1);
+                        break;
+                    }
+                }
+            } else {
+                System.err.println("No grammar file given!!!");
+                return;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+            System.err.println("Grammar file could not be read!");
+            return;
         }
 
-        bnfLexer lexer = new bnfLexer(CharStreams.fromString(numberGrammar));
+        bnfLexer lexer = new bnfLexer(CharStreams.fromString(String.join("\n", grammar)));
         bnfParser parser = new bnfParser(new CommonTokenStream(lexer));
 
         RuleListListener listener = new RuleListListener();
         parser.rulelist().enterRule(listener);
         RuleList ruleList = listener.getRuleList();
         System.out.println(ruleList);
-        ruleList.saveInterfaces();
+        ruleList.saveInterfaces(targetDirectory);
     }
 
 
