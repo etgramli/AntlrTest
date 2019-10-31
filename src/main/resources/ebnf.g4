@@ -1,5 +1,5 @@
 /*
- [The "BSD licence"]
+ [The 'BSD licence']
  Copyright (c) 2013 Tom Everett
  All rights reserved.
  Redistribution and use in source and binary forms, with or without
@@ -26,28 +26,17 @@
 
 grammar ebnf;
 
-<rulelist> ::= <RBRACE><rule_><LBRACE> <EOF>
+<rulelist> ::= {<rule_>} <EOF>
 <rule_> ::= <lhs> <ASSIGN> <rhs>
 <lhs> ::= <id>
 <rhs> ::= <alternatives>
-<alternatives> ::= <alternative> <RBRACE>(<BAR> <alternative>)<LBRACE>
-<alternative> ::= <RBRACE><element><LBRACE>
+<alternatives> ::= <alternative> {(<BAR> <alternative>)}
+<alternative> ::= {<element>}
 <element> ::= <optional> | <zeroormore> | <oneormore> | <text> | <id>
-<optional>  ::= <REND> <alternatives> <LEND>
-<zeroormore>  ::= <RBRACE> <alternatives> <LBRACE>
-<oneormore> ::= <RPAREN> <alternatives> <LPAREN>
+<optional>  ::= [<alternatives>]
+<zeroormore>  ::= {<alternatives>}
+<oneormore> ::= ( <alternatives> )
 <text> ::= <ID>
-<id> ::= <LT> <ruleid> <GT>
+<id> ::= <ruleid>
 <ruleid> ::= <ID>
-<ASSIGN> ::= '::='
-<LPAREN> ::= )
-<RPAREN> ::= (
-<LBRACE> ::= }
-<RBRACE> ::= {
-<LEND> ::= ]
-<REND> ::= [
-<BAR> ::= |
-<GT> ::= >
-<LT> ::= <
-<ID> ::= ('a'..'z'|'A'..'Z') ('a'..'z'|'A'..'Z'|'0'..'9'|'-'|' ')+
-<WS> ::= [ \r\n\t]
+<ID> ::= <CHAR> (<CHAR>|<DIGIT>)

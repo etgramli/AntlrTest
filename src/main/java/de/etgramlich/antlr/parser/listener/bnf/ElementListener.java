@@ -31,8 +31,10 @@ public class ElementListener extends bnfBaseListener {
                 repetitionListener.enterZeroormore(ctx.zeroormore());
             } else if (ctx.oneormore() != null) {
                 repetitionListener.enterOneormore(ctx.oneormore());
+            } else if (ctx.children.size() == 1 && ctx.children.get(0).getText().equals("::=")){
+                System.out.println("Assignment!!!");
             } else {
-                throw new UnsupportedOperationException("Elements of optional, ueroormore and oneormore are not implemented yet!");
+                throw new UnsupportedOperationException("Element type not recognized!!!");
             }
             element = new Element(repetitionListener.getAlternatives());
         }
