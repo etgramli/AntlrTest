@@ -35,7 +35,7 @@ public class ElementListener extends bnfBaseListener {
             } else {
                 throw new UnsupportedOperationException("Element type not recognized!!!");
             }
-            element = new Element(repetitionListener.getAlternatives());
+            element = new Element(repetitionListener.getRepetition());
         }
     }
 

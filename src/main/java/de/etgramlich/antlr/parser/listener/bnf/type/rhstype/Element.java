@@ -1,6 +1,7 @@
 package de.etgramlich.antlr.parser.listener.bnf.type.rhstype;
 
 import de.etgramlich.antlr.parser.listener.bnf.type.BnfType;
+import de.etgramlich.antlr.parser.listener.bnf.type.rhstype.repetition.AbstractRepetition;
 import de.etgramlich.antlr.parser.listener.bnf.type.terminal.AbstractId;
 import org.jetbrains.annotations.Contract;
 
@@ -9,18 +10,18 @@ import java.util.List;
 
 public final class Element implements BnfType, RhsType {
     private final AbstractId id;
-    private final List<Alternative> alternatives;
+    private final AbstractRepetition alternatives;
 
     @Contract(pure = true)
     public Element(final AbstractId id) {
         this.id = id;
-        alternatives = Collections.emptyList();
+        alternatives = null;
     }
 
     @Contract(pure = true)
-    public Element(final List<Alternative> alternatives) {
+    public Element(final AbstractRepetition alternatives) {
         id = null;
-        this.alternatives = List.copyOf(alternatives);
+        this.alternatives = alternatives;
     }
 
 
@@ -31,7 +32,7 @@ public final class Element implements BnfType, RhsType {
 
     @Contract(pure = true)
     public List<Alternative> getAlternatives() {
-        return alternatives;
+        return alternatives != null ? alternatives.getAlternatives() : Collections.emptyList();
     }
 
     @Contract(pure = true)
@@ -43,7 +44,7 @@ public final class Element implements BnfType, RhsType {
     @Override
     public List<RhsType> getChildren() {
         if (alternatives != null) {
-            return List.copyOf(alternatives);
+            return List.copyOf(alternatives.getAlternatives());
         } else {
             return Collections.emptyList();
         }

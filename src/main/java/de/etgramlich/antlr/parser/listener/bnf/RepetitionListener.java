@@ -2,27 +2,26 @@ package de.etgramlich.antlr.parser.listener.bnf;
 
 import de.etgramlich.antlr.parser.gen.bnf.bnfBaseListener;
 import de.etgramlich.antlr.parser.gen.bnf.bnfParser;
-import de.etgramlich.antlr.parser.listener.bnf.type.rhstype.Alternative;
+import de.etgramlich.antlr.parser.listener.bnf.type.rhstype.repetition.AbstractRepetition;
+import de.etgramlich.antlr.parser.listener.bnf.type.rhstype.repetition.OneOrMore;
+import de.etgramlich.antlr.parser.listener.bnf.type.rhstype.repetition.Optional;
+import de.etgramlich.antlr.parser.listener.bnf.type.rhstype.repetition.ZeroOrMore;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
-import java.util.List;
-
 public final class RepetitionListener extends bnfBaseListener {
-    protected List<Alternative> alternatives;
+    private AbstractRepetition repetition;
 
-    @NotNull
     @Contract(pure = true)
-    public List<Alternative> getAlternatives() {
-        return Collections.unmodifiableList(alternatives);
+    public AbstractRepetition getRepetition() {
+        return repetition;
     }
 
     @Override
     public void enterOneormore(@NotNull bnfParser.OneormoreContext ctx) {
         AlternativeListener listener = new AlternativeListener();
         listener.enterAlternatives(ctx.alternatives());
-        alternatives = listener.getAlternatives();
+        this.repetition = new OneOrMore(listener.getAlternatives());
     }
 
     @Override
@@ -34,7 +33,7 @@ public final class RepetitionListener extends bnfBaseListener {
     public void enterZeroormore(@NotNull bnfParser.ZeroormoreContext ctx) {
         AlternativeListener listener = new AlternativeListener();
         listener.enterAlternatives(ctx.alternatives());
-        this.alternatives = listener.getAlternatives();
+        this.repetition = new ZeroOrMore(listener.getAlternatives());
     }
 
     @Override
@@ -44,13 +43,9 @@ public final class RepetitionListener extends bnfBaseListener {
 
     @Override
     public void enterOptional(@NotNull bnfParser.OptionalContext ctx) {
-        if (ctx.alternatives().alternative().size() > 1) {
-            throw new IllegalArgumentException("Optional must only have 0 or 1 element! (had: " +
-                    ctx.alternatives().alternative().size() + ")");
-        }
         AlternativeListener listener = new AlternativeListener();
         listener.enterAlternatives(ctx.alternatives());
-        this.alternatives = listener.getAlternatives();
+        this.repetition = new Optional(listener.getAlternatives());
     }
 
     @Override
