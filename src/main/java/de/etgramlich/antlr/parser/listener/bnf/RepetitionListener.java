@@ -21,7 +21,7 @@ public final class RepetitionListener extends bnfBaseListener {
     public void enterOneormore(@NotNull bnfParser.OneormoreContext ctx) {
         AlternativeListener listener = new AlternativeListener();
         listener.enterAlternatives(ctx.alternatives());
-        this.repetition = new OneOrMore(listener.getAlternatives());
+        repetition = new OneOrMore(listener.getAlternatives());
     }
 
     @Override
@@ -33,7 +33,7 @@ public final class RepetitionListener extends bnfBaseListener {
     public void enterZeroormore(@NotNull bnfParser.ZeroormoreContext ctx) {
         AlternativeListener listener = new AlternativeListener();
         listener.enterAlternatives(ctx.alternatives());
-        this.repetition = new ZeroOrMore(listener.getAlternatives());
+        repetition = new ZeroOrMore(listener.getAlternatives());
     }
 
     @Override
@@ -45,7 +45,7 @@ public final class RepetitionListener extends bnfBaseListener {
     public void enterOptional(@NotNull bnfParser.OptionalContext ctx) {
         AlternativeListener listener = new AlternativeListener();
         listener.enterAlternatives(ctx.alternatives());
-        this.repetition = new Optional(listener.getAlternatives());
+        repetition = new Optional(listener.getAlternatives());
     }
 
     @Override

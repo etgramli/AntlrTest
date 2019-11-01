@@ -4,16 +4,19 @@ import de.etgramlich.antlr.parser.gen.bnf.bnfBaseListener;
 import de.etgramlich.antlr.parser.gen.bnf.bnfParser;
 import de.etgramlich.antlr.parser.listener.bnf.type.rhstype.Alternative;
 import de.etgramlich.antlr.parser.listener.bnf.type.rhstype.Element;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class AlternativeListener extends bnfBaseListener {
+public final class AlternativeListener extends bnfBaseListener {
     private Alternative alternative;
     private final List<Alternative> alternatives = new ArrayList<>();
 
+    @NotNull
+    @Contract(pure = true)
     public List<Alternative> getAlternatives() {
         return Collections.unmodifiableList(alternatives);
     }
@@ -35,7 +38,7 @@ public class AlternativeListener extends bnfBaseListener {
             listener.enterElement(elementContext);
             elements.add(listener.getElement());
         }
-        this.alternative = new Alternative(elements);
+        alternative = new Alternative(elements);
     }
 
     @Override

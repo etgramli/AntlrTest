@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
  * Parses an element of ANTL4's bnf grammar.
  * Currently only allows text and id options.
  */
-public class ElementListener extends bnfBaseListener {
+public final class ElementListener extends bnfBaseListener {
     private Element element;
 
     @Override

@@ -33,4 +33,9 @@ public abstract class AbstractId implements BnfType, RhsType {
     public List<RhsType> getChildren() {
         return Collections.emptyList();
     }
+
+    @Override
+    public String toString() {
+        return id;
+    }
 }

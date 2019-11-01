@@ -11,13 +11,13 @@ import de.etgramlich.antlr.parser.visitor.NumberVisitor;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.apache.commons.cli.*;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Collections;
 import java.util.List;
 
 public final class Main {
@@ -29,22 +29,14 @@ public final class Main {
         options.addOption("g", true, "Grammar file path");
         CommandLineParser cliParser = new DefaultParser();
         String targetDirectory = "./";
-        final String grammarFilePath;
-        List<String> grammar = Collections.emptyList();
+        String grammar = StringUtils.EMPTY;
         try {
             CommandLine cmd = cliParser.parse(options, args);
             if (cmd.hasOption("t")) {
                 targetDirectory = cmd.getOptionValue("t");
             }
             if (cmd.hasOption("g")) {
-                grammarFilePath = cmd.getOptionValue("g");
-                grammar = Files.readAllLines(Paths.get(grammarFilePath));
-                for (String line : grammar) {
-                    if (line.matches("grammar .*;")) {
-                        grammar = grammar.subList(grammar.indexOf(line)+1, grammar.size()-1);
-                        break;
-                    }
-                }
+                grammar = prepareGrammar(cmd.getOptionValue("g"));
             } else {
                 System.err.println("No grammar file given!!!");
                 return;
@@ -57,13 +49,25 @@ public final class Main {
             return;
         }
 
-        bnfLexer lexer = new bnfLexer(CharStreams.fromString(String.join("\n", grammar)));
+        bnfLexer lexer = new bnfLexer(CharStreams.fromString(grammar));
         bnfParser parser = new bnfParser(new CommonTokenStream(lexer));
 
         RuleListListener listener = new RuleListListener();
         parser.rulelist().enterRule(listener);
         RuleList ruleList = listener.getRuleList();
         ruleList.saveInterfaces(targetDirectory);
+    }
+
+    @NotNull
+    private static String prepareGrammar(final String filepath) throws IOException {
+        List<String> grammar = Files.readAllLines(Paths.get(filepath));
+        for (String line : grammar) {
+            if (line.matches("grammar .*;")) {
+                grammar = grammar.subList(grammar.indexOf(line)+1, grammar.size()-1);
+                break;
+            }
+        }
+        return String.join("\n", grammar);
     }
 
 

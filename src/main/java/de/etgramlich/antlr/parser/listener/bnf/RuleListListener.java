@@ -4,12 +4,13 @@ import de.etgramlich.antlr.parser.gen.bnf.bnfBaseListener;
 import de.etgramlich.antlr.parser.gen.bnf.bnfParser;
 import de.etgramlich.antlr.parser.listener.bnf.type.Rule;
 import de.etgramlich.antlr.parser.listener.bnf.type.RuleList;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RuleListListener extends bnfBaseListener {
+public final class RuleListListener extends bnfBaseListener {
     private RuleList ruleList;
 
     @Override
@@ -29,6 +30,7 @@ public class RuleListListener extends bnfBaseListener {
         super.exitRulelist(ctx);
     }
 
+    @Contract(pure = true)
     public RuleList getRuleList() {
         return ruleList;
     }
