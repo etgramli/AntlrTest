@@ -29,7 +29,7 @@ public class RuleListener extends bnfBaseListener {
         SymbolTable.add(lhs.getText(), LHS);
 
         // RHS
-        AlternativesListener alternativesListener = new AlternativesListener();
+        AlternativeListener alternativesListener = new AlternativeListener();
         alternativesListener.enterAlternatives(ctx.rhs().alternatives());
         List<Alternative> rhs = alternativesListener.getAlternatives();
 

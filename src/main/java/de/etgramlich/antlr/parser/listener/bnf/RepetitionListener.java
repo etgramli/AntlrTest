@@ -1,8 +1,7 @@
-package de.etgramlich.antlr.parser.listener.bnf.repetition;
+package de.etgramlich.antlr.parser.listener.bnf;
 
 import de.etgramlich.antlr.parser.gen.bnf.bnfBaseListener;
 import de.etgramlich.antlr.parser.gen.bnf.bnfParser;
-import de.etgramlich.antlr.parser.listener.bnf.AlternativesListener;
 import de.etgramlich.antlr.parser.listener.bnf.type.rhstype.Alternative;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -21,7 +20,7 @@ public final class RepetitionListener extends bnfBaseListener {
 
     @Override
     public void enterOneormore(@NotNull bnfParser.OneormoreContext ctx) {
-        AlternativesListener listener = new AlternativesListener();
+        AlternativeListener listener = new AlternativeListener();
         listener.enterAlternatives(ctx.alternatives());
         alternatives = listener.getAlternatives();
     }
@@ -33,7 +32,7 @@ public final class RepetitionListener extends bnfBaseListener {
 
     @Override
     public void enterZeroormore(@NotNull bnfParser.ZeroormoreContext ctx) {
-        AlternativesListener listener = new AlternativesListener();
+        AlternativeListener listener = new AlternativeListener();
         listener.enterAlternatives(ctx.alternatives());
         this.alternatives = listener.getAlternatives();
     }
@@ -49,7 +48,7 @@ public final class RepetitionListener extends bnfBaseListener {
             throw new IllegalArgumentException("Optional must only have 0 or 1 element! (had: " +
                     ctx.alternatives().alternative().size() + ")");
         }
-        AlternativesListener listener = new AlternativesListener();
+        AlternativeListener listener = new AlternativeListener();
         listener.enterAlternatives(ctx.alternatives());
         this.alternatives = listener.getAlternatives();
     }

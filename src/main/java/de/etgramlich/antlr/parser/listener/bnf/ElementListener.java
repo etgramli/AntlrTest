@@ -2,7 +2,6 @@ package de.etgramlich.antlr.parser.listener.bnf;
 
 import de.etgramlich.antlr.parser.gen.bnf.bnfBaseListener;
 import de.etgramlich.antlr.parser.gen.bnf.bnfParser;
-import de.etgramlich.antlr.parser.listener.bnf.repetition.RepetitionListener;
 import de.etgramlich.antlr.parser.listener.bnf.type.rhstype.Element;
 import org.jetbrains.annotations.NotNull;
 

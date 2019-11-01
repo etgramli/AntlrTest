@@ -7,10 +7,24 @@ import de.etgramlich.antlr.parser.listener.bnf.type.rhstype.Element;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class AlternativeListener extends bnfBaseListener {
     private Alternative alternative;
+    private final List<Alternative> alternatives = new ArrayList<>();
+
+    public List<Alternative> getAlternatives() {
+        return Collections.unmodifiableList(alternatives);
+    }
+
+    @Override
+    public void enterAlternatives(@NotNull bnfParser.AlternativesContext ctx) {
+        for (bnfParser.AlternativeContext context : ctx.alternative()) {
+            enterAlternative(context);
+            alternatives.add(alternative);
+        }
+    }
 
     @Override
     public void enterAlternative(@NotNull bnfParser.AlternativeContext ctx) {
@@ -29,7 +43,8 @@ public class AlternativeListener extends bnfBaseListener {
         super.exitAlternative(ctx);
     }
 
-    public Alternative getAlternative() {
-        return alternative;
+    @Override
+    public void exitAlternatives(bnfParser.AlternativesContext ctx) {
+        super.exitAlternatives(ctx);
     }
 }

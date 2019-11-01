@@ -18,7 +18,8 @@ public final class SymbolTable {
     }
 
     public static boolean add(final String symbol, final SymbolType type) {
-        if (contains(symbol)) return false;
+        if (contains(symbol))
+            return false;
         else {
             symbolTable.put(symbol, type);
             return true;
