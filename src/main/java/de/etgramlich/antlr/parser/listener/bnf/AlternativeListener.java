@@ -24,6 +24,11 @@ public class AlternativeListener extends bnfBaseListener {
         this.alternative = new Alternative(elements);
     }
 
+    @Override
+    public void exitAlternative(@NotNull bnfParser.AlternativeContext ctx) {
+        super.exitAlternative(ctx);
+    }
+
     public Alternative getAlternative() {
         return alternative;
     }
