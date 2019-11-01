@@ -1,18 +1,18 @@
 package de.etgramlich.antlr.parser.listener.bnf.type.rhstype;
 
 import de.etgramlich.antlr.parser.listener.bnf.type.BnfType;
-import de.etgramlich.antlr.parser.listener.bnf.type.terminal.ID;
+import de.etgramlich.antlr.parser.listener.bnf.type.terminal.AbstractId;
 import org.jetbrains.annotations.Contract;
 
 import java.util.Collections;
 import java.util.List;
 
 public final class Element implements BnfType, RhsType {
-    private final ID id;
+    private final AbstractId id;
     private final List<Alternative> alternatives;
 
     @Contract(pure = true)
-    public Element(final ID id) {
+    public Element(final AbstractId id) {
         this.id = id;
         alternatives = Collections.emptyList();
     }
@@ -25,7 +25,7 @@ public final class Element implements BnfType, RhsType {
 
 
     @Contract(pure = true)
-    public ID getId() {
+    public AbstractId getId() {
         return id;
     }
 

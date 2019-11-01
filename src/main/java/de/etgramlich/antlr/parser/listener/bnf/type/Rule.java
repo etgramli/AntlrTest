@@ -2,7 +2,7 @@ package de.etgramlich.antlr.parser.listener.bnf.type;
 
 import de.etgramlich.antlr.parser.listener.bnf.type.rhstype.Alternative;
 import de.etgramlich.antlr.parser.listener.bnf.type.rhstype.Element;
-import de.etgramlich.antlr.parser.listener.bnf.type.terminal.ID;
+import de.etgramlich.antlr.parser.listener.bnf.type.terminal.AbstractId;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,17 +20,17 @@ import java.util.Set;
  * Rhs: respect call sequence and mutual exclusive rules
  */
 public final class Rule implements BnfType {
-    private final ID lhs;
+    private final AbstractId lhs;
     private final List<Alternative> rhs;
 
     @Contract(pure = true)
-    public Rule(final ID lhs, final List<Alternative> rhs) {
+    public Rule(final AbstractId lhs, final List<Alternative> rhs) {
         this.lhs = lhs;
         this.rhs = List.copyOf(rhs);
     }
 
     @Contract(pure = true)
-    public ID getLhs() {
+    public AbstractId getLhs() {
         return lhs;
     }
 

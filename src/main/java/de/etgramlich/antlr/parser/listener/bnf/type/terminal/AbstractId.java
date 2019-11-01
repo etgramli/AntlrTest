@@ -1,8 +1,13 @@
 package de.etgramlich.antlr.parser.listener.bnf.type.terminal;
 
+import de.etgramlich.antlr.parser.listener.bnf.type.BnfType;
+import de.etgramlich.antlr.parser.listener.bnf.type.rhstype.RhsType;
 import org.jetbrains.annotations.Contract;
 
-public abstract class AbstractId implements ID {
+import java.util.Collections;
+import java.util.List;
+
+public abstract class AbstractId implements BnfType, RhsType {
     private final String id;
 
     @Contract(pure = true)
@@ -10,8 +15,22 @@ public abstract class AbstractId implements ID {
         this.id = id;
     }
 
-    @Override
     public String getText() {
         return id;
+    }
+
+    @Override
+    public boolean isTerminal() {
+        return true;
+    }
+
+    @Override
+    public boolean isLeaf() {
+        return true;
+    }
+
+    @Override
+    public List<RhsType> getChildren() {
+        return Collections.emptyList();
     }
 }

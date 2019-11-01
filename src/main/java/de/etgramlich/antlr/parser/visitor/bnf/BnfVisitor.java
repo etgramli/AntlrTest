@@ -4,14 +4,14 @@ import de.etgramlich.antlr.parser.listener.bnf.type.*;
 import de.etgramlich.antlr.parser.listener.bnf.type.rhstype.Alternative;
 import de.etgramlich.antlr.parser.listener.bnf.type.rhstype.Element;
 import de.etgramlich.antlr.parser.listener.bnf.type.rhstype.repetition.AbstractRepetition;
-import de.etgramlich.antlr.parser.listener.bnf.type.terminal.ID;
+import de.etgramlich.antlr.parser.listener.bnf.type.terminal.AbstractId;
 import de.etgramlich.antlr.util.BnfTypeVisitor;
 
 import java.util.List;
 
 public class BnfVisitor implements BnfTypeVisitor {
     @Override
-    public void visit(ID id) {
+    public void visit(AbstractId id) {
         // ToDo
         throw new UnsupportedOperationException("Not yet implemented!!!");
     }
