@@ -44,18 +44,18 @@ rhs
     : alternatives
     ;
 
-alternatives
+alternatives    // Alternative
     : alternative (BAR alternative)*
     ;
 
-alternative
+alternative     // Sequence
     : element*
     ;
 
 element
-    : optional
-    | zeroormore
-    | oneormore
+    : optional  // \
+    | zeroormore//  }= Repetition
+    | oneormore // /
     | text
     | id
     ;
@@ -123,6 +123,7 @@ GT
 LT
     : '<'
     ;
+
 TEXT
     : '\''('a'..'z'|'A'..'Z')('a'..'z'|'A'..'Z'|'0'..'9'|':'|'-'|'_'|' ')+'\''
     ;

@@ -2,10 +2,12 @@ package de.etgramlich.antlr.parser.listener.bnf;
 
 import de.etgramlich.antlr.parser.gen.bnf.bnfBaseListener;
 import de.etgramlich.antlr.parser.gen.bnf.bnfParser;
-import de.etgramlich.antlr.parser.listener.bnf.type.Alternatives;
+import de.etgramlich.antlr.parser.listener.bnf.type.rhstype.Alternative;
 import de.etgramlich.antlr.parser.listener.bnf.type.Rule;
 import de.etgramlich.antlr.parser.listener.bnf.type.terminal.ID;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 
 public class RuleListener extends bnfBaseListener {
@@ -21,7 +23,7 @@ public class RuleListener extends bnfBaseListener {
         // RHS
         AlternativesListener alternativesListener = new AlternativesListener();
         alternativesListener.enterAlternatives(ctx.rhs().alternatives());
-        Alternatives rhs = alternativesListener.getAlternatives();
+        List<Alternative> rhs = alternativesListener.getAlternatives();
 
         rule = new Rule(lhs, rhs);
     }

@@ -63,7 +63,6 @@ public final class Main {
         RuleListListener listener = new RuleListListener();
         parser.rulelist().enterRule(listener);
         RuleList ruleList = listener.getRuleList();
-        System.out.println(ruleList);
         ruleList.saveInterfaces(targetDirectory);
     }
 

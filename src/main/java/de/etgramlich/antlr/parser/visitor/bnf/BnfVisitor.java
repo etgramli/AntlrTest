@@ -1,9 +1,13 @@
 package de.etgramlich.antlr.parser.visitor.bnf;
 
 import de.etgramlich.antlr.parser.listener.bnf.type.*;
-import de.etgramlich.antlr.parser.listener.bnf.type.repetition.AbstractRepetition;
+import de.etgramlich.antlr.parser.listener.bnf.type.rhstype.Alternative;
+import de.etgramlich.antlr.parser.listener.bnf.type.rhstype.Element;
+import de.etgramlich.antlr.parser.listener.bnf.type.rhstype.repetition.AbstractRepetition;
 import de.etgramlich.antlr.parser.listener.bnf.type.terminal.ID;
 import de.etgramlich.antlr.util.BnfTypeVisitor;
+
+import java.util.List;
 
 public class BnfVisitor implements BnfTypeVisitor {
     @Override
@@ -25,7 +29,7 @@ public class BnfVisitor implements BnfTypeVisitor {
     }
 
     @Override
-    public void visit(Alternatives alternatives) {
+    public void visit(List<Alternative> alternatives) {
         // ToDo
         throw new UnsupportedOperationException("Not yet implemented!!!");
     }

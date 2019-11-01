@@ -3,16 +3,20 @@ package de.etgramlich.antlr.parser.listener.bnf.repetition;
 import de.etgramlich.antlr.parser.gen.bnf.bnfBaseListener;
 import de.etgramlich.antlr.parser.gen.bnf.bnfParser;
 import de.etgramlich.antlr.parser.listener.bnf.AlternativesListener;
-import de.etgramlich.antlr.parser.listener.bnf.type.Alternatives;
+import de.etgramlich.antlr.parser.listener.bnf.type.rhstype.Alternative;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-public final class RepetitionListener extends bnfBaseListener {
-    protected Alternatives alternatives;
+import java.util.Collections;
+import java.util.List;
 
+public final class RepetitionListener extends bnfBaseListener {
+    protected List<Alternative> alternatives;
+
+    @NotNull
     @Contract(pure = true)
-    public Alternatives getAlternatives() {
-        return alternatives;
+    public List<Alternative> getAlternatives() {
+        return Collections.unmodifiableList(alternatives);
     }
 
     @Override

@@ -1,6 +1,6 @@
-package de.etgramlich.antlr.parser.listener.bnf.type.repetition;
+package de.etgramlich.antlr.parser.listener.bnf.type.rhstype.repetition;
 
-import de.etgramlich.antlr.parser.listener.bnf.type.Alternative;
+import de.etgramlich.antlr.parser.listener.bnf.type.rhstype.Alternative;
 
 import java.util.Collection;
 

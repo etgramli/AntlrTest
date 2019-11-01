@@ -1,10 +1,13 @@
 package de.etgramlich.antlr.parser.listener.bnf.type;
 
+import de.etgramlich.antlr.parser.listener.bnf.type.rhstype.Alternative;
+import de.etgramlich.antlr.parser.listener.bnf.type.rhstype.Element;
 import de.etgramlich.antlr.parser.listener.bnf.type.terminal.ID;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -18,12 +21,12 @@ import java.util.Set;
  */
 public final class Rule implements BnfType {
     private final ID lhs;
-    private final Alternatives rhs;
+    private final List<Alternative> rhs;
 
     @Contract(pure = true)
-    public Rule(final ID lhs, final Alternatives rhs) {
+    public Rule(final ID lhs, final List<Alternative> rhs) {
         this.lhs = lhs;
-        this.rhs = rhs;
+        this.rhs = List.copyOf(rhs);
     }
 
     @Contract(pure = true)
@@ -32,7 +35,7 @@ public final class Rule implements BnfType {
     }
 
     @Contract(pure = true)
-    public Alternatives getRhs() {
+    public List<Alternative> getRhs() {
         return rhs;
     }
 
@@ -49,7 +52,7 @@ public final class Rule implements BnfType {
         sb.append(lhs.getText()).append(" {").append(NEWLINE);
 
         Set<String> encounteredNames = new HashSet<>();
-        for (Alternative alternative : rhs.getAlternatives()) {
+        for (Alternative alternative : rhs) {
             for (Element element : alternative.getElements()) {
                 // ToDo: test for alternatives in element (is recursive)
                 if (element.getId() != null && encounteredNames.add(element.getId().getText())) {

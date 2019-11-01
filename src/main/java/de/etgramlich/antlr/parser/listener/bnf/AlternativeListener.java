@@ -2,8 +2,8 @@ package de.etgramlich.antlr.parser.listener.bnf;
 
 import de.etgramlich.antlr.parser.gen.bnf.bnfBaseListener;
 import de.etgramlich.antlr.parser.gen.bnf.bnfParser;
-import de.etgramlich.antlr.parser.listener.bnf.type.Alternative;
-import de.etgramlich.antlr.parser.listener.bnf.type.Element;
+import de.etgramlich.antlr.parser.listener.bnf.type.rhstype.Alternative;
+import de.etgramlich.antlr.parser.listener.bnf.type.rhstype.Element;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
