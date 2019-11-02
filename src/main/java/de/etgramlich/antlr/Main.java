@@ -8,6 +8,7 @@ import de.etgramlich.antlr.parser.listener.bnf.RuleListListener;
 import de.etgramlich.antlr.parser.listener.bnf.type.RuleList;
 import de.etgramlich.antlr.parser.listener.number.ExprListener;
 import de.etgramlich.antlr.parser.visitor.NumberVisitor;
+import de.etgramlich.antlr.util.StringUtil;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.apache.commons.cli.*;
@@ -60,14 +61,13 @@ public final class Main {
 
     @NotNull
     private static String prepareGrammar(final String filepath) throws IOException {
-        List<String> grammar = Files.readAllLines(Paths.get(filepath));
-        for (String line : grammar) {
-            if (line.matches("grammar .*;")) {
-                grammar = grammar.subList(grammar.indexOf(line)+1, grammar.size()-1);
-                break;
-            }
-        }
-        return String.join("\n", grammar);
+        final List<String> grammar = Files.readAllLines(Paths.get(filepath));
+        final int beginIndex = grammar.indexOf(
+                grammar.stream().filter(i -> i.matches("grammar .*;")).findFirst().orElse(null)
+        );
+        List<String> rules = grammar.subList(beginIndex + 1, grammar.size() - 1);
+        rules = StringUtil.removeDuplicates(StringUtil.stripBlankLines(rules));
+        return String.join("\n", rules);
     }
 
 

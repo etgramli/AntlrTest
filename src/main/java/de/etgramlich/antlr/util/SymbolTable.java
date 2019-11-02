@@ -10,7 +10,6 @@ import java.util.Map;
  * Singleton class to store symbols of the parsed EBNF grammar.
  */
 public final class SymbolTable {
-    // Maybe change to nested Map to detect duplicates within interface
     private static final Map<String, BnfType> symbolTable = new HashMap<>();
 
     @Contract(pure = true)
