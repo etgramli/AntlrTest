@@ -1,0 +1,4 @@
+templateInterface(interfaceName,methods) ::= <<
+interface <interfaceName> {
+    <methods:{ method |    <method.returnType> <method.name>();<\n>}>
+}>>

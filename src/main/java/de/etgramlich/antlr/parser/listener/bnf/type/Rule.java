@@ -6,6 +6,8 @@ import de.etgramlich.antlr.parser.listener.bnf.type.terminal.AbstractId;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.stringtemplate.v4.ST;
+import org.stringtemplate.v4.STGroup;
+import org.stringtemplate.v4.STGroupFile;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -22,10 +24,7 @@ import java.util.Set;
  * Rhs: respect call sequence and mutual exclusive rules
  */
 public final class Rule implements BnfType {
-    private static final String interfaceST =
-    "interface <interfaceName> {\n" +
-    "<methods:{ method |    <method.returnType> <method.name>();\n}>" +
-     "}";
+    private static final String INTERFACE_ST_FILENAME = "src/main/resources/ebnf.stg";
 
     private final AbstractId lhs;
     private final List<Alternative> rhs;
@@ -49,7 +48,8 @@ public final class Rule implements BnfType {
 
     @NotNull
     public String buildInterface() {
-        ST st = new ST(interfaceST);
+        final STGroup stGroup = new STGroupFile(INTERFACE_ST_FILENAME);
+        ST st = stGroup.getInstanceOf("templateInterface");
         st.add("interfaceName", lhs.getText());
 
         final List<Method> methods = new ArrayList<>();
