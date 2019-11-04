@@ -58,7 +58,7 @@ public final class Main {
         RuleListListener listener = new RuleListListener();
         parser.rulelist().enterRule(listener);
         RuleList ruleList = listener.getRuleList();
-        //ruleList.saveInterfaces(targetDirectory);
+        ruleList.saveInterfaces(targetDirectory);
 
         Interface iface = InterfaceBuilder.Interface("ifac")
                 .method()

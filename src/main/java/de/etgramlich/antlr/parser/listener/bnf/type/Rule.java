@@ -5,7 +5,9 @@ import de.etgramlich.antlr.parser.listener.bnf.type.rhstype.Element;
 import de.etgramlich.antlr.parser.listener.bnf.type.terminal.AbstractId;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.stringtemplate.v4.ST;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -20,6 +22,11 @@ import java.util.Set;
  * Rhs: respect call sequence and mutual exclusive rules
  */
 public final class Rule implements BnfType {
+    private static final String interfaceST =
+    "interface <interfaceName> {\n" +
+    "<methods:{ method |    <method.returnType> <method.name>();\n}>" +
+     "}";
+
     private final AbstractId lhs;
     private final List<Alternative> rhs;
 
@@ -40,31 +47,37 @@ public final class Rule implements BnfType {
     }
 
 
-    private static final String NEWLINE = "\n";
-    private static final String TABULATOR = "\t";
-    private static final String METHOD_END = "();";
-    private static final String INT_TYPE = "int ";
-
     @NotNull
     public String buildInterface() {
-        StringBuilder sb = new StringBuilder("interface ");
+        ST st = new ST(interfaceST);
+        st.add("interfaceName", lhs.getText());
 
-        sb.append(lhs.getText()).append(" {").append(NEWLINE);
-
+        final List<Method> methods = new ArrayList<>();
         Set<String> encounteredNames = new HashSet<>();
         for (Alternative alternative : rhs) {
             for (Element element : alternative.getElements()) {
                 // ToDo: test for alternatives in element (is recursive)
                 if (element.getId() != null && encounteredNames.add(element.getId().getText())) {
-                    sb.append(TABULATOR)
-                            .append(INT_TYPE)
-                            .append(element.getId().getText())
-                            .append(METHOD_END)
-                            .append(NEWLINE);
+                    methods.add(new Method("int", element.getId().getText()));
                 }
             }
         }
+        st.add("methods", methods);
 
-        return sb.append("}\n").toString();
+        return st.render();
+    }
+
+    private static class Method {
+        private final String returnType, name;
+        private Method(final String returnType, final String name) {
+            this.returnType = returnType;
+            this.name = name;
+        }
+        public String getName() {
+            return name;
+        }
+        public String getReturnType() {
+            return returnType;
+        }
     }
 }

@@ -1,5 +1,5 @@
 interface(i) ::= "
-interface <i.name> {
-    <i.methodType> <i.methodName> (i.methodArg);
-}
+interface <i.name> \{
+    <i.methods :{ method |<method.methodType> <method.methodName> (<method.methodArg>)}>;
+\}
 "
