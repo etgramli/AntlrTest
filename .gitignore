@@ -1,6 +1,7 @@
+# Generated files
 /target/
 out/
-
+src/main/java/de/etgramlich/antlr/parser/gen/ebnf
 # Compiled class file
 *.class
 

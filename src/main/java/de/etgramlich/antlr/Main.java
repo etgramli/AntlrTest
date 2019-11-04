@@ -25,12 +25,14 @@ import java.util.List;
 
 public final class Main {
     private static final String LEXER_INPUT = "900+90+9+15*33";
-
-    public static void main(String[] args) {
-        Options options = new Options();
+    private static Options options = new Options();
+    static {
         options.addOption("t", true, "Target directory for generated sources");
         options.addOption("p", true, "Target package");
         options.addOption("g", true, "Grammar file path");
+    }
+
+    public static void main(String[] args) {
         CommandLineParser cliParser = new DefaultParser();
         String targetDirectory = "./";
         String grammar = StringUtils.EMPTY;
