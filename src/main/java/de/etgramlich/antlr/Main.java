@@ -8,6 +8,8 @@ import de.etgramlich.antlr.parser.listener.bnf.RuleListListener;
 import de.etgramlich.antlr.parser.listener.bnf.type.RuleList;
 import de.etgramlich.antlr.parser.listener.number.ExprListener;
 import de.etgramlich.antlr.parser.visitor.NumberVisitor;
+import de.etgramlich.antlr.semanticmodel.builder.InterfaceBuilder;
+import de.etgramlich.antlr.semanticmodel.type.Interface;
 import de.etgramlich.antlr.util.StringUtil;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -56,7 +58,20 @@ public final class Main {
         RuleListListener listener = new RuleListListener();
         parser.rulelist().enterRule(listener);
         RuleList ruleList = listener.getRuleList();
-        ruleList.saveInterfaces(targetDirectory);
+        //ruleList.saveInterfaces(targetDirectory);
+
+        Interface iface = InterfaceBuilder.Interface("ifac")
+                .method()
+                    .name("Getter_1")
+                    .returnType("String")
+                .method()
+                    .name("Setter 1")
+                    .argument()
+                        .setName("newVal")
+                        .setType("String")
+                    .returnType("void")
+        .build();
+        System.out.println(iface);
     }
 
     @NotNull

@@ -1,4 +1,4 @@
-package de.etgramlich.antlr.semanticmodel;
+package de.etgramlich.antlr.semanticmodel.type;
 
 import org.jetbrains.annotations.Contract;
 
@@ -18,6 +18,15 @@ public final class Interface {
     public Interface(final String name, final Collection<Method> methods) {
         this.name = name;
         this.methods = new HashSet<>(methods);
+    }
+
+    public boolean addMethod(final Method method) {
+        if (methods.contains(method)) {
+            return false;
+        } else {
+            methods.add(method);
+            return true;
+        }
     }
 
     @Contract(pure = true)

@@ -1,12 +1,19 @@
-package de.etgramlich.antlr.semanticmodel;
+package de.etgramlich.antlr.semanticmodel.type;
 
 import org.jetbrains.annotations.Contract;
 
 public final class Type {
-    private final String name;
+    private String name;
+
+    @Contract(pure = true)
+    public Type() {}
 
     @Contract(pure = true)
     public Type(final String name) {
+        this.name = name;
+    }
+
+    public void setName(final String name) {
         this.name = name;
     }
 
