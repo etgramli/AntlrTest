@@ -1,4 +1,5 @@
-templateInterface(interfaceName,methods) ::= <<
+templateInterface(package,interfaceName,methods) ::= <<
+package <package>;
 interface <interfaceName> {
     <methods:{ method |    <method.returnType> <method.name>();<\n>}>
 }>>

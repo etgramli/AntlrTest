@@ -47,9 +47,10 @@ public final class Rule implements BnfType {
 
 
     @NotNull
-    public String buildInterface() {
+    public String buildInterface(final String pkg) {
         final STGroup stGroup = new STGroupFile(INTERFACE_ST_FILENAME);
         ST st = stGroup.getInstanceOf("templateInterface");
+        st.add("package", pkg);
         st.add("interfaceName", lhs.getText());
 
         final List<Method> methods = new ArrayList<>();

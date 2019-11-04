@@ -29,14 +29,19 @@ public final class Main {
     public static void main(String[] args) {
         Options options = new Options();
         options.addOption("t", true, "Target directory for generated sources");
+        options.addOption("p", true, "Target package");
         options.addOption("g", true, "Grammar file path");
         CommandLineParser cliParser = new DefaultParser();
         String targetDirectory = "./";
         String grammar = StringUtils.EMPTY;
+        String targetPackage = StringUtils.EMPTY;
         try {
             CommandLine cmd = cliParser.parse(options, args);
             if (cmd.hasOption("t")) {
                 targetDirectory = cmd.getOptionValue("t");
+            }
+            if (cmd.hasOption("p")) {
+                targetPackage = cmd.getOptionValue("p");
             }
             if (cmd.hasOption("g")) {
                 grammar = prepareGrammar(cmd.getOptionValue("g"));
@@ -58,7 +63,7 @@ public final class Main {
         RuleListListener listener = new RuleListListener();
         parser.rulelist().enterRule(listener);
         RuleList ruleList = listener.getRuleList();
-        ruleList.saveInterfaces(targetDirectory);
+        ruleList.saveInterfaces(targetDirectory, targetPackage);
 
         Interface iface = InterfaceBuilder.Interface("ifac")
                 .method()

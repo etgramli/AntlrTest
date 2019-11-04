@@ -21,10 +21,13 @@ public final class RuleList implements BnfType {
         return rules;
     }
 
-    public void saveInterfaces(final String directory) {
+    public void saveInterfaces(final String rootDirectory, @NotNull final String pkg) {
+        final String directory = rootDirectory + "/" + pkg.replace('.', '/');
+        System.out.println(directory);
         for (Rule rule : rules) {
-            try (PrintWriter pw = new PrintWriter(directory + "/" + rule.getLhs().getText())) {
-                pw.write(rule.buildInterface());
+            final String filepath = directory + "/" + rule.getLhs().getText() + ".java";
+            try (PrintWriter pw = new PrintWriter(filepath)) {
+                pw.write(rule.buildInterface(pkg));
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
