@@ -1,4 +1,4 @@
-package de.etgramlich.antlr.parser.visitor.bnf;
+package de.etgramlich.antlr.parser.visitor;
 
 import de.etgramlich.antlr.parser.listener.bnf.type.*;
 import de.etgramlich.antlr.parser.listener.bnf.type.rhstype.Alternative;
