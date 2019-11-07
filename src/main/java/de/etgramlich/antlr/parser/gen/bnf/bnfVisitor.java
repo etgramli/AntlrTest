@@ -88,4 +88,10 @@ public interface bnfVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitRuleid(bnfParser.RuleidContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link bnfParser#letterrange}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLetterrange(bnfParser.LetterrangeContext ctx);
 }

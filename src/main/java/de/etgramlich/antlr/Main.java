@@ -25,7 +25,7 @@ import java.util.List;
 
 public final class Main {
     private static final String LEXER_INPUT = "900+90+9+15*33";
-    private static Options options = new Options();
+    private static final Options options = new Options();
     static {
         options.addOption("t", true, "Target directory for generated sources");
         options.addOption("p", true, "Target package");
@@ -33,12 +33,11 @@ public final class Main {
     }
 
     public static void main(String[] args) {
-        CommandLineParser cliParser = new DefaultParser();
         String targetDirectory = "./";
         String grammar = StringUtils.EMPTY;
         String targetPackage = StringUtils.EMPTY;
         try {
-            CommandLine cmd = cliParser.parse(options, args);
+            CommandLine cmd = new DefaultParser().parse(options, args);
             if (cmd.hasOption("t")) {
                 targetDirectory = cmd.getOptionValue("t");
             }

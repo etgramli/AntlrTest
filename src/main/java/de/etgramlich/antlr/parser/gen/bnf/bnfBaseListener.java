@@ -167,6 +167,18 @@ public class bnfBaseListener implements bnfListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitRuleid(bnfParser.RuleidContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterLetterrange(bnfParser.LetterrangeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitLetterrange(bnfParser.LetterrangeContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

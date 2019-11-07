@@ -137,4 +137,14 @@ public interface bnfListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitRuleid(bnfParser.RuleidContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link bnfParser#letterrange}.
+	 * @param ctx the parse tree
+	 */
+	void enterLetterrange(bnfParser.LetterrangeContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link bnfParser#letterrange}.
+	 * @param ctx the parse tree
+	 */
+	void exitLetterrange(bnfParser.LetterrangeContext ctx);
 }

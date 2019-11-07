@@ -1,5 +1,5 @@
 /*
- [The "BSD licence"]
+ [The 'BSD licence']
  Copyright (c) 2013 Tom Everett
  All rights reserved.
  Redistribution and use in source and binary forms, with or without
@@ -58,6 +58,7 @@ element
     | oneormore // /
     | text
     | id
+    | letterrange
     ;
 
 optional
@@ -82,6 +83,10 @@ id
 
 ruleid
     : ID
+    ;
+
+letterrange
+    : LETTERRANGE
     ;
 
 ASSIGN
@@ -125,11 +130,24 @@ LT
     ;
 
 TEXT
-    : '\''('a'..'z'|'A'..'Z')('a'..'z'|'A'..'Z'|'0'..'9'|':'|'-'|'_'|' ')+'\''
+    : '\''('a'..'z'|'A'..'Z'|'_')('a'..'z'|'A'..'Z'|'0'..'9'|':'|'-'|'_'|' ')*'\''
     ;
 
 ID
     : ('a'..'z'|'A'..'Z') ('a'..'z'|'A'..'Z'|'0'..'9'|'-'|' '|'_')+
+    ;
+
+LETTERRANGE
+    : LETTER '..' LETTER
+    | DIGIT '..' DIGIT
+    ;
+
+LETTER
+    : '\'' ('A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V' | 'W' | 'X' | 'Y' | 'Z' | 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm' | 'n' | 'o' | 'p' | 'q' | 'r' | 's' | 't' | 'u' | 'v' | 'w' | 'x' | 'y' | 'z') '\''
+    ;
+
+DIGIT
+    : '\'' ('0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9') '\''
     ;
 
 WS
