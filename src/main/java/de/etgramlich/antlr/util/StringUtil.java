@@ -23,9 +23,9 @@ public final class StringUtil extends StringUtils {
         if (begin.isEmpty() && end.isEmpty()) { // Only blank lines
             return Collections.emptyList();
         }
-        final int beginIndex = lines.indexOf(begin.get());
-        final int endIndex = lines.indexOf(end.get());
-        return lines.subList(beginIndex, endIndex+1);
+        final int beginIndex = begin.map(lines::indexOf).orElse(0);
+        final int endIndex = end.map(lines::indexOf).orElseGet(() -> lines.size() - 1);
+        return lines.subList(beginIndex, endIndex + 1);
     }
 
     @NotNull
@@ -36,5 +36,26 @@ public final class StringUtil extends StringUtils {
     @Contract(pure = true)
     public static boolean isAllBlank(@NotNull final Collection<String> lines) {
         return isAllBlank(lines.toArray(new String[0]));
+    }
+
+    @NotNull
+    @Contract(pure = true)
+    public static String removeAllWhiteSpaces(@NotNull final String str) {
+        return str.replaceAll("\\s+", "");
+    }
+
+    public static boolean isNumeric(final char c) {
+        return isNumeric(String.valueOf(c));
+    }
+
+    @Contract("null -> false")
+    public static boolean isAllNumeric(char... cs) {
+        if (cs == null) return false;
+        for (char c : cs) {
+            if (!isNumeric(c)) {
+                return false;
+            }
+        }
+        return true;
     }
 }

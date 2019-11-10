@@ -2,10 +2,8 @@ package de.etgramlich.antlr;
 
 import de.etgramlich.antlr.parser.gen.bnf.bnfLexer;
 import de.etgramlich.antlr.parser.gen.bnf.bnfParser;
-import de.etgramlich.antlr.parser.listener.bnf.RuleListListener;
-import de.etgramlich.antlr.parser.listener.bnf.type.RuleList;
-import de.etgramlich.antlr.semanticmodel.builder.InterfaceBuilder;
-import de.etgramlich.antlr.semanticmodel.type.Interface;
+import de.etgramlich.antlr.parser.listener.RuleListListener;
+import de.etgramlich.antlr.parser.listener.type.RuleList;
 import de.etgramlich.antlr.util.StringUtil;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -19,7 +17,6 @@ import java.nio.file.Paths;
 import java.util.List;
 
 public final class Main {
-    private static final String LEXER_INPUT = "900+90+9+15*33";
     private static final Options options = new Options();
     static {
         options.addOption("t", true, "Target directory for generated sources");
@@ -47,6 +44,7 @@ public final class Main {
             }
         } catch (ParseException e) {
             e.printStackTrace();
+            System.err.println("Wrong grammar file!");
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("Grammar file could not be read!");
@@ -60,19 +58,6 @@ public final class Main {
         parser.rulelist().enterRule(listener);
         RuleList ruleList = listener.getRuleList();
         ruleList.saveInterfaces(targetDirectory, targetPackage);
-
-        Interface iface = InterfaceBuilder.Interface("ifac")
-                .method()
-                    .name("Getter_1")
-                    .returnType("String")
-                .method()
-                    .name("Setter 1")
-                    .argument()
-                        .setName("newVal")
-                        .setType("String")
-                    .returnType("void")
-        .build();
-        System.out.println(iface);
     }
 
     @NotNull
@@ -81,8 +66,8 @@ public final class Main {
         final int beginIndex = grammar.indexOf(
                 grammar.stream().filter(i -> i.matches("grammar .*;")).findFirst().orElse(null)
         );
-        List<String> rules = grammar.subList(beginIndex + 1, grammar.size() - 1);
-        rules = StringUtil.removeDuplicates(StringUtil.stripBlankLines(rules));
-        return String.join("\n", rules);
+        final List<String> allRules = grammar.subList(beginIndex + 1, grammar.size());
+        final List<String> noDuplicateRules = StringUtil.removeDuplicates(StringUtil.stripBlankLines(allRules));
+        return String.join("\n", noDuplicateRules);
     }
 }
