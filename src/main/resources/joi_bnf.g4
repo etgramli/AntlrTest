@@ -1,5 +1,5 @@
 <joi> ::= <component>
-<component> ::= 'component' <name> 'implements' <componentInterface> {<componentInterface>} (<componentMethod>) {<componentField>}
+<component> ::= 'component' <name> 'impl' <componentInterface> {<componentInterface>} (<componentMethod>) {<componentField>}
 <componentInterface> ::= <name>
 <componentMethod> ::= <name>
 <componentField> ::= <name>
