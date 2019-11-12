@@ -1,8 +1,13 @@
 package de.etgramlich.antlr.parser.listener.type.rhstype;
 
+import de.etgramlich.antlr.parser.listener.type.BnfType;
 import de.etgramlich.antlr.util.StringUtil;
+import de.etgramlich.antlr.util.visitor.BnfElement;
+import de.etgramlich.antlr.util.visitor.BnfTypeVisitor;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
-public final class LetterRange {
+public final class LetterRange implements BnfType, BnfElement {
     private final boolean isLetter;
     private final char beginChar, endChar;
     private final int beginInt, endInt;
@@ -27,8 +32,23 @@ public final class LetterRange {
         if (isLetter) {
             return c >= beginChar && c <= endChar;
         } else {
-            final int value = Integer.parseInt(String.valueOf(c));
-            return value >= beginInt && value <= endInt;
+            try {
+                final int value = Integer.parseInt(String.valueOf(c));
+                return value >= beginInt && value <= endInt;
+            } catch (NumberFormatException e) {
+                return false;
+            }
         }
+    }
+
+    @Contract(pure = true)
+    @Override
+    public boolean isTerminal() {
+        return true;
+    }
+
+    @Override
+    public void accept(@NotNull BnfTypeVisitor visitor) {
+        visitor.visit(this);
     }
 }

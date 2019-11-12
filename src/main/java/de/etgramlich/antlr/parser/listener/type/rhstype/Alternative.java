@@ -1,12 +1,14 @@
 package de.etgramlich.antlr.parser.listener.type.rhstype;
 
 import de.etgramlich.antlr.parser.listener.type.BnfType;
+import de.etgramlich.antlr.util.visitor.BnfElement;
+import de.etgramlich.antlr.util.visitor.BnfTypeVisitor;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-public final class Alternative implements BnfType, RhsType {
+public final class Alternative implements BnfType, BnfElement {
     private final List<Element> elements;
 
     public Alternative(final Collection<Element> elements) {
@@ -19,15 +21,14 @@ public final class Alternative implements BnfType, RhsType {
         return elements;
     }
 
-    @Contract(pure = true)
     @Override
-    public boolean isLeaf() {
-        return false;
+    public void accept(@NotNull BnfTypeVisitor visitor) {
+        elements.forEach(element -> element.accept(visitor));
+        visitor.visit(this);
     }
 
-    @NotNull
-    @Contract(pure = true)
-    public List<RhsType> getChildren() {
-        return Collections.unmodifiableList(elements);
+    @Override
+    public boolean isAlternative() {
+        return true;
     }
 }

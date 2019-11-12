@@ -3,13 +3,25 @@ package de.etgramlich.antlr.parser.visitor;
 import de.etgramlich.antlr.parser.listener.type.*;
 import de.etgramlich.antlr.parser.listener.type.rhstype.Alternative;
 import de.etgramlich.antlr.parser.listener.type.rhstype.Element;
-import de.etgramlich.antlr.parser.listener.type.rhstype.repetition.AbstractRepetition;
+import de.etgramlich.antlr.parser.listener.type.rhstype.LetterRange;
+import de.etgramlich.antlr.parser.listener.type.rhstype.repetition.OneOrMore;
+import de.etgramlich.antlr.parser.listener.type.rhstype.repetition.Optional;
+import de.etgramlich.antlr.parser.listener.type.rhstype.repetition.ZeroOrMore;
 import de.etgramlich.antlr.parser.listener.type.terminal.AbstractId;
-import de.etgramlich.antlr.util.BnfTypeVisitor;
+import de.etgramlich.antlr.util.visitor.BnfTypeVisitor;
+import org.jgrapht.Graph;
+import org.jgrapht.graph.DefaultDirectedGraph;
+import org.jgrapht.graph.DefaultEdge;
 
 import java.util.List;
 
 public class BnfVisitor implements BnfTypeVisitor {
+    private final Graph<BnfType, DefaultEdge> graph;
+
+    public BnfVisitor() {
+        graph = new DefaultDirectedGraph<>(DefaultEdge.class);
+    }
+
     @Override
     public void visit(AbstractId id) {
         // ToDo
@@ -17,7 +29,24 @@ public class BnfVisitor implements BnfTypeVisitor {
     }
 
     @Override
-    public void visit(AbstractRepetition repetition) {
+    public void visit(LetterRange letterRange) {
+        // ToDo
+        throw new UnsupportedOperationException("Not yet implemented!!!");
+    }
+
+    @Override
+    public void visit(OneOrMore repetition) {
+        // ToDo
+        throw new UnsupportedOperationException("Not yet implemented!!!");
+    }
+
+    @Override
+    public void visit(Optional repetition) {
+
+    }
+
+    @Override
+    public void visit(ZeroOrMore repetition) {
         // ToDo
         throw new UnsupportedOperationException("Not yet implemented!!!");
     }

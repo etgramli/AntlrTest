@@ -1,8 +1,10 @@
 package de.etgramlich.antlr.parser.listener.type.terminal;
 
 import de.etgramlich.antlr.parser.listener.type.BnfType;
-import de.etgramlich.antlr.parser.listener.type.rhstype.RhsType;
+import de.etgramlich.antlr.util.visitor.BnfElement;
+import de.etgramlich.antlr.util.visitor.BnfTypeVisitor;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -10,7 +12,7 @@ import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class AbstractId implements BnfType, RhsType {
+public abstract class AbstractId implements BnfType, BnfElement {
     private static final String HOST_LANG_KEYWORD_FILENAME = "src/main/resources/keywords-java.txt";
     private static List<String> keywords = Collections.emptyList();
     static {
@@ -41,17 +43,12 @@ public abstract class AbstractId implements BnfType, RhsType {
     }
 
     @Override
-    public boolean isLeaf() {
-        return true;
-    }
-
-    @Override
-    public List<RhsType> getChildren() {
-        return Collections.emptyList();
-    }
-
-    @Override
     public String toString() {
         return id;
+    }
+
+    @Override
+    public void accept(@NotNull BnfTypeVisitor visitor) {
+        visitor.visit(this);
     }
 }

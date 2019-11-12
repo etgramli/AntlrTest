@@ -3,12 +3,14 @@ package de.etgramlich.antlr.parser.listener.type.rhstype;
 import de.etgramlich.antlr.parser.listener.type.BnfType;
 import de.etgramlich.antlr.parser.listener.type.rhstype.repetition.AbstractRepetition;
 import de.etgramlich.antlr.parser.listener.type.terminal.AbstractId;
+import de.etgramlich.antlr.util.visitor.BnfElement;
+import de.etgramlich.antlr.util.visitor.BnfTypeVisitor;
 import org.jetbrains.annotations.Contract;
 
 import java.util.Collections;
 import java.util.List;
 
-public final class Element implements BnfType, RhsType {
+public final class Element implements BnfType, BnfElement {
     private final AbstractId id;
     private final AbstractRepetition alternatives;
     private final LetterRange range;
@@ -50,18 +52,15 @@ public final class Element implements BnfType, RhsType {
         return range;
     }
 
-    @Contract(pure = true)
     @Override
-    public boolean isLeaf() {
-        return id != null;
-    }
-
-    @Override
-    public List<RhsType> getChildren() {
-        if (alternatives != null) {
-            return List.copyOf(alternatives.getAlternatives());
-        } else {
-            return Collections.emptyList();
+    public void accept(BnfTypeVisitor visitor) {
+        if (id != null) {
+            id.accept(visitor);
+        } else if (alternatives != null) {
+            alternatives.accept(visitor);
+        } else if (range != null) {
+            range.accept(visitor);
         }
+        visitor.visit(this);
     }
 }

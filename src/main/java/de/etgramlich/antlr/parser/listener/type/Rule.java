@@ -16,10 +16,7 @@ import java.util.Set;
 
 
 /**
- * ToDo: lhs -> JoiInterface
- * ToDo: rhs -> Methods (return types may be interfaces or simple types)
- *
- * ToDo: Keep track of all types and make them return types in RHS
+ * ToDo: Nodes in graph to Scopes
  *
  * Rhs: respect call sequence and mutual exclusive rules
  */

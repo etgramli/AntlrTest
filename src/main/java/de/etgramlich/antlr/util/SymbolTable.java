@@ -38,9 +38,7 @@ public final class SymbolTable {
     }
 
     public enum SymbolType {
-        LHS,
-        TEXT,
-        ID,
-        RULEID
+        SCOPE,
+        ID
     }
 }
