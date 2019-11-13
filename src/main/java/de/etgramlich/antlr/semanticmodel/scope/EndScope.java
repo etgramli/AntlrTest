@@ -7,6 +7,4 @@ package de.etgramlich.antlr.semanticmodel.scope;
  * (i.e. last element or element before last optional element)
  */
 public interface EndScope extends Scope {
-    // ToDo: Add type to be returned by building
-    void build();
 }

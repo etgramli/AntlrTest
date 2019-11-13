@@ -27,8 +27,19 @@ public final class Alternative implements BnfType, BnfElement {
         visitor.visit(this);
     }
 
+    @Contract(pure = true)
     @Override
     public boolean isAlternative() {
+        return true;
+    }
+
+    @Override
+    public boolean isTerminal() {
+        for (Element element : elements) {
+            if (!element.isTerminal()) {
+                return false;
+            }
+        }
         return true;
     }
 }

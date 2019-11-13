@@ -57,6 +57,7 @@ public final class Main {
         RuleListListener listener = new RuleListListener();
         parser.rulelist().enterRule(listener);
         RuleList ruleList = listener.getRuleList();
+        ruleList.getRules().get(0).isTerminal();
         ruleList.saveInterfaces(targetDirectory, targetPackage);
     }
 

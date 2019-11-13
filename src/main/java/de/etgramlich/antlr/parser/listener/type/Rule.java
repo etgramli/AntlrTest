@@ -65,6 +65,25 @@ public final class Rule implements BnfType {
         return st.render();
     }
 
+    @Override
+    public boolean isTerminal() {
+        for (Alternative alternative : rhs) {
+            if (!alternative.isTerminal()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Retruns true if on the RHS are only non-terminal-symbols
+     * @return True if only non-terminals on right-hand-side.
+     */
+    public boolean hasNTRhs() {
+
+        return false;//ToDo
+    }
+
     private static class Method {
         private final String returnType, name;
         private Method(final String returnType, final String name) {

@@ -15,8 +15,16 @@ import org.jgrapht.graph.DefaultEdge;
 
 import java.util.List;
 
+/**
+ * Class that builds a dependency graph to generate a hierarchy of scopes to be generated.
+ */
 public class BnfVisitor implements BnfTypeVisitor {
     private final Graph<BnfType, DefaultEdge> graph;
+
+    private String currentScopeName;
+    private List<String> precedingScopeNames;
+    private List<String> followingScopeNames;
+    private List<String> alternativesNames;
 
     public BnfVisitor() {
         graph = new DefaultDirectedGraph<>(DefaultEdge.class);

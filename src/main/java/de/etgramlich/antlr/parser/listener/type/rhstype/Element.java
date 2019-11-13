@@ -63,4 +63,17 @@ public final class Element implements BnfType, BnfElement {
         }
         visitor.visit(this);
     }
+
+    @Override
+    public boolean isTerminal() {
+        if (id != null) {           // Id can be either id of other rule or text
+            return id.isTerminal();
+        } else if (range != null) { // Range is always composed of (renge of) terminals
+            return true;
+        } else if (alternatives != null) {
+            return alternatives.isTerminal();
+        } else {                    // Should never happen
+            return true;
+        }
+    }
 }
