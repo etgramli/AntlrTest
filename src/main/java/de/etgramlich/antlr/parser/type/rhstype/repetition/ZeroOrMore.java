@@ -1,13 +1,13 @@
-package de.etgramlich.antlr.parser.listener.type.rhstype.repetition;
+package de.etgramlich.antlr.parser.type.rhstype.repetition;
 
-import de.etgramlich.antlr.parser.listener.type.rhstype.Alternative;
+import de.etgramlich.antlr.parser.type.rhstype.Alternative;
 import de.etgramlich.antlr.util.visitor.BnfTypeVisitor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 
-public final class Precedence extends AbstractRepetition {
-    public Precedence(Collection<Alternative> alternatives) {
+public final class ZeroOrMore extends AbstractRepetition {
+    public ZeroOrMore(Collection<Alternative> alternatives) {
         super(alternatives);
     }
 

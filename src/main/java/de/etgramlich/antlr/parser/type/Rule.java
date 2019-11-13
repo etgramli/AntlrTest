@@ -1,8 +1,8 @@
-package de.etgramlich.antlr.parser.listener.type;
+package de.etgramlich.antlr.parser.type;
 
-import de.etgramlich.antlr.parser.listener.type.rhstype.Alternative;
-import de.etgramlich.antlr.parser.listener.type.rhstype.Element;
-import de.etgramlich.antlr.parser.listener.type.terminal.AbstractId;
+import de.etgramlich.antlr.parser.type.rhstype.Alternative;
+import de.etgramlich.antlr.parser.type.rhstype.Element;
+import de.etgramlich.antlr.parser.type.terminal.AbstractId;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.stringtemplate.v4.ST;

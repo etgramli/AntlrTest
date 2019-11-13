@@ -3,7 +3,7 @@ package de.etgramlich.antlr;
 import de.etgramlich.antlr.parser.gen.bnf.bnfLexer;
 import de.etgramlich.antlr.parser.gen.bnf.bnfParser;
 import de.etgramlich.antlr.parser.listener.RuleListListener;
-import de.etgramlich.antlr.parser.listener.type.RuleList;
+import de.etgramlich.antlr.parser.type.RuleList;
 import de.etgramlich.antlr.util.StringUtil;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;

@@ -1,6 +1,6 @@
-package de.etgramlich.antlr.parser.listener.type.rhstype;
+package de.etgramlich.antlr.parser.type.rhstype;
 
-import de.etgramlich.antlr.parser.listener.type.BnfType;
+import de.etgramlich.antlr.parser.type.BnfType;
 import de.etgramlich.antlr.util.visitor.BnfElement;
 import de.etgramlich.antlr.util.visitor.BnfTypeVisitor;
 import org.jetbrains.annotations.Contract;

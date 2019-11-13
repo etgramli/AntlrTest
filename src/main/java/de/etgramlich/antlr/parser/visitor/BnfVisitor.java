@@ -1,17 +1,16 @@
 package de.etgramlich.antlr.parser.visitor;
 
-import de.etgramlich.antlr.parser.listener.type.*;
-import de.etgramlich.antlr.parser.listener.type.rhstype.Alternative;
-import de.etgramlich.antlr.parser.listener.type.rhstype.Element;
-import de.etgramlich.antlr.parser.listener.type.rhstype.LetterRange;
-import de.etgramlich.antlr.parser.listener.type.rhstype.repetition.Optional;
-import de.etgramlich.antlr.parser.listener.type.rhstype.repetition.Precedence;
-import de.etgramlich.antlr.parser.listener.type.rhstype.repetition.ZeroOrMore;
-import de.etgramlich.antlr.parser.listener.type.terminal.AbstractId;
+import de.etgramlich.antlr.parser.type.*;
+import de.etgramlich.antlr.parser.type.rhstype.Alternative;
+import de.etgramlich.antlr.parser.type.rhstype.Element;
+import de.etgramlich.antlr.parser.type.rhstype.LetterRange;
+import de.etgramlich.antlr.parser.type.rhstype.repetition.Optional;
+import de.etgramlich.antlr.parser.type.rhstype.repetition.Precedence;
+import de.etgramlich.antlr.parser.type.rhstype.repetition.ZeroOrMore;
+import de.etgramlich.antlr.parser.type.terminal.AbstractId;
+import de.etgramlich.antlr.util.graph.Node;
 import de.etgramlich.antlr.util.visitor.BnfTypeVisitor;
-import org.jgrapht.Graph;
-import org.jgrapht.graph.DefaultDirectedGraph;
-import org.jgrapht.graph.DefaultEdge;
+import org.jetbrains.annotations.Contract;
 
 import java.util.List;
 
@@ -19,15 +18,10 @@ import java.util.List;
  * Class that builds a dependency graph to generate a hierarchy of scopes to be generated.
  */
 public class BnfVisitor implements BnfTypeVisitor {
-    private final Graph<BnfType, DefaultEdge> graph;
+    private Node graph;
 
-    private String currentScopeName;
-    private List<String> precedingScopeNames;
-    private List<String> followingScopeNames;
-    private List<String> alternativesNames;
-
-    public BnfVisitor() {
-        graph = new DefaultDirectedGraph<>(DefaultEdge.class);
+    public BnfVisitor(final RuleList ruleList) {
+        visit(ruleList);
     }
 
     @Override
@@ -43,8 +37,9 @@ public class BnfVisitor implements BnfTypeVisitor {
     }
 
     @Override
-    public void visit(Optional repetition) {
-
+    public void visit(Optional optional) {
+        // ToDo
+        throw new UnsupportedOperationException("Not yet implemented!!!");
     }
 
     @Override

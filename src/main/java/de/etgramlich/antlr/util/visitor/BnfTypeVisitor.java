@@ -1,13 +1,13 @@
 package de.etgramlich.antlr.util.visitor;
 
-import de.etgramlich.antlr.parser.listener.type.*;
-import de.etgramlich.antlr.parser.listener.type.rhstype.Alternative;
-import de.etgramlich.antlr.parser.listener.type.rhstype.Element;
-import de.etgramlich.antlr.parser.listener.type.rhstype.LetterRange;
-import de.etgramlich.antlr.parser.listener.type.rhstype.repetition.Optional;
-import de.etgramlich.antlr.parser.listener.type.rhstype.repetition.Precedence;
-import de.etgramlich.antlr.parser.listener.type.rhstype.repetition.ZeroOrMore;
-import de.etgramlich.antlr.parser.listener.type.terminal.AbstractId;
+import de.etgramlich.antlr.parser.type.*;
+import de.etgramlich.antlr.parser.type.rhstype.Alternative;
+import de.etgramlich.antlr.parser.type.rhstype.Element;
+import de.etgramlich.antlr.parser.type.rhstype.LetterRange;
+import de.etgramlich.antlr.parser.type.rhstype.repetition.Optional;
+import de.etgramlich.antlr.parser.type.rhstype.repetition.Precedence;
+import de.etgramlich.antlr.parser.type.rhstype.repetition.ZeroOrMore;
+import de.etgramlich.antlr.parser.type.terminal.AbstractId;
 
 import java.util.List;
 

@@ -2,8 +2,8 @@ package de.etgramlich.antlr.parser.listener;
 
 import de.etgramlich.antlr.parser.gen.bnf.bnfBaseListener;
 import de.etgramlich.antlr.parser.gen.bnf.bnfParser;
-import de.etgramlich.antlr.parser.listener.type.Rule;
-import de.etgramlich.antlr.parser.listener.type.RuleList;
+import de.etgramlich.antlr.parser.type.Rule;
+import de.etgramlich.antlr.parser.type.RuleList;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 

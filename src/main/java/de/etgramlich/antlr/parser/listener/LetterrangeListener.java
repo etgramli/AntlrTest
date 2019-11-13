@@ -2,7 +2,7 @@ package de.etgramlich.antlr.parser.listener;
 
 import de.etgramlich.antlr.parser.gen.bnf.bnfBaseListener;
 import de.etgramlich.antlr.parser.gen.bnf.bnfParser;
-import de.etgramlich.antlr.parser.listener.type.rhstype.LetterRange;
+import de.etgramlich.antlr.parser.type.rhstype.LetterRange;
 import de.etgramlich.antlr.util.StringUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;

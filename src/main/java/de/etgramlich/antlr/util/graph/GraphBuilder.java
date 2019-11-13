@@ -1,6 +1,6 @@
 package de.etgramlich.antlr.util.graph;
 
-import de.etgramlich.antlr.parser.listener.type.RuleList;
+import de.etgramlich.antlr.parser.type.RuleList;
 import org.jetbrains.annotations.Contract;
 
 import java.util.ArrayList;

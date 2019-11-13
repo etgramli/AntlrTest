@@ -2,9 +2,9 @@ package de.etgramlich.antlr.parser.listener;
 
 import de.etgramlich.antlr.parser.gen.bnf.bnfBaseListener;
 import de.etgramlich.antlr.parser.gen.bnf.bnfParser;
-import de.etgramlich.antlr.parser.listener.type.rhstype.Alternative;
-import de.etgramlich.antlr.parser.listener.type.Rule;
-import de.etgramlich.antlr.parser.listener.type.terminal.AbstractId;
+import de.etgramlich.antlr.parser.type.rhstype.Alternative;
+import de.etgramlich.antlr.parser.type.Rule;
+import de.etgramlich.antlr.parser.type.terminal.AbstractId;
 import de.etgramlich.antlr.util.SymbolTable;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;

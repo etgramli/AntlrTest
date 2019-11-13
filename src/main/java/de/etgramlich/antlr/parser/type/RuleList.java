@@ -1,4 +1,4 @@
-package de.etgramlich.antlr.parser.listener.type;
+package de.etgramlich.antlr.parser.type;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;

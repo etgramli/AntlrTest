@@ -1,7 +1,7 @@
 package de.etgramlich.antlr.semanticmodel.scope;
 
-import de.etgramlich.antlr.parser.listener.type.Rule;
-import de.etgramlich.antlr.parser.listener.type.RuleList;
+import de.etgramlich.antlr.parser.type.Rule;
+import de.etgramlich.antlr.parser.type.RuleList;
 import de.etgramlich.antlr.util.SymbolTable;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;

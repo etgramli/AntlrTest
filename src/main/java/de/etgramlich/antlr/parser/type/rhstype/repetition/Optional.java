@@ -1,6 +1,6 @@
-package de.etgramlich.antlr.parser.listener.type.rhstype.repetition;
+package de.etgramlich.antlr.parser.type.rhstype.repetition;
 
-import de.etgramlich.antlr.parser.listener.type.rhstype.Alternative;
+import de.etgramlich.antlr.parser.type.rhstype.Alternative;
 import de.etgramlich.antlr.util.visitor.BnfTypeVisitor;
 import org.jetbrains.annotations.NotNull;
 

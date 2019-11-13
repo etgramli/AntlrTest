@@ -2,10 +2,10 @@ package de.etgramlich.antlr.parser.listener;
 
 import de.etgramlich.antlr.parser.gen.bnf.bnfBaseListener;
 import de.etgramlich.antlr.parser.gen.bnf.bnfParser;
-import de.etgramlich.antlr.parser.listener.type.terminal.AbstractId;
-import de.etgramlich.antlr.parser.listener.type.terminal.Id;
-import de.etgramlich.antlr.parser.listener.type.terminal.RuleId;
-import de.etgramlich.antlr.parser.listener.type.terminal.Text;
+import de.etgramlich.antlr.parser.type.terminal.AbstractId;
+import de.etgramlich.antlr.parser.type.terminal.Id;
+import de.etgramlich.antlr.parser.type.terminal.RuleId;
+import de.etgramlich.antlr.parser.type.terminal.Text;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 

@@ -1,6 +1,6 @@
 package de.etgramlich.antlr.util;
 
-import de.etgramlich.antlr.parser.listener.type.BnfType;
+import de.etgramlich.antlr.parser.type.BnfType;
 import org.jetbrains.annotations.Contract;
 
 import java.util.HashMap;
