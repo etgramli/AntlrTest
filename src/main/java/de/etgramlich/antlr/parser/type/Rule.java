@@ -3,16 +3,15 @@ package de.etgramlich.antlr.parser.type;
 import de.etgramlich.antlr.parser.type.rhstype.Alternative;
 import de.etgramlich.antlr.parser.type.rhstype.Element;
 import de.etgramlich.antlr.parser.type.terminal.AbstractId;
+import de.etgramlich.antlr.util.visitor.BnfElement;
+import de.etgramlich.antlr.util.visitor.BnfTypeVisitor;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupFile;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -20,7 +19,7 @@ import java.util.Set;
  *
  * Rhs: respect call sequence and mutual exclusive rules
  */
-public final class Rule implements BnfType {
+public final class Rule implements BnfType, BnfElement {
     private static final String INTERFACE_ST_FILENAME = "src/main/resources/ebnf.stg";
 
     private final AbstractId lhs;
@@ -67,21 +66,13 @@ public final class Rule implements BnfType {
 
     @Override
     public boolean isTerminal() {
-        for (Alternative alternative : rhs) {
-            if (!alternative.isTerminal()) {
-                return false;
-            }
-        }
-        return true;
+        return rhs.stream().filter(alternative -> !alternative.isTerminal()).findAny().isEmpty();
     }
 
-    /**
-     * Retruns true if on the RHS are only non-terminal-symbols
-     * @return True if only non-terminals on right-hand-side.
-     */
-    public boolean hasNTRhs() {
-
-        return false;//ToDo
+    @Override
+    public void accept(@NotNull BnfTypeVisitor visitor) {
+        visitor.visit(this);
+        rhs.forEach(alternative -> alternative.accept(visitor));
     }
 
     private static class Method {

@@ -1,5 +1,7 @@
 package de.etgramlich.antlr.parser.type;
 
+import de.etgramlich.antlr.util.visitor.BnfElement;
+import de.etgramlich.antlr.util.visitor.BnfTypeVisitor;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -8,7 +10,7 @@ import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.List;
 
-public final class RuleList implements BnfType {
+public final class RuleList implements BnfType, BnfElement {
     private final List<Rule> rules;
 
     public RuleList(final Collection<Rule> rules) {
@@ -32,5 +34,11 @@ public final class RuleList implements BnfType {
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public void accept(@NotNull BnfTypeVisitor visitor) {
+        visitor.visit(this);
+        rules.forEach(rule -> rule.accept(visitor));
     }
 }

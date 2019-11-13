@@ -35,11 +35,6 @@ public final class Alternative implements BnfType, BnfElement {
 
     @Override
     public boolean isTerminal() {
-        for (Element element : elements) {
-            if (!element.isTerminal()) {
-                return false;
-            }
-        }
-        return true;
+        return elements.stream().filter(element -> !element.isTerminal()).findAny().isEmpty();
     }
 }

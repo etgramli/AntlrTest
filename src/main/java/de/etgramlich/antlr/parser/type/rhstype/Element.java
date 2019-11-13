@@ -68,7 +68,7 @@ public final class Element implements BnfType, BnfElement {
     public boolean isTerminal() {
         if (id != null) {           // Id can be either id of other rule or text
             return id.isTerminal();
-        } else if (range != null) { // Range is always composed of (renge of) terminals
+        } else if (range != null) { // Range is always composed of (range of) terminals
             return true;
         } else if (alternatives != null) {
             return alternatives.isTerminal();

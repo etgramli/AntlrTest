@@ -10,7 +10,6 @@ import de.etgramlich.antlr.parser.type.rhstype.repetition.ZeroOrMore;
 import de.etgramlich.antlr.parser.type.terminal.AbstractId;
 import de.etgramlich.antlr.util.graph.Node;
 import de.etgramlich.antlr.util.visitor.BnfTypeVisitor;
-import org.jetbrains.annotations.Contract;
 
 import java.util.List;
 

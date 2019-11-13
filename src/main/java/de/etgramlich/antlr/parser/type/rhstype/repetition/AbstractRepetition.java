@@ -25,11 +25,6 @@ public abstract class AbstractRepetition implements BnfType, BnfElement {
 
     @Override
     public boolean isTerminal() {
-        for (Alternative alternative : alternatives) {
-            if (!alternative.isTerminal()) {
-                return false;
-            }
-        }
-        return true;
+        return alternatives.stream().filter(alternative -> !alternative.isTerminal()).findAny().isEmpty();
     }
 }
