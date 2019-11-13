@@ -3,8 +3,11 @@ package de.etgramlich.antlr.parser.gen.bnf;
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.misc.*;
 import org.antlr.v4.runtime.tree.*;
 import java.util.List;
+import java.util.Iterator;
+import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class bnfParser extends Parser {
@@ -19,11 +22,11 @@ public class bnfParser extends Parser {
 	public static final int
 		RULE_rulelist = 0, RULE_rule_ = 1, RULE_lhs = 2, RULE_rhs = 3, RULE_alternatives = 4, 
 		RULE_alternative = 5, RULE_element = 6, RULE_optional = 7, RULE_zeroormore = 8, 
-		RULE_oneormore = 9, RULE_text = 10, RULE_id = 11, RULE_ruleid = 12, RULE_letterrange = 13;
+		RULE_precedence = 9, RULE_text = 10, RULE_id = 11, RULE_ruleid = 12, RULE_letterrange = 13;
 	private static String[] makeRuleNames() {
 		return new String[] {
 			"rulelist", "rule_", "lhs", "rhs", "alternatives", "alternative", "element", 
-			"optional", "zeroormore", "oneormore", "text", "id", "ruleid", "letterrange"
+			"optional", "zeroormore", "precedence", "text", "id", "ruleid", "letterrange"
 		};
 	}
 	public static final String[] ruleNames = makeRuleNames();
@@ -432,8 +435,8 @@ public class bnfParser extends Parser {
 		public ZeroormoreContext zeroormore() {
 			return getRuleContext(ZeroormoreContext.class,0);
 		}
-		public OneormoreContext oneormore() {
-			return getRuleContext(OneormoreContext.class,0);
+		public PrecedenceContext precedence() {
+			return getRuleContext(PrecedenceContext.class,0);
 		}
 		public TextContext text() {
 			return getRuleContext(TextContext.class,0);
@@ -488,7 +491,7 @@ public class bnfParser extends Parser {
 				enterOuterAlt(_localctx, 3);
 				{
 				setState(60);
-				oneormore();
+				precedence();
 				}
 				break;
 			case TEXT:
@@ -627,34 +630,34 @@ public class bnfParser extends Parser {
 		return _localctx;
 	}
 
-	public static class OneormoreContext extends ParserRuleContext {
+	public static class PrecedenceContext extends ParserRuleContext {
 		public TerminalNode RPAREN() { return getToken(bnfParser.RPAREN, 0); }
 		public AlternativesContext alternatives() {
 			return getRuleContext(AlternativesContext.class,0);
 		}
 		public TerminalNode LPAREN() { return getToken(bnfParser.LPAREN, 0); }
-		public OneormoreContext(ParserRuleContext parent, int invokingState) {
+		public PrecedenceContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_oneormore; }
+		@Override public int getRuleIndex() { return RULE_precedence; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof bnfListener ) ((bnfListener)listener).enterOneormore(this);
+			if ( listener instanceof bnfListener ) ((bnfListener)listener).enterPrecedence(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof bnfListener ) ((bnfListener)listener).exitOneormore(this);
+			if ( listener instanceof bnfListener ) ((bnfListener)listener).exitPrecedence(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof bnfVisitor ) return ((bnfVisitor<? extends T>)visitor).visitOneormore(this);
+			if ( visitor instanceof bnfVisitor ) return ((bnfVisitor<? extends T>)visitor).visitPrecedence(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 
-	public final OneormoreContext oneormore() throws RecognitionException {
-		OneormoreContext _localctx = new OneormoreContext(_ctx, getState());
-		enterRule(_localctx, 18, RULE_oneormore);
+	public final PrecedenceContext precedence() throws RecognitionException {
+		PrecedenceContext _localctx = new PrecedenceContext(_ctx, getState());
+		enterRule(_localctx, 18, RULE_precedence);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{

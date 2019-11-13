@@ -35,8 +35,8 @@ public final class ElementListener extends bnfBaseListener {
                 repetitionListener.enterOptional(ctx.optional());
             } else if (ctx.zeroormore() != null) {
                 repetitionListener.enterZeroormore(ctx.zeroormore());
-            } else if (ctx.oneormore() != null) {
-                repetitionListener.enterOneormore(ctx.oneormore());
+            } else if (ctx.precedence() != null) {
+                repetitionListener.enterPrecedence(ctx.precedence());
             } else {
                 throw new UnsupportedOperationException("Element type not recognized!!! (" + ctx.getText() + ")");
             }

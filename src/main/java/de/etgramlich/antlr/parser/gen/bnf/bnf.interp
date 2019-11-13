@@ -46,7 +46,7 @@ alternative
 element
 optional
 zeroormore
-oneormore
+precedence
 text
 id
 ruleid

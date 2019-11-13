@@ -6,12 +6,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 
-public final class OneOrMore extends AbstractRepetition {
-    public OneOrMore(Collection<Alternative> alternatives) {
+public final class Precedence extends AbstractRepetition {
+    public Precedence(Collection<Alternative> alternatives) {
         super(alternatives);
-        if (alternatives.size() == 0) {
-            throw new IllegalArgumentException("OneOrMore must have at least 1 Alternative!");
-        }
     }
 
     @Override

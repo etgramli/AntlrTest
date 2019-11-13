@@ -65,11 +65,11 @@ public interface bnfVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitZeroormore(bnfParser.ZeroormoreContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link bnfParser#oneormore}.
+	 * Visit a parse tree produced by {@link bnfParser#precedence}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitOneormore(bnfParser.OneormoreContext ctx);
+	T visitPrecedence(bnfParser.PrecedenceContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link bnfParser#text}.
 	 * @param ctx the parse tree

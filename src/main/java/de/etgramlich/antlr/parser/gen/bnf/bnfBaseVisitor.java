@@ -80,7 +80,7 @@ public class bnfBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements bn
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitOneormore(bnfParser.OneormoreContext ctx) { return visitChildren(ctx); }
+	@Override public T visitPrecedence(bnfParser.PrecedenceContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *

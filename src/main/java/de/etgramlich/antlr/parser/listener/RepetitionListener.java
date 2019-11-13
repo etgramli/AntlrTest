@@ -2,9 +2,10 @@ package de.etgramlich.antlr.parser.listener;
 
 import de.etgramlich.antlr.parser.gen.bnf.bnfBaseListener;
 import de.etgramlich.antlr.parser.gen.bnf.bnfParser;
+import de.etgramlich.antlr.parser.listener.type.rhstype.Alternative;
 import de.etgramlich.antlr.parser.listener.type.rhstype.repetition.AbstractRepetition;
-import de.etgramlich.antlr.parser.listener.type.rhstype.repetition.OneOrMore;
 import de.etgramlich.antlr.parser.listener.type.rhstype.repetition.Optional;
+import de.etgramlich.antlr.parser.listener.type.rhstype.repetition.Precedence;
 import de.etgramlich.antlr.parser.listener.type.rhstype.repetition.ZeroOrMore;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -15,18 +16,6 @@ public final class RepetitionListener extends bnfBaseListener {
     @Contract(pure = true)
     public AbstractRepetition getRepetition() {
         return repetition;
-    }
-
-    @Override
-    public void enterOneormore(@NotNull bnfParser.OneormoreContext ctx) {
-        AlternativeListener listener = new AlternativeListener();
-        listener.enterAlternatives(ctx.alternatives());
-        repetition = new OneOrMore(listener.getAlternatives());
-    }
-
-    @Override
-    public void exitOneormore(bnfParser.OneormoreContext ctx) {
-        super.exitOneormore(ctx);
     }
 
     @Override
@@ -51,5 +40,12 @@ public final class RepetitionListener extends bnfBaseListener {
     @Override
     public void exitOptional(bnfParser.OptionalContext ctx) {
         super.exitOptional(ctx);
+    }
+
+    @Override
+    public void enterPrecedence(bnfParser.PrecedenceContext ctx) {
+        AlternativeListener listener = new AlternativeListener();
+        listener.enterAlternatives(ctx.alternatives());
+        repetition = new Precedence(listener.getAlternatives());
     }
 }

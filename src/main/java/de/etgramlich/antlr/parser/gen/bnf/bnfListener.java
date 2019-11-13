@@ -98,15 +98,15 @@ public interface bnfListener extends ParseTreeListener {
 	 */
 	void exitZeroormore(bnfParser.ZeroormoreContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link bnfParser#oneormore}.
+	 * Enter a parse tree produced by {@link bnfParser#precedence}.
 	 * @param ctx the parse tree
 	 */
-	void enterOneormore(bnfParser.OneormoreContext ctx);
+	void enterPrecedence(bnfParser.PrecedenceContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link bnfParser#oneormore}.
+	 * Exit a parse tree produced by {@link bnfParser#precedence}.
 	 * @param ctx the parse tree
 	 */
-	void exitOneormore(bnfParser.OneormoreContext ctx);
+	void exitPrecedence(bnfParser.PrecedenceContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link bnfParser#text}.
 	 * @param ctx the parse tree

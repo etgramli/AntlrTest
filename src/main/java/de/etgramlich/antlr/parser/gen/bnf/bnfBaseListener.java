@@ -124,13 +124,13 @@ public class bnfBaseListener implements bnfListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterOneormore(bnfParser.OneormoreContext ctx) { }
+	@Override public void enterPrecedence(bnfParser.PrecedenceContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitOneormore(bnfParser.OneormoreContext ctx) { }
+	@Override public void exitPrecedence(bnfParser.PrecedenceContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

@@ -4,8 +4,8 @@ import de.etgramlich.antlr.parser.listener.type.*;
 import de.etgramlich.antlr.parser.listener.type.rhstype.Alternative;
 import de.etgramlich.antlr.parser.listener.type.rhstype.Element;
 import de.etgramlich.antlr.parser.listener.type.rhstype.LetterRange;
-import de.etgramlich.antlr.parser.listener.type.rhstype.repetition.OneOrMore;
 import de.etgramlich.antlr.parser.listener.type.rhstype.repetition.Optional;
+import de.etgramlich.antlr.parser.listener.type.rhstype.repetition.Precedence;
 import de.etgramlich.antlr.parser.listener.type.rhstype.repetition.ZeroOrMore;
 import de.etgramlich.antlr.parser.listener.type.terminal.AbstractId;
 import de.etgramlich.antlr.util.visitor.BnfTypeVisitor;
@@ -43,18 +43,18 @@ public class BnfVisitor implements BnfTypeVisitor {
     }
 
     @Override
-    public void visit(OneOrMore repetition) {
-        // ToDo
-        throw new UnsupportedOperationException("Not yet implemented!!!");
-    }
-
-    @Override
     public void visit(Optional repetition) {
 
     }
 
     @Override
     public void visit(ZeroOrMore repetition) {
+        // ToDo
+        throw new UnsupportedOperationException("Not yet implemented!!!");
+    }
+
+    @Override
+    public void visit(Precedence precedence) {
         // ToDo
         throw new UnsupportedOperationException("Not yet implemented!!!");
     }

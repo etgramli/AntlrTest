@@ -54,8 +54,8 @@ alternative     // Sequence
 
 element
     : optional  // \
-    | zeroormore//  }= Repetition
-    | oneormore // /
+    | zeroormore// /= Repetition
+    | precedence
     | text
     | id
     | letterrange
@@ -69,7 +69,7 @@ zeroormore
     : RBRACE alternatives LBRACE
     ;
 
-oneormore
+precedence
     : RPAREN alternatives LPAREN
     ;
 

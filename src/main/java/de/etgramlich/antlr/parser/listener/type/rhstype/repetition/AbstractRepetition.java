@@ -3,6 +3,8 @@ package de.etgramlich.antlr.parser.listener.type.rhstype.repetition;
 import de.etgramlich.antlr.parser.listener.type.rhstype.Alternative;
 import de.etgramlich.antlr.parser.listener.type.BnfType;
 import de.etgramlich.antlr.util.visitor.BnfElement;
+import de.etgramlich.antlr.util.visitor.BnfTypeVisitor;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.List;
