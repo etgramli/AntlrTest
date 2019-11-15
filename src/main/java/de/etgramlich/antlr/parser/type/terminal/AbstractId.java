@@ -13,13 +13,17 @@ import java.util.Collections;
 import java.util.List;
 
 public abstract class AbstractId implements BnfType, BnfElement {
+    // ToDo: Maybe move to SymbolTable
     private static final String HOST_LANG_KEYWORD_FILENAME = "src/main/resources/keywords-java.txt";
-    private static List<String> keywords = Collections.emptyList();
+    private static final List<String> keywords;
     static {
+        List<String> readKeywords = Collections.emptyList();
         try {
-            keywords = Files.readAllLines(Path.of(HOST_LANG_KEYWORD_FILENAME));
+            readKeywords = Files.readAllLines(Path.of(HOST_LANG_KEYWORD_FILENAME));
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            keywords = Collections.unmodifiableList(readKeywords);
         }
     }
 

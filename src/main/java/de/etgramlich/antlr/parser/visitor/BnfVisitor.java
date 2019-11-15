@@ -8,7 +8,7 @@ import de.etgramlich.antlr.parser.type.rhstype.repetition.Optional;
 import de.etgramlich.antlr.parser.type.rhstype.repetition.Precedence;
 import de.etgramlich.antlr.parser.type.rhstype.repetition.ZeroOrMore;
 import de.etgramlich.antlr.parser.type.terminal.AbstractId;
-import de.etgramlich.antlr.util.graph.Node;
+import de.etgramlich.antlr.util.graph.node.Node;
 import de.etgramlich.antlr.util.visitor.BnfTypeVisitor;
 
 import java.util.List;

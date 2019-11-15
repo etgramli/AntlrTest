@@ -6,6 +6,7 @@ import de.etgramlich.antlr.parser.type.terminal.AbstractId;
 import de.etgramlich.antlr.util.visitor.BnfElement;
 import de.etgramlich.antlr.util.visitor.BnfTypeVisitor;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
@@ -16,26 +17,36 @@ public final class Element implements BnfType, BnfElement {
     private final LetterRange range;
 
     @Contract(pure = true)
-    public Element(final AbstractId id) {
+    public Element(@NotNull final AbstractId id) {
         this.id = id;
         alternatives = null;
         range = null;
     }
 
     @Contract(pure = true)
-    public Element(final AbstractRepetition alternatives) {
+    public Element(@NotNull final AbstractRepetition alternatives) {
         id = null;
         this.alternatives = alternatives;
         range = null;
     }
 
     @Contract(pure = true)
-    public Element(final LetterRange letterRange) {
+    public Element(@NotNull final LetterRange letterRange) {
         id = null;
         alternatives = null;
         range = letterRange;
     }
 
+
+    @Contract(pure = true)
+    public boolean isId() {
+        return id != null;
+    }
+
+    @Contract(pure = true)
+    public boolean isAlternative() {
+        return alternatives != null;
+    }
 
     @Contract(pure = true)
     public AbstractId getId() {
