@@ -18,9 +18,14 @@ public abstract class AbstractRepetition implements BnfType, BnfElement {
         return alternatives;
     }
 
-    @Override
-    public boolean isRepetition() {
-        return true;
+    public abstract boolean isRepetition();
+
+    public abstract boolean isOptional();
+
+    public abstract boolean isPrecedence();
+
+    public boolean hasOnlyOneAlternative() {
+        return alternatives.size() == 1;
     }
 
     @Override

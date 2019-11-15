@@ -38,6 +38,18 @@ public final class Element implements BnfType, BnfElement {
     }
 
 
+    public boolean isOptional() {
+        return isAlternative() && alternatives.isOptional();
+    }
+
+    public boolean isRepetition() {
+        return isAlternative() && alternatives.isRepetition();
+    }
+
+    public boolean isPrecedence() {
+        return isAlternative() && alternatives.isPrecedence();
+    }
+
     @Contract(pure = true)
     public boolean isId() {
         return id != null;

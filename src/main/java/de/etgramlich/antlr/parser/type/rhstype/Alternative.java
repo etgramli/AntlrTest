@@ -21,16 +21,15 @@ public final class Alternative implements BnfType, BnfElement {
         return elements;
     }
 
+    @Contract(pure = true)
+    public boolean hasOneElementInSequence() {
+        return elements.size() == 1;
+    }
+
     @Override
     public void accept(@NotNull BnfTypeVisitor visitor) {
         elements.forEach(element -> element.accept(visitor));
         visitor.visit(this);
-    }
-
-    @Contract(pure = true)
-    @Override
-    public boolean isAlternative() {
-        return true;
     }
 
     @Override

@@ -42,6 +42,11 @@ public final class Rule implements BnfType, BnfElement {
     }
 
 
+    @Contract(pure = true)
+    public boolean hasOnlyOneAlternative() {
+        return rhs.size() == 1;
+    }
+
     @NotNull
     public String buildInterface(final String pkg) {
         final STGroup stGroup = new STGroupFile(INTERFACE_ST_FILENAME);

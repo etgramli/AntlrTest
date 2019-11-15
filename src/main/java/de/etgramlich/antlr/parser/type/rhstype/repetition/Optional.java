@@ -15,6 +15,21 @@ public final class Optional extends AbstractRepetition {
     }
 
     @Override
+    public boolean isRepetition() {
+        return false;
+    }
+
+    @Override
+    public boolean isOptional() {
+        return true;
+    }
+
+    @Override
+    public boolean isPrecedence() {
+        return false;
+    }
+
+    @Override
     public void accept(@NotNull BnfTypeVisitor visitor) {
         getAlternatives().forEach(alternative -> alternative.accept(visitor));
         visitor.visit(this);
