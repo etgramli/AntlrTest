@@ -1,5 +1,6 @@
 package de.etgramlich.antlr.parser.type;
 
+import de.etgramlich.antlr.util.StringUtil;
 import de.etgramlich.antlr.util.visitor.BnfElement;
 import de.etgramlich.antlr.util.visitor.BnfTypeVisitor;
 import org.jetbrains.annotations.Contract;
@@ -40,5 +41,10 @@ public final class RuleList implements BnfType, BnfElement {
     public void accept(@NotNull BnfTypeVisitor visitor) {
         visitor.visit(this);
         rules.forEach(rule -> rule.accept(visitor));
+    }
+
+    @Override
+    public String getName() {
+        return rules.isEmpty() ? StringUtil.EMPTY : rules.get(0).getName();
     }
 }

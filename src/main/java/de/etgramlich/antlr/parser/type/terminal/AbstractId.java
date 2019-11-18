@@ -42,6 +42,11 @@ public abstract class AbstractId implements BnfType, BnfElement {
     }
 
     @Override
+    public String getName() {
+        return id;
+    }
+
+    @Override
     public String toString() {
         return id;
     }

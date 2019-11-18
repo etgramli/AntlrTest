@@ -7,6 +7,7 @@ public final class Text extends AbstractId {
     public Text(@NotNull final String id) {
         super(id.replaceAll("'", ""));
     }
+
     @Contract(pure = true)
     @Override
     public boolean isTerminal() {

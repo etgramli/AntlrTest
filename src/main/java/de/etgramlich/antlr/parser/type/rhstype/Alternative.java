@@ -1,6 +1,7 @@
 package de.etgramlich.antlr.parser.type.rhstype;
 
 import de.etgramlich.antlr.parser.type.BnfType;
+import de.etgramlich.antlr.util.StringUtil;
 import de.etgramlich.antlr.util.visitor.BnfElement;
 import de.etgramlich.antlr.util.visitor.BnfTypeVisitor;
 import org.jetbrains.annotations.Contract;
@@ -30,6 +31,11 @@ public final class Alternative implements BnfType, BnfElement {
     public void accept(@NotNull BnfTypeVisitor visitor) {
         elements.forEach(element -> element.accept(visitor));
         visitor.visit(this);
+    }
+
+    @Override
+    public String getName() {
+        return elements.isEmpty() ? StringUtil.EMPTY : elements.get(0).getName();
     }
 
     @Override

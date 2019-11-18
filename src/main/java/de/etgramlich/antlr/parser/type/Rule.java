@@ -70,6 +70,11 @@ public final class Rule implements BnfType, BnfElement {
     }
 
     @Override
+    public String getName() {
+        return lhs.getName();
+    }
+
+    @Override
     public boolean isTerminal() {
         return rhs.stream().filter(alternative -> !alternative.isTerminal()).findAny().isEmpty();
     }

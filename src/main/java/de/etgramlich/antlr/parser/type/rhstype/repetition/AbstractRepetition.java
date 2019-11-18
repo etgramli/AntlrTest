@@ -2,6 +2,7 @@ package de.etgramlich.antlr.parser.type.rhstype.repetition;
 
 import de.etgramlich.antlr.parser.type.rhstype.Alternative;
 import de.etgramlich.antlr.parser.type.BnfType;
+import de.etgramlich.antlr.util.StringUtil;
 import de.etgramlich.antlr.util.visitor.BnfElement;
 
 import java.util.Collection;
@@ -31,5 +32,10 @@ public abstract class AbstractRepetition implements BnfType, BnfElement {
     @Override
     public boolean isTerminal() {
         return alternatives.stream().filter(alternative -> !alternative.isTerminal()).findAny().isEmpty();
+    }
+
+    @Override
+    public String getName() {
+        return alternatives.isEmpty() ? StringUtil.EMPTY : alternatives.get(0).getName();
     }
 }

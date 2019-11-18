@@ -8,5 +8,4 @@ public final class SequenceNode extends Node {
     public SequenceNode(String name, Node parent) {
         super(name, parent);
     }
-
 }

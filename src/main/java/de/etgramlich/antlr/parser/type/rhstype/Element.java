@@ -16,11 +16,15 @@ public final class Element implements BnfType, BnfElement {
     private final AbstractRepetition alternatives;
     private final LetterRange range;
 
+    private final String name;
+
     @Contract(pure = true)
     public Element(@NotNull final AbstractId id) {
         this.id = id;
         alternatives = null;
         range = null;
+
+        this.name = id.getText();
     }
 
     @Contract(pure = true)
@@ -28,6 +32,8 @@ public final class Element implements BnfType, BnfElement {
         id = null;
         this.alternatives = alternatives;
         range = null;
+
+        this.name = alternatives.getName();
     }
 
     @Contract(pure = true)
@@ -35,6 +41,8 @@ public final class Element implements BnfType, BnfElement {
         id = null;
         alternatives = null;
         range = letterRange;
+
+        this.name = letterRange.getName();
     }
 
 
@@ -85,6 +93,12 @@ public final class Element implements BnfType, BnfElement {
             range.accept(visitor);
         }
         visitor.visit(this);
+    }
+
+    @Contract(pure = true)
+    @Override
+    public String getName() {
+        return name;
     }
 
     @Override

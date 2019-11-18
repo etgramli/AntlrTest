@@ -7,6 +7,7 @@ public final class RuleId extends AbstractId {
     public RuleId(final String id) {
         super(id);
     }
+
     @Contract(pure = true)
     @Override
     public boolean isTerminal() {
