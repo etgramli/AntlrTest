@@ -15,8 +15,6 @@ import java.util.*;
 
 
 /**
- * ToDo: Nodes in graph to Scopes
- *
  * Rhs: respect call sequence and mutual exclusive rules
  */
 public final class Rule implements BnfType, BnfElement {
@@ -45,28 +43,6 @@ public final class Rule implements BnfType, BnfElement {
     @Contract(pure = true)
     public boolean hasOnlyOneAlternative() {
         return rhs.size() == 1;
-    }
-
-    @NotNull
-    public String buildInterface(final String pkg) {
-        final STGroup stGroup = new STGroupFile(INTERFACE_ST_FILENAME);
-        ST st = stGroup.getInstanceOf("templateInterface");
-        st.add("package", pkg);
-        st.add("interfaceName", lhs.getText());
-
-        final List<Method> methods = new ArrayList<>();
-        Set<String> encounteredNames = new HashSet<>();
-        for (Alternative alternative : rhs) {
-            for (Element element : alternative.getElements()) {
-                // ToDo: test for alternatives in element (is recursive)
-                if (element.getId() != null && encounteredNames.add(element.getId().getText())) {
-                    methods.add(new Method("int", element.getId().getText()));
-                }
-            }
-        }
-        st.add("methods", methods);
-
-        return st.render();
     }
 
     @Override

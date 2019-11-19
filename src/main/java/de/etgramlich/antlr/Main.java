@@ -5,6 +5,7 @@ import de.etgramlich.antlr.parser.gen.bnf.bnfParser;
 import de.etgramlich.antlr.parser.listener.RuleListListener;
 import de.etgramlich.antlr.parser.type.RuleList;
 import de.etgramlich.antlr.util.StringUtil;
+import de.etgramlich.antlr.util.graph.GraphBuilder;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.apache.commons.cli.*;
@@ -57,7 +58,8 @@ public final class Main {
         RuleListListener listener = new RuleListListener();
         parser.rulelist().enterRule(listener);
         RuleList ruleList = listener.getRuleList();
-        ruleList.saveInterfaces(targetDirectory, targetPackage);
+
+        GraphBuilder gb = new GraphBuilder(ruleList);
     }
 
     @NotNull

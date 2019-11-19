@@ -6,25 +6,25 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 public final class AlternativeNode extends Node {
-    private final List<Node> children;
+    private final List<Node> alternatives;
 
-    public AlternativeNode(final String name, final Node parent) {
-        this(name, parent, Collections.emptyList());
+    public AlternativeNode(final String name) {
+        this(name, Collections.emptyList());
     }
 
-    public AlternativeNode(final String name, final Node parent, final Collection<SequenceNode> nodes) {
-        super(name, parent);
-        children = new ArrayList<>(nodes);
+    public AlternativeNode(final String name, final Collection<SequenceNode> nodes) {
+        super(name);
+        alternatives = new ArrayList<>(nodes);
     }
 
-    public void addChild(final SequenceNode node) {
-        children.add(node);
+    public void addAlternative(final SequenceNode node) {
+        alternatives.add(node);
     }
 
     @NotNull
     @Contract(pure = true)
-    public List<Node> getChildren() {
-        return Collections.unmodifiableList(children);
+    public List<Node> getAlternatives() {
+        return Collections.unmodifiableList(alternatives);
     }
 
     @Contract(value = "null -> false", pure = true)
@@ -36,14 +36,13 @@ public final class AlternativeNode extends Node {
         AlternativeNode that = (AlternativeNode) o;
 
         if (!getName().equals(that.getName())) return false;
-        if (!Objects.equals(getParent(), that.getParent())) return false;
-        return children.equals(that.children);
+        return alternatives.equals(that.alternatives);
     }
 
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + children.hashCode();
+        result = 31 * result + alternatives.hashCode();
         return result;
     }
 }

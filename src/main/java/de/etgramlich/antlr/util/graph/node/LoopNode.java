@@ -12,11 +12,6 @@ public final class LoopNode extends Node {
         this.child = child;
     }
 
-    public LoopNode(final String name, final Node parent, final Node child) {
-        super(name, parent);
-        this.child = child;
-    }
-
     @Contract(pure = true)
     public Node getChild() {
         return child;
@@ -31,7 +26,6 @@ public final class LoopNode extends Node {
         LoopNode loopNode = (LoopNode) o;
 
         if (!getName().equals(loopNode.getName())) return false;
-        if (!Objects.equals(getParent(), loopNode.getParent())) return false;
         return Objects.equals(child, loopNode.child);
     }
 

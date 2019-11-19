@@ -6,22 +6,22 @@ import org.jetbrains.annotations.NotNull;
 import org.jgrapht.graph.DefaultEdge;
 
 public final class BnfEdge extends DefaultEdge {
-    private final Node source, target;
+    private final Scope source, target;
 
-    public BnfEdge(@NotNull final Node source, @NotNull final Node target) {
+    public BnfEdge(@NotNull final Scope source, @NotNull final Scope target) {
         this.source = source;
         this.target = target;
     }
 
     @Contract(pure = true)
     @Override
-    public Node getSource() {
+    public Scope getSource() {
         return source;
     }
 
     @Contract(pure = true)
     @Override
-    public Node getTarget() {
+    public Scope getTarget() {
         return target;
     }
 

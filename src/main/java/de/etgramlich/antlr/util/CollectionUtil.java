@@ -1,10 +1,13 @@
 package de.etgramlich.antlr.util;
 
+import de.etgramlich.antlr.util.graph.node.Node;
+import de.etgramlich.antlr.util.graph.node.SequenceNode;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public final class CollectionUtil {
@@ -29,5 +32,24 @@ public final class CollectionUtil {
         } else {
             return new ArrayList<>(Arrays.asList(items));
         }
+    }
+
+    /**
+     * Converts a sequence of SequenceNodes (basically a linked list) to an unmodifiable List.
+     * @param node A SequenceNode, must not be null.
+     * @return A non-empty, unmodifiable List of SequenceNodes.
+     */
+    @NotNull
+    public static List<Node> toList(@NotNull final SequenceNode node) {
+        List<SequenceNode> nodeList = new ArrayList<>();
+        nodeList.add(node);
+
+        SequenceNode currentNode = node;
+        while (currentNode.getSuccessor() != null) {
+            currentNode = currentNode.getSuccessor();
+            nodeList.add(currentNode);
+        }
+
+        return Collections.unmodifiableList(nodeList);
     }
 }

@@ -24,19 +24,6 @@ public final class RuleList implements BnfType, BnfElement {
         return rules;
     }
 
-    public void saveInterfaces(final String rootDirectory, @NotNull final String pkg) {
-        final String directory = rootDirectory + "/" + pkg.replace('.', '/');
-        System.out.println(directory);
-        for (Rule rule : rules) {
-            final String filepath = directory + "/" + rule.getLhs().getText() + ".java";
-            try (PrintWriter pw = new PrintWriter(filepath)) {
-                pw.write(rule.buildInterface(pkg));
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     @Override
     public void accept(@NotNull BnfTypeVisitor visitor) {
         visitor.visit(this);
