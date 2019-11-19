@@ -5,7 +5,6 @@ import de.etgramlich.antlr.parser.type.Rule;
 import de.etgramlich.antlr.parser.type.RuleList;
 import de.etgramlich.antlr.parser.type.rhstype.Alternative;
 import de.etgramlich.antlr.parser.type.rhstype.Element;
-import de.etgramlich.antlr.util.CollectionUtil;
 import de.etgramlich.antlr.util.graph.node.AlternativeNode;
 import de.etgramlich.antlr.util.graph.node.Node;
 import de.etgramlich.antlr.util.graph.node.SequenceNode;
@@ -21,12 +20,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * Builds a Graph with Scopes as vertices and Node as edges.
+ */
 public final class GraphBuilder {
-    private final Graph<Scope, BnfEdge> graph;
+    // ToDo: Remove nodes from Scopes and use Node as edges and Scope as vertex
+    private final Graph<Scope, ScopeEdge> graph;
     private Scope lastAddedScope;
 
     public GraphBuilder(@NotNull final RuleList ruleList) {
-        final Graph<Scope, BnfEdge> tmpGraph = new DefaultDirectedGraph<>(BnfEdge.class);
+        final Graph<Scope, ScopeEdge> tmpGraph = new DefaultDirectedGraph<>(null, null, false);
         graph = new ParanoidGraph<>(tmpGraph);
         lastAddedScope = null;
 
@@ -34,18 +37,31 @@ public final class GraphBuilder {
         nonTerminalRules.forEach(rule -> addAlternatives(rule.getRhs()));
     }
 
-    /**
-     * Adds scope to the graph and links it to the previously added scope.
-     * The edge is directional from the previous scope to the passed scope.
-     * @param scope The new scope to add, it will be the next end scope.
-     */
-    private void addNodeAndVertexToLastAddedNode(final Scope scope) {
+
+    private void addOptional(@NotNull final Scope scope, @NotNull final Node node) {
         graph.addVertex(scope);
         if (lastAddedScope != null) {
-            graph.addEdge(lastAddedScope, scope, new BnfEdge(lastAddedScope, scope));
+            graph.addEdge(lastAddedScope, scope, new ScopeEdge(lastAddedScope, scope, node));
+            graph.addEdge(lastAddedScope, scope, null);
         }
         lastAddedScope = scope;
     }
+    private void addSequence(@NotNull final Scope scope, @NotNull final Node node) {
+        graph.addVertex(scope);
+        if (lastAddedScope != null) {
+            graph.addEdge(lastAddedScope, scope, new ScopeEdge(lastAddedScope, scope, node));
+        }
+        lastAddedScope = scope;
+    }
+    private void addLoop(@NotNull final Scope scope, @NotNull final Node loop) {
+        graph.addVertex(scope);
+        if (lastAddedScope != null) {
+            graph.addEdge(lastAddedScope, scope, new ScopeEdge(lastAddedScope, scope, loop));
+            graph.addEdge(scope, lastAddedScope, null);
+        }
+        lastAddedScope = scope;
+    }
+
 
     /**
      * Returns an unmodifiable view of the graph built by the constructor.
@@ -54,7 +70,7 @@ public final class GraphBuilder {
      */
     @NotNull
     @Contract(pure = true)
-    public Graph<Scope, BnfEdge> getGraph() {
+    public Graph<Scope, ScopeEdge> getGraph() {
         return new AsUnmodifiableGraph<>(graph);
     }
 
@@ -67,10 +83,9 @@ public final class GraphBuilder {
             throw new IllegalArgumentException("Alternatives is empty!!");
         }
         final Scope scope = new Scope(alternatives.get(0).getName());
-        for (Alternative alternative : alternatives) {
-            scope.addNode(getAlternative(alternative));
-        }
-        addNodeAndVertexToLastAddedNode(scope);
+        final List<SequenceNode> nodeList = alternatives.stream().map(this::getAlternative).collect(Collectors.toList());
+        final AlternativeNode node = new AlternativeNode(alternatives.get(0).getName(), nodeList);
+        addSequence(scope, node);
     }
 
     /**
@@ -89,7 +104,9 @@ public final class GraphBuilder {
      * @param alternative Alternative to be added to the scope.
      */
     private void addAlterative(@NotNull Alternative alternative) {
-        Scope alternativeScope = new Scope(alternative.getName(), CollectionUtil.toList(getAlternative(alternative)));
+        final Scope alternativeScope = new Scope(alternative.getName());
+        final Node alternativeNode = getAlternative(alternative);
+        addSequence(alternativeScope, alternativeNode);
     }
 
     /**
@@ -99,34 +116,42 @@ public final class GraphBuilder {
      * @return SequenceNode, not null.
      */
     private SequenceNode getAlternative(@NotNull final Alternative alternative) {
-        SequenceNode alternativeNode = null;
-        final int numElements = alternative.getElements().size();
-        if (numElements == 1) {
-            alternativeNode = new SequenceNode(alternative.getName());
-        } else if (numElements > 1) {
-            for (Element element : Lists.reverse(alternative.getElements())) {
-                alternativeNode = new SequenceNode(element.getName(), alternativeNode);
-            }
-        } else {
+        if (alternative.getElements().size() == 0) {
             throw new IllegalArgumentException("Alternatives with no elements!");
         }
+
+        SequenceNode alternativeNode = null;
+        for (Element element : Lists.reverse(alternative.getElements())) {
+            alternativeNode = new SequenceNode(element.getName(), alternativeNode);
+        }
+
         return alternativeNode;
     }
 
-    private void addElement(final Element element) {
-        // ToDo
+    private void addElement(@NotNull final Element element) {
+        final Scope scope = new Scope(element.getName());
+        final Node elementNode = getElement(element);
+
+        if (element.isOptional()) {
+            addOptional(scope, elementNode);
+        } else if (element.isRepetition()) {
+            addLoop(scope, elementNode);
+        } else if(element.isPrecedence() || element.isId()) {
+            addSequence(scope, elementNode);
+        } else {
+            throw new UnsupportedOperationException("Unknown element type!");
+        }
     }
 
-    private Node getElement(final Element element) {
-        Node node = null;
+    @NotNull
+    private Node getElement(@NotNull final Element element) {
         if (element.isId()) {
-            node = new SequenceNode(element.getId().getText());
-        } else if (element.isAlternative()) {
-            // TODo
+            return new SequenceNode(element.getId().getText());
+        } else if (element.isRepetition()) {
+            return getAlternatives(element.getRepetition());
         } else {// Is LetterRange
-            // ToDo
+            return new SequenceNode(element.getName());
         }
-        return node;
     }
 
     /**
@@ -155,7 +180,7 @@ public final class GraphBuilder {
      * @return List of Scopes.
      */
     private List<Scope> findSuccessors(final Scope scope) {
-        return graph.outgoingEdgesOf(scope).stream().map(BnfEdge::getTarget).collect(Collectors.toList());
+        return graph.outgoingEdgesOf(scope).stream().map(ScopeEdge::getTarget).collect(Collectors.toList());
     }
 
     /**
@@ -175,7 +200,7 @@ public final class GraphBuilder {
      * @return List of nodes.
      */
     private List<Scope> findPredecessors(@NotNull final Scope scope) {
-        return graph.incomingEdgesOf(scope).stream().map(BnfEdge::getSource).collect(Collectors.toList());
+        return graph.incomingEdgesOf(scope).stream().map(ScopeEdge::getSource).collect(Collectors.toList());
     }
 
     /**

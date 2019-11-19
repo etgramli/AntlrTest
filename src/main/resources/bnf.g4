@@ -53,8 +53,8 @@ alternative     // Sequence
     ;
 
 element
-    : optional  // \
-    | zeroormore// /= Repetition
+    : optional
+    | zeroormore// Repetition
     | precedence
     | text
     | id

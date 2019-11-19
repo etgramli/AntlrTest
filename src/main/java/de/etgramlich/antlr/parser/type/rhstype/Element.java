@@ -13,7 +13,7 @@ import java.util.List;
 
 public final class Element implements BnfType, BnfElement {
     private final AbstractId id;
-    private final AbstractRepetition alternatives;
+    private final AbstractRepetition repetition;
     private final LetterRange range;
 
     private final String name;
@@ -21,25 +21,25 @@ public final class Element implements BnfType, BnfElement {
     @Contract(pure = true)
     public Element(@NotNull final AbstractId id) {
         this.id = id;
-        alternatives = null;
+        repetition = null;
         range = null;
 
         this.name = id.getText();
     }
 
     @Contract(pure = true)
-    public Element(@NotNull final AbstractRepetition alternatives) {
+    public Element(@NotNull final AbstractRepetition repetition) {
         id = null;
-        this.alternatives = alternatives;
+        this.repetition = repetition;
         range = null;
 
-        this.name = alternatives.getName();
+        this.name = repetition.getName();
     }
 
     @Contract(pure = true)
     public Element(@NotNull final LetterRange letterRange) {
         id = null;
-        alternatives = null;
+        repetition = null;
         range = letterRange;
 
         this.name = letterRange.getName();
@@ -47,15 +47,15 @@ public final class Element implements BnfType, BnfElement {
 
 
     public boolean isOptional() {
-        return isAlternative() && alternatives.isOptional();
+        return repetition != null && repetition.isOptional();
     }
 
     public boolean isRepetition() {
-        return isAlternative() && alternatives.isRepetition();
+        return repetition != null && repetition.isRepetition();
     }
 
     public boolean isPrecedence() {
-        return isAlternative() && alternatives.isPrecedence();
+        return repetition != null && repetition.isPrecedence();
     }
 
     @Contract(pure = true)
@@ -64,18 +64,13 @@ public final class Element implements BnfType, BnfElement {
     }
 
     @Contract(pure = true)
-    public boolean isAlternative() {
-        return alternatives != null;
-    }
-
-    @Contract(pure = true)
     public AbstractId getId() {
         return id;
     }
 
     @Contract(pure = true)
-    public List<Alternative> getAlternatives() {
-        return alternatives != null ? alternatives.getAlternatives() : Collections.emptyList();
+    public List<Alternative> getRepetition() {
+        return repetition != null ? repetition.getAlternatives() : Collections.emptyList();
     }
 
     @Contract(pure = true)
@@ -87,8 +82,8 @@ public final class Element implements BnfType, BnfElement {
     public void accept(BnfTypeVisitor visitor) {
         if (id != null) {
             id.accept(visitor);
-        } else if (alternatives != null) {
-            alternatives.accept(visitor);
+        } else if (repetition != null) {
+            repetition.accept(visitor);
         } else if (range != null) {
             range.accept(visitor);
         }
@@ -107,8 +102,8 @@ public final class Element implements BnfType, BnfElement {
             return id.isTerminal();
         } else if (range != null) { // Range is always composed of (range of) terminals
             return true;
-        } else if (alternatives != null) {
-            return alternatives.isTerminal();
+        } else if (repetition != null) {
+            return repetition.isTerminal();
         } else {                    // Should never happen
             return true;
         }
