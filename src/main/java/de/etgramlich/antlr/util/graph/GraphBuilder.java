@@ -14,6 +14,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.AsUnmodifiableGraph;
 import org.jgrapht.graph.DefaultDirectedGraph;
+import org.jgrapht.graph.DirectedPseudograph;
 import org.jgrapht.graph.ParanoidGraph;
 
 import java.util.List;
@@ -24,12 +25,11 @@ import java.util.stream.Collectors;
  * Builds a Graph with Scopes as vertices and Node as edges.
  */
 public final class GraphBuilder {
-    // ToDo: Remove nodes from Scopes and use Node as edges and Scope as vertex
     private final Graph<Scope, ScopeEdge> graph;
     private Scope lastAddedScope;
 
     public GraphBuilder(@NotNull final RuleList ruleList) {
-        final Graph<Scope, ScopeEdge> tmpGraph = new DefaultDirectedGraph<>(null, null, false);
+        final Graph<Scope, ScopeEdge> tmpGraph = new DirectedPseudograph<>(null, null, false);
         graph = new ParanoidGraph<>(tmpGraph);
         lastAddedScope = null;
 
@@ -38,6 +38,12 @@ public final class GraphBuilder {
     }
 
 
+    /**
+     * Adds a Scope as vertex to the graph, and associates the node with the forward directed edge and also creates
+     * also a second edge with null as Node, indicating that the node in the other edge can be omitted.
+     * @param scope New vertex, must not be null.
+     * @param node Node associated with the edge.
+     */
     private void addOptional(@NotNull final Scope scope, @NotNull final Node node) {
         graph.addVertex(scope);
         if (lastAddedScope != null) {
@@ -46,6 +52,12 @@ public final class GraphBuilder {
         }
         lastAddedScope = scope;
     }
+
+    /**
+     * Adds a sequence of nodes (may be only one) to the graph.
+     * @param scope Next scope to be added as edge.
+     * @param node Node(s) to be associated with the edge.
+     */
     private void addSequence(@NotNull final Scope scope, @NotNull final Node node) {
         graph.addVertex(scope);
         if (lastAddedScope != null) {
@@ -53,6 +65,13 @@ public final class GraphBuilder {
         }
         lastAddedScope = scope;
     }
+
+    /**
+     * Adds a Scope as vertex to the graph and associates the Node with the forward edge and also creates an Edge with
+     * null as Node backwards.
+     * @param scope Scope  to add as vertex.
+     * @param loop Loop node to add to the forward edge.
+     */
     private void addLoop(@NotNull final Scope scope, @NotNull final Node loop) {
         graph.addVertex(scope);
         if (lastAddedScope != null) {
@@ -104,9 +123,7 @@ public final class GraphBuilder {
      * @param alternative Alternative to be added to the scope.
      */
     private void addAlterative(@NotNull Alternative alternative) {
-        final Scope alternativeScope = new Scope(alternative.getName());
-        final Node alternativeNode = getAlternative(alternative);
-        addSequence(alternativeScope, alternativeNode);
+        addSequence(new Scope(alternative.getName()), getAlternative(alternative));
     }
 
     /**
@@ -227,5 +244,14 @@ public final class GraphBuilder {
             throw new NullPointerException("No end node!");
         }
         return endNode.get();
+    }
+
+    private String getAltName(final Scope scope) {
+        Optional<ScopeEdge> edge = graph.outgoingEdgesOf(scope).stream().filter(e -> !e.isEmpty()).findFirst();
+        if (edge.isEmpty()) {
+            return "EndScope";
+        } else {
+            return edge.get().getNodes().get(0).getName();
+        }
     }
 }

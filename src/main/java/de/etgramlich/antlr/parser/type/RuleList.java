@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public final class RuleList implements BnfType, BnfElement {
@@ -33,5 +34,19 @@ public final class RuleList implements BnfType, BnfElement {
     @Override
     public String getName() {
         return rules.isEmpty() ? StringUtil.EMPTY : rules.get(0).getName();
+    }
+
+    @NotNull
+    @Contract(pure = true)
+    @Override
+    public List<String> getNonTerminalDependants() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public void removeNonTerminals() {
+        for (Rule rule : rules) {
+            rule.removeNonTerminals();
+        }
     }
 }

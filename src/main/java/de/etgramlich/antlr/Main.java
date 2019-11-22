@@ -6,11 +6,14 @@ import de.etgramlich.antlr.parser.listener.RuleListListener;
 import de.etgramlich.antlr.parser.type.RuleList;
 import de.etgramlich.antlr.util.StringUtil;
 import de.etgramlich.antlr.util.graph.GraphBuilder;
+import de.etgramlich.antlr.util.graph.Scope;
+import de.etgramlich.antlr.util.graph.ScopeEdge;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.apache.commons.cli.*;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jgrapht.Graph;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -60,6 +63,7 @@ public final class Main {
         RuleList ruleList = listener.getRuleList();
 
         GraphBuilder gb = new GraphBuilder(ruleList);
+        Graph<Scope, ScopeEdge> graph = gb.getGraph();
     }
 
     @NotNull

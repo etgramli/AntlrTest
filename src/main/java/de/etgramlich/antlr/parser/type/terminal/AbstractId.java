@@ -55,4 +55,9 @@ public abstract class AbstractId implements BnfType, BnfElement {
     public void accept(@NotNull BnfTypeVisitor visitor) {
         visitor.visit(this);
     }
+
+    @Override
+    public void removeNonTerminals() {
+        // ToDo
+    }
 }

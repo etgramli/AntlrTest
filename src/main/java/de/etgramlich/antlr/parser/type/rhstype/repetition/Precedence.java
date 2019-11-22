@@ -35,4 +35,9 @@ public final class Precedence extends AbstractRepetition {
         getAlternatives().forEach(alternative -> alternative.accept(visitor));
         visitor.visit(this);
     }
+
+    @Override
+    public void removeNonTerminals() {
+        // ToDo
+    }
 }

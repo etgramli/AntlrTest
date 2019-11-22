@@ -5,7 +5,10 @@ import de.etgramlich.antlr.util.visitor.BnfTypeVisitor;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public final class Optional extends AbstractRepetition {
     public Optional(Collection<Alternative> alternatives) {
@@ -37,5 +40,10 @@ public final class Optional extends AbstractRepetition {
     public void accept(@NotNull BnfTypeVisitor visitor) {
         getAlternatives().forEach(alternative -> alternative.accept(visitor));
         visitor.visit(this);
+    }
+
+    @Override
+    public void removeNonTerminals() {
+        // ToDo
     }
 }

@@ -42,4 +42,19 @@ public final class Alternative implements BnfType, BnfElement {
     public boolean isTerminal() {
         return elements.stream().filter(element -> !element.isTerminal()).findAny().isEmpty();
     }
+
+    @Override
+    public List<String> getNonTerminalDependants() {
+        if (isTerminal()) return Collections.emptyList();
+        List<String> dependencies = new ArrayList<>();
+        for (Element element : elements) {
+            dependencies.addAll(element.getNonTerminalDependants());
+        }
+        return Collections.unmodifiableList(dependencies);
+    }
+
+    @Override
+    public void removeNonTerminals() {
+        // ToDo
+    }
 }

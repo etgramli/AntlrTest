@@ -108,4 +108,23 @@ public final class Element implements BnfType, BnfElement {
             return true;
         }
     }
+
+    @Override
+    public List<String> getNonTerminalDependants() {
+        if (isTerminal()) return Collections.emptyList();
+        if (id != null) {
+            return id.getNonTerminalDependants();
+        } else if (range != null) {
+            return range.getNonTerminalDependants();
+        } else if (repetition != null) {
+            return repetition.getNonTerminalDependants();
+        } else {// Should never happen
+            return Collections.emptyList();
+        }
+    }
+
+    @Override
+    public void removeNonTerminals() {
+        // ToDo
+    }
 }

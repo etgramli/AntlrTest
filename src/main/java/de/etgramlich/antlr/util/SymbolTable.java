@@ -4,16 +4,30 @@ import de.etgramlich.antlr.parser.type.BnfType;
 import org.jetbrains.annotations.Contract;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Singleton class to store symbols of the parsed EBNF grammar.
  */
 public final class SymbolTable {
     private static final Map<String, BnfType> symbolTable = new HashMap<>();
+    private static final Map<String, Boolean> rules = new HashMap<>();
 
     @Contract(pure = true)
     private SymbolTable() {}
+
+    @Contract(pure = true)
+    public static boolean containsRule(final String ruleName) {
+        return rules.containsKey(ruleName);
+    }
+    public static void addRule(final String name, final boolean isTerminal) {
+        rules.put(name, isTerminal);
+    }
+    public static boolean isTerminal(final String rule) {
+        return rules.get(rule);
+    }
 
     @Contract(pure = true)
     public static boolean contains(final String symbol) {

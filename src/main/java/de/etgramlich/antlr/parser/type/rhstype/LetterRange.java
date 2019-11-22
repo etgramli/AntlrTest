@@ -7,6 +7,9 @@ import de.etgramlich.antlr.util.visitor.BnfTypeVisitor;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
+import java.util.List;
+
 public final class LetterRange implements BnfType, BnfElement {
     private final char beginChar, endChar;
 
@@ -34,6 +37,18 @@ public final class LetterRange implements BnfType, BnfElement {
     @Override
     public boolean isTerminal() {
         return true;
+    }
+
+    @NotNull
+    @Contract(pure = true)
+    @Override
+    public List<String> getNonTerminalDependants() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public void removeNonTerminals() {
+        // ToDo
     }
 
     @Override

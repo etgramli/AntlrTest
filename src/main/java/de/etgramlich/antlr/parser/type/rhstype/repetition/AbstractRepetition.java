@@ -7,6 +7,7 @@ import de.etgramlich.antlr.util.visitor.BnfElement;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public abstract class AbstractRepetition implements BnfType, BnfElement {
     private final List<Alternative> alternatives;
@@ -32,6 +33,11 @@ public abstract class AbstractRepetition implements BnfType, BnfElement {
     @Override
     public boolean isTerminal() {
         return alternatives.stream().filter(alternative -> !alternative.isTerminal()).findAny().isEmpty();
+    }
+
+    @Override
+    public List<String> getNonTerminalDependants() {
+        return getAlternatives().stream().flatMap(alternative -> alternative.getNonTerminalDependants().stream()).collect(Collectors.toList());
     }
 
     @Override

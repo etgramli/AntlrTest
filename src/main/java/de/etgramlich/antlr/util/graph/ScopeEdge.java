@@ -43,6 +43,15 @@ public final class ScopeEdge extends DefaultEdge {
         return nodes.size() > 1;
     }
 
+    /**
+     * Returns true if there are no nodes associated with this edge. May be empty if this edge is used for a loop or optional element.
+     * @return True if at least one node is associated.
+     */
+    @Contract(pure = true)
+    public boolean isEmpty() {
+        return nodes.isEmpty();
+    }
+
     @Contract(value = "null -> false", pure = true)
     @Override
     public boolean equals(Object o) {

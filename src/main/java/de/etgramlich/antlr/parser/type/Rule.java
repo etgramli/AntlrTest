@@ -1,15 +1,12 @@
 package de.etgramlich.antlr.parser.type;
 
 import de.etgramlich.antlr.parser.type.rhstype.Alternative;
-import de.etgramlich.antlr.parser.type.rhstype.Element;
 import de.etgramlich.antlr.parser.type.terminal.AbstractId;
+import de.etgramlich.antlr.util.SymbolTable;
 import de.etgramlich.antlr.util.visitor.BnfElement;
 import de.etgramlich.antlr.util.visitor.BnfTypeVisitor;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.stringtemplate.v4.ST;
-import org.stringtemplate.v4.STGroup;
-import org.stringtemplate.v4.STGroupFile;
 
 import java.util.*;
 
@@ -26,8 +23,18 @@ public final class Rule implements BnfType, BnfElement {
     @Contract(pure = true)
     public Rule(final AbstractId lhs, final List<Alternative> rhs) {
         this.lhs = lhs;
-        this.rhs = List.copyOf(rhs);
+        this.rhs = List.copyOf(replaceNonTerminals(rhs));
     }
+
+
+    @NotNull
+    private static List<Alternative> replaceNonTerminals(@NotNull final List<Alternative> alternatives) {
+        final List<Alternative> terminals = new ArrayList<>(alternatives.size());
+        // ToDo: Replace NTs by Ts
+
+        return terminals;
+    }
+
 
     @Contract(pure = true)
     public AbstractId getLhs() {
@@ -53,6 +60,22 @@ public final class Rule implements BnfType, BnfElement {
     @Override
     public boolean isTerminal() {
         return rhs.stream().filter(alternative -> !alternative.isTerminal()).findAny().isEmpty();
+    }
+
+    @Override
+    public List<String> getNonTerminalDependants() {
+        if (isTerminal()) return Collections.emptyList();
+        List<String> nonTerminals = new ArrayList<>();
+        for (Alternative alternative : rhs) {
+            nonTerminals.addAll(alternative.getNonTerminalDependants());
+        }
+        return Collections.unmodifiableList(nonTerminals);
+    }
+
+    @Override
+    public void removeNonTerminals() {
+        // ToDo
+        SymbolTable.addRule(lhs.getName(), isTerminal());
     }
 
     @Override

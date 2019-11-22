@@ -1,13 +1,14 @@
 package de.etgramlich.antlr.util.graph.node;
 
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
 public final class SequenceNode extends Node {
     private final SequenceNode successor;
 
-    public SequenceNode(String name) {
+    public SequenceNode(final String name) {
         this(name, null);
     }
 
@@ -30,13 +31,14 @@ public final class SequenceNode extends Node {
 
         SequenceNode that = (SequenceNode) o;
 
+        if (!getName().equals(that.getName())) return false;
         return Objects.equals(successor, that.successor);
     }
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (successor != null ? successor.hashCode() : 0);
-        return result;
+        final int superHashCode = super.hashCode();
+        final int successorHashCode = successor != null ? successor.hashCode() : 0;
+        return 31 * superHashCode + successorHashCode;
     }
 }
