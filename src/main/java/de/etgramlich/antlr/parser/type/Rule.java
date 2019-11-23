@@ -23,18 +23,8 @@ public final class Rule implements BnfType, BnfElement {
     @Contract(pure = true)
     public Rule(final AbstractId lhs, final List<Alternative> rhs) {
         this.lhs = lhs;
-        this.rhs = List.copyOf(replaceNonTerminals(rhs));
+        this.rhs = List.copyOf(rhs);
     }
-
-
-    @NotNull
-    private static List<Alternative> replaceNonTerminals(@NotNull final List<Alternative> alternatives) {
-        final List<Alternative> terminals = new ArrayList<>(alternatives.size());
-        // ToDo: Replace NTs by Ts
-
-        return terminals;
-    }
-
 
     @Contract(pure = true)
     public AbstractId getLhs() {

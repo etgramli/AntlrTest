@@ -14,10 +14,16 @@ import org.apache.commons.cli.*;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jgrapht.Graph;
+import org.jgrapht.io.ComponentNameProvider;
+import org.jgrapht.io.DOTExporter;
+import org.jgrapht.io.GraphExporter;
 
 import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import org.jgrapht.io.ExportException;
 import java.util.List;
 
 public final class Main {
@@ -61,9 +67,15 @@ public final class Main {
         RuleListListener listener = new RuleListListener();
         parser.rulelist().enterRule(listener);
         RuleList ruleList = listener.getRuleList();
+        ruleList.removeNonTerminals();
 
         GraphBuilder gb = new GraphBuilder(ruleList);
         Graph<Scope, ScopeEdge> graph = gb.getGraph();
+        try {
+            renderHrefGraph(graph);
+        } catch (ExportException e) {
+            e.printStackTrace();
+        }
     }
 
     @NotNull
@@ -75,5 +87,17 @@ public final class Main {
         final List<String> allRules = grammar.subList(beginIndex + 1, grammar.size());
         final List<String> noDuplicateRules = StringUtil.removeDuplicates(StringUtil.stripBlankLines(allRules));
         return String.join("\n", noDuplicateRules);
+    }
+
+    private static void renderHrefGraph(Graph<Scope, ScopeEdge> hrefGraph) throws ExportException {
+        final ComponentNameProvider<Scope> vertexProvider = scope -> "S_" + scope.getName();
+        final ComponentNameProvider<Scope> vertexIdProvider = scope -> "S_id_" + scope.getName();
+        final ComponentNameProvider<ScopeEdge> edgeProvider =
+                scopeEdge -> "E_" + scopeEdge.getNodes().get(0).getName() + "(" + scopeEdge.getNodes().size() + ")";
+        final GraphExporter<Scope, ScopeEdge> exporter =
+                new DOTExporter<>(vertexIdProvider, vertexProvider, edgeProvider);
+        final Writer writer = new StringWriter();
+        exporter.exportGraph(hrefGraph, writer);
+        System.out.println(writer.toString());
     }
 }
