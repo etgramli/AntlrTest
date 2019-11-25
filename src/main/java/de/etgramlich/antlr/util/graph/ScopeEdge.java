@@ -43,6 +43,14 @@ public final class ScopeEdge extends DefaultEdge {
         return nodes.size() > 1;
     }
 
+    public int getTotalNumberOfNodes() {
+        int counter = nodes.size();
+        for (Node node : nodes) {
+            counter += node.getTotalAmountOfChildNodes();
+        }
+        return counter;
+    }
+
     /**
      * Returns true if there are no nodes associated with this edge. May be empty if this edge is used for a loop or optional element.
      * @return True if at least one node is associated.

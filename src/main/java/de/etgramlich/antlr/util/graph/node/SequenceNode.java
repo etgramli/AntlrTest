@@ -1,7 +1,6 @@
 package de.etgramlich.antlr.util.graph.node;
 
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -10,6 +9,12 @@ public final class SequenceNode extends Node {
 
     public SequenceNode(final String name) {
         this(name, null);
+    }
+
+    @Contract(pure = true)
+    @Override
+    public int getTotalAmountOfChildNodes() {
+        return 1 + (successor != null ? successor.getTotalAmountOfChildNodes() : 0);
     }
 
     public SequenceNode(final String name, final SequenceNode successor) {

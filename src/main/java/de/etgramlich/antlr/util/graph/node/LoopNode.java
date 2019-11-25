@@ -17,6 +17,11 @@ public final class LoopNode extends Node {
         return child;
     }
 
+    @Override
+    public int getTotalAmountOfChildNodes() {
+        return 1 + child.getTotalAmountOfChildNodes();
+    }
+
     @Contract(value = "null -> false", pure = true)
     @Override
     public boolean equals(Object o) {

@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-public final class RuleList implements BnfType, BnfElement {
+public class RuleList implements BnfType, BnfElement {
     private final List<Rule> rules;
 
     public RuleList(final Collection<Rule> rules) {
@@ -44,6 +44,7 @@ public final class RuleList implements BnfType, BnfElement {
     @Override
     public void removeNonTerminals() {
         for (Rule rule : rules) {
+            if (rule.isTerminal()) continue;
             rule.removeNonTerminals();
         }
     }

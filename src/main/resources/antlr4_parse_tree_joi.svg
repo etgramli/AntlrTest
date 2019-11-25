@@ -1,0 +1,3507 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1671.5"
+   height="387"
+   version="1.1"
+   id="svg1038"
+   sodipodi:docname="antlr4_parse_tree_joi.svg"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)">
+  <metadata
+     id="metadata1044">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>Syntax-Tree of the Joi grammar</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs1042" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1031"
+     id="namedview1040"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:zoom="0.20385675"
+     inkscape:cx="353.68919"
+     inkscape:cy="-130.5"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg1038" />
+  <line
+     x1="773.3125"
+     y1="7.5"
+     x2="77"
+     y2="31.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line2" />
+  <line
+     x1="77"
+     y1="38.5"
+     x2="38.5"
+     y2="62.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line4" />
+  <line
+     x1="38.5"
+     y1="69.5"
+     x2="38.5"
+     y2="93.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line6" />
+  <line
+     x1="38.5"
+     y1="100.5"
+     x2="7"
+     y2="124.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line8" />
+  <line
+     x1="38.5"
+     y1="100.5"
+     x2="38.5"
+     y2="124.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line10" />
+  <line
+     x1="38.5"
+     y1="131.5"
+     x2="38.5"
+     y2="155.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line12" />
+  <line
+     x1="38.5"
+     y1="100.5"
+     x2="70"
+     y2="124.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line14" />
+  <line
+     x1="77"
+     y1="38.5"
+     x2="76.5"
+     y2="62.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line16" />
+  <line
+     x1="77"
+     y1="38.5"
+     x2="115.5"
+     y2="62.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line18" />
+  <line
+     x1="115.5"
+     y1="69.5"
+     x2="115.5"
+     y2="93.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line20" />
+  <line
+     x1="115.5"
+     y1="100.5"
+     x2="115.5"
+     y2="124.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line22" />
+  <line
+     x1="115.5"
+     y1="131.5"
+     x2="115.5"
+     y2="155.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line24" />
+  <line
+     x1="115.5"
+     y1="162.5"
+     x2="115.5"
+     y2="186.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line26" />
+  <line
+     x1="115.5"
+     y1="193.5"
+     x2="84"
+     y2="217.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line28" />
+  <line
+     x1="115.5"
+     y1="193.5"
+     x2="115.5"
+     y2="217.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line30" />
+  <line
+     x1="115.5"
+     y1="224.5"
+     x2="115.5"
+     y2="248.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line32" />
+  <line
+     x1="115.5"
+     y1="193.5"
+     x2="147"
+     y2="217.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line34" />
+  <line
+     x1="773.3125"
+     y1="7.5"
+     x2="358.875"
+     y2="31.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line36" />
+  <line
+     x1="358.875"
+     y1="38.5"
+     x2="192.5"
+     y2="62.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line38" />
+  <line
+     x1="192.5"
+     y1="69.5"
+     x2="192.5"
+     y2="93.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line40" />
+  <line
+     x1="192.5"
+     y1="100.5"
+     x2="161"
+     y2="124.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line42" />
+  <line
+     x1="192.5"
+     y1="100.5"
+     x2="192.5"
+     y2="124.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line44" />
+  <line
+     x1="192.5"
+     y1="131.5"
+     x2="192.5"
+     y2="155.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line46" />
+  <line
+     x1="192.5"
+     y1="100.5"
+     x2="224"
+     y2="124.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line48" />
+  <line
+     x1="358.875"
+     y1="38.5"
+     x2="358.375"
+     y2="62.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line50" />
+  <line
+     x1="358.875"
+     y1="38.5"
+     x2="525.25"
+     y2="62.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line52" />
+  <line
+     x1="525.25"
+     y1="69.5"
+     x2="525.25"
+     y2="93.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line54" />
+  <line
+     x1="525.25"
+     y1="100.5"
+     x2="525.25"
+     y2="124.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line56" />
+  <line
+     x1="525.25"
+     y1="131.5"
+     x2="258"
+     y2="155.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line58" />
+  <line
+     x1="258"
+     y1="162.5"
+     x2="258"
+     y2="186.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line60" />
+  <line
+     x1="258"
+     y1="193.5"
+     x2="258"
+     y2="217.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line62" />
+  <line
+     x1="525.25"
+     y1="131.5"
+     x2="339.5"
+     y2="155.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line64" />
+  <line
+     x1="339.5"
+     y1="162.5"
+     x2="339.5"
+     y2="186.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line66" />
+  <line
+     x1="339.5"
+     y1="193.5"
+     x2="308"
+     y2="217.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line68" />
+  <line
+     x1="339.5"
+     y1="193.5"
+     x2="339.5"
+     y2="217.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line70" />
+  <line
+     x1="339.5"
+     y1="224.5"
+     x2="339.5"
+     y2="248.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line72" />
+  <line
+     x1="339.5"
+     y1="193.5"
+     x2="371"
+     y2="217.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line74" />
+  <line
+     x1="525.25"
+     y1="131.5"
+     x2="401.5"
+     y2="155.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line76" />
+  <line
+     x1="401.5"
+     y1="162.5"
+     x2="401.5"
+     y2="186.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line78" />
+  <line
+     x1="401.5"
+     y1="193.5"
+     x2="401.5"
+     y2="217.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line80" />
+  <line
+     x1="525.25"
+     y1="131.5"
+     x2="463.5"
+     y2="155.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line82" />
+  <line
+     x1="463.5"
+     y1="162.5"
+     x2="463.5"
+     y2="186.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line84" />
+  <line
+     x1="463.5"
+     y1="193.5"
+     x2="432"
+     y2="217.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line86" />
+  <line
+     x1="463.5"
+     y1="193.5"
+     x2="463.5"
+     y2="217.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line88" />
+  <line
+     x1="463.5"
+     y1="224.5"
+     x2="463.5"
+     y2="248.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line90" />
+  <line
+     x1="463.5"
+     y1="193.5"
+     x2="495"
+     y2="217.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line92" />
+  <line
+     x1="525.25"
+     y1="131.5"
+     x2="562"
+     y2="155.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line94" />
+  <line
+     x1="562"
+     y1="162.5"
+     x2="562"
+     y2="186.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line96" />
+  <line
+     x1="562"
+     y1="193.5"
+     x2="514"
+     y2="217.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line98" />
+  <line
+     x1="562"
+     y1="193.5"
+     x2="562"
+     y2="217.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line100" />
+  <line
+     x1="562"
+     y1="224.5"
+     x2="562"
+     y2="248.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line102" />
+  <line
+     x1="562"
+     y1="255.5"
+     x2="562"
+     y2="279.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line104" />
+  <line
+     x1="562"
+     y1="286.5"
+     x2="562"
+     y2="310.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line106" />
+  <line
+     x1="562"
+     y1="317.5"
+     x2="530.5"
+     y2="341.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line108" />
+  <line
+     x1="562"
+     y1="317.5"
+     x2="562"
+     y2="341.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line110" />
+  <line
+     x1="562"
+     y1="348.5"
+     x2="562"
+     y2="372.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line112" />
+  <line
+     x1="562"
+     y1="317.5"
+     x2="593.5"
+     y2="341.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line114" />
+  <line
+     x1="562"
+     y1="193.5"
+     x2="610"
+     y2="217.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line116" />
+  <line
+     x1="525.25"
+     y1="131.5"
+     x2="681.5"
+     y2="155.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line118" />
+  <line
+     x1="681.5"
+     y1="162.5"
+     x2="681.5"
+     y2="186.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line120" />
+  <line
+     x1="681.5"
+     y1="193.5"
+     x2="635"
+     y2="217.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line122" />
+  <line
+     x1="681.5"
+     y1="193.5"
+     x2="681.5"
+     y2="217.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line124" />
+  <line
+     x1="681.5"
+     y1="224.5"
+     x2="681.5"
+     y2="248.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line126" />
+  <line
+     x1="681.5"
+     y1="255.5"
+     x2="681.5"
+     y2="279.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line128" />
+  <line
+     x1="681.5"
+     y1="286.5"
+     x2="681.5"
+     y2="310.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line130" />
+  <line
+     x1="681.5"
+     y1="317.5"
+     x2="650"
+     y2="341.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line132" />
+  <line
+     x1="681.5"
+     y1="317.5"
+     x2="681.5"
+     y2="341.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line134" />
+  <line
+     x1="681.5"
+     y1="348.5"
+     x2="681.5"
+     y2="372.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line136" />
+  <line
+     x1="681.5"
+     y1="317.5"
+     x2="713"
+     y2="341.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line138" />
+  <line
+     x1="681.5"
+     y1="193.5"
+     x2="728"
+     y2="217.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line140" />
+  <line
+     x1="525.25"
+     y1="131.5"
+     x2="792.5"
+     y2="155.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line142" />
+  <line
+     x1="792.5"
+     y1="162.5"
+     x2="792.5"
+     y2="186.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line144" />
+  <line
+     x1="792.5"
+     y1="193.5"
+     x2="744.5"
+     y2="217.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line146" />
+  <line
+     x1="792.5"
+     y1="193.5"
+     x2="792.5"
+     y2="217.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line148" />
+  <line
+     x1="792.5"
+     y1="224.5"
+     x2="792.5"
+     y2="248.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line150" />
+  <line
+     x1="792.5"
+     y1="255.5"
+     x2="792.5"
+     y2="279.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line152" />
+  <line
+     x1="792.5"
+     y1="286.5"
+     x2="792.5"
+     y2="310.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line154" />
+  <line
+     x1="792.5"
+     y1="317.5"
+     x2="761"
+     y2="341.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line156" />
+  <line
+     x1="792.5"
+     y1="317.5"
+     x2="792.5"
+     y2="341.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line158" />
+  <line
+     x1="792.5"
+     y1="348.5"
+     x2="792.5"
+     y2="372.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line160" />
+  <line
+     x1="792.5"
+     y1="317.5"
+     x2="824"
+     y2="341.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line162" />
+  <line
+     x1="792.5"
+     y1="193.5"
+     x2="840.5"
+     y2="217.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line164" />
+  <line
+     x1="773.3125"
+     y1="7.5"
+     x2="928.25"
+     y2="31.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line166" />
+  <line
+     x1="928.25"
+     y1="38.5"
+     x2="883"
+     y2="62.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line168" />
+  <line
+     x1="883"
+     y1="69.5"
+     x2="883"
+     y2="93.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line170" />
+  <line
+     x1="883"
+     y1="100.5"
+     x2="851.5"
+     y2="124.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line172" />
+  <line
+     x1="883"
+     y1="100.5"
+     x2="883"
+     y2="124.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line174" />
+  <line
+     x1="883"
+     y1="131.5"
+     x2="883"
+     y2="155.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line176" />
+  <line
+     x1="883"
+     y1="100.5"
+     x2="914.5"
+     y2="124.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line178" />
+  <line
+     x1="928.25"
+     y1="38.5"
+     x2="927.75"
+     y2="62.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line180" />
+  <line
+     x1="928.25"
+     y1="38.5"
+     x2="973.5"
+     y2="62.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line182" />
+  <line
+     x1="973.5"
+     y1="69.5"
+     x2="973.5"
+     y2="93.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line184" />
+  <line
+     x1="973.5"
+     y1="100.5"
+     x2="973.5"
+     y2="124.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line186" />
+  <line
+     x1="973.5"
+     y1="131.5"
+     x2="973.5"
+     y2="155.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line188" />
+  <line
+     x1="973.5"
+     y1="162.5"
+     x2="973.5"
+     y2="186.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line190" />
+  <line
+     x1="973.5"
+     y1="193.5"
+     x2="942"
+     y2="217.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line192" />
+  <line
+     x1="973.5"
+     y1="193.5"
+     x2="973.5"
+     y2="217.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line194" />
+  <line
+     x1="973.5"
+     y1="224.5"
+     x2="973.5"
+     y2="248.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line196" />
+  <line
+     x1="973.5"
+     y1="193.5"
+     x2="1005"
+     y2="217.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line198" />
+  <line
+     x1="773.3125"
+     y1="7.5"
+     x2="1102.5"
+     y2="31.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line200" />
+  <line
+     x1="1102.5"
+     y1="38.5"
+     x2="1059.5"
+     y2="62.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line202" />
+  <line
+     x1="1059.5"
+     y1="69.5"
+     x2="1059.5"
+     y2="93.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line204" />
+  <line
+     x1="1059.5"
+     y1="100.5"
+     x2="1028"
+     y2="124.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line206" />
+  <line
+     x1="1059.5"
+     y1="100.5"
+     x2="1059.5"
+     y2="124.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line208" />
+  <line
+     x1="1059.5"
+     y1="131.5"
+     x2="1059.5"
+     y2="155.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line210" />
+  <line
+     x1="1059.5"
+     y1="100.5"
+     x2="1091"
+     y2="124.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line212" />
+  <line
+     x1="1102.5"
+     y1="38.5"
+     x2="1102"
+     y2="62.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line214" />
+  <line
+     x1="1102.5"
+     y1="38.5"
+     x2="1145.5"
+     y2="62.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line216" />
+  <line
+     x1="1145.5"
+     y1="69.5"
+     x2="1145.5"
+     y2="93.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line218" />
+  <line
+     x1="1145.5"
+     y1="100.5"
+     x2="1145.5"
+     y2="124.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line220" />
+  <line
+     x1="1145.5"
+     y1="131.5"
+     x2="1145.5"
+     y2="155.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line222" />
+  <line
+     x1="1145.5"
+     y1="162.5"
+     x2="1145.5"
+     y2="186.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line224" />
+  <line
+     x1="1145.5"
+     y1="193.5"
+     x2="1114"
+     y2="217.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line226" />
+  <line
+     x1="1145.5"
+     y1="193.5"
+     x2="1145.5"
+     y2="217.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line228" />
+  <line
+     x1="1145.5"
+     y1="224.5"
+     x2="1145.5"
+     y2="248.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line230" />
+  <line
+     x1="1145.5"
+     y1="193.5"
+     x2="1177"
+     y2="217.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line232" />
+  <line
+     x1="773.3125"
+     y1="7.5"
+     x2="1263.25"
+     y2="31.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line234" />
+  <line
+     x1="1263.25"
+     y1="38.5"
+     x2="1224"
+     y2="62.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line236" />
+  <line
+     x1="1224"
+     y1="69.5"
+     x2="1224"
+     y2="93.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line238" />
+  <line
+     x1="1224"
+     y1="100.5"
+     x2="1192.5"
+     y2="124.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line240" />
+  <line
+     x1="1224"
+     y1="100.5"
+     x2="1224"
+     y2="124.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line242" />
+  <line
+     x1="1224"
+     y1="131.5"
+     x2="1224"
+     y2="155.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line244" />
+  <line
+     x1="1224"
+     y1="100.5"
+     x2="1255.5"
+     y2="124.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line246" />
+  <line
+     x1="1263.25"
+     y1="38.5"
+     x2="1262.75"
+     y2="62.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line248" />
+  <line
+     x1="1263.25"
+     y1="38.5"
+     x2="1302.5"
+     y2="62.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line250" />
+  <line
+     x1="1302.5"
+     y1="69.5"
+     x2="1302.5"
+     y2="93.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line252" />
+  <line
+     x1="1302.5"
+     y1="100.5"
+     x2="1302.5"
+     y2="124.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line254" />
+  <line
+     x1="1302.5"
+     y1="131.5"
+     x2="1302.5"
+     y2="155.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line256" />
+  <line
+     x1="1302.5"
+     y1="162.5"
+     x2="1302.5"
+     y2="186.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line258" />
+  <line
+     x1="1302.5"
+     y1="193.5"
+     x2="1271"
+     y2="217.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line260" />
+  <line
+     x1="1302.5"
+     y1="193.5"
+     x2="1302.5"
+     y2="217.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line262" />
+  <line
+     x1="1302.5"
+     y1="224.5"
+     x2="1302.5"
+     y2="248.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line264" />
+  <line
+     x1="1302.5"
+     y1="193.5"
+     x2="1334"
+     y2="217.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line266" />
+  <line
+     x1="773.3125"
+     y1="7.5"
+     x2="1424.625"
+     y2="31.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line268" />
+  <line
+     x1="1424.625"
+     y1="38.5"
+     x2="1379.5"
+     y2="62.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line270" />
+  <line
+     x1="1379.5"
+     y1="69.5"
+     x2="1379.5"
+     y2="93.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line272" />
+  <line
+     x1="1379.5"
+     y1="100.5"
+     x2="1348"
+     y2="124.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line274" />
+  <line
+     x1="1379.5"
+     y1="100.5"
+     x2="1379.5"
+     y2="124.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line276" />
+  <line
+     x1="1379.5"
+     y1="131.5"
+     x2="1379.5"
+     y2="155.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line278" />
+  <line
+     x1="1379.5"
+     y1="100.5"
+     x2="1411"
+     y2="124.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line280" />
+  <line
+     x1="1424.625"
+     y1="38.5"
+     x2="1424.125"
+     y2="62.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line282" />
+  <line
+     x1="1424.625"
+     y1="38.5"
+     x2="1469.75"
+     y2="62.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line284" />
+  <line
+     x1="1469.75"
+     y1="69.5"
+     x2="1469.75"
+     y2="93.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line286" />
+  <line
+     x1="1469.75"
+     y1="100.5"
+     x2="1469.75"
+     y2="124.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line288" />
+  <line
+     x1="1469.75"
+     y1="131.5"
+     x2="1429.5"
+     y2="155.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line290" />
+  <line
+     x1="1429.5"
+     y1="162.5"
+     x2="1429.5"
+     y2="186.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line292" />
+  <line
+     x1="1429.5"
+     y1="193.5"
+     x2="1429.5"
+     y2="217.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line294" />
+  <line
+     x1="1469.75"
+     y1="131.5"
+     x2="1510"
+     y2="155.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line296" />
+  <line
+     x1="1510"
+     y1="162.5"
+     x2="1510"
+     y2="186.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line298" />
+  <line
+     x1="1510"
+     y1="193.5"
+     x2="1462"
+     y2="217.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line300" />
+  <line
+     x1="1510"
+     y1="193.5"
+     x2="1510"
+     y2="217.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line302" />
+  <line
+     x1="1510"
+     y1="224.5"
+     x2="1381"
+     y2="248.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line304" />
+  <line
+     x1="1381"
+     y1="255.5"
+     x2="1381"
+     y2="279.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line306" />
+  <line
+     x1="1381"
+     y1="286.5"
+     x2="1381"
+     y2="310.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line308" />
+  <line
+     x1="1381"
+     y1="317.5"
+     x2="1381"
+     y2="341.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line310" />
+  <line
+     x1="1510"
+     y1="224.5"
+     x2="1424"
+     y2="248.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line312" />
+  <line
+     x1="1510"
+     y1="224.5"
+     x2="1467"
+     y2="248.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line314" />
+  <line
+     x1="1467"
+     y1="255.5"
+     x2="1467"
+     y2="279.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line316" />
+  <line
+     x1="1467"
+     y1="286.5"
+     x2="1467"
+     y2="310.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line318" />
+  <line
+     x1="1467"
+     y1="317.5"
+     x2="1467"
+     y2="341.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line320" />
+  <line
+     x1="1510"
+     y1="224.5"
+     x2="1510"
+     y2="248.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line322" />
+  <line
+     x1="1510"
+     y1="224.5"
+     x2="1553"
+     y2="248.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line324" />
+  <line
+     x1="1553"
+     y1="255.5"
+     x2="1553"
+     y2="279.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line326" />
+  <line
+     x1="1553"
+     y1="286.5"
+     x2="1553"
+     y2="310.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line328" />
+  <line
+     x1="1553"
+     y1="317.5"
+     x2="1553"
+     y2="341.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line330" />
+  <line
+     x1="1510"
+     y1="224.5"
+     x2="1596"
+     y2="248.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line332" />
+  <line
+     x1="1510"
+     y1="224.5"
+     x2="1639"
+     y2="248.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line334" />
+  <line
+     x1="1639"
+     y1="255.5"
+     x2="1639"
+     y2="279.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line336" />
+  <line
+     x1="1639"
+     y1="286.5"
+     x2="1639"
+     y2="310.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line338" />
+  <line
+     x1="1639"
+     y1="317.5"
+     x2="1639"
+     y2="341.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line340" />
+  <line
+     x1="1510"
+     y1="193.5"
+     x2="1558"
+     y2="217.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line342" />
+  <line
+     x1="773.3125"
+     y1="7.5"
+     x2="1469.625"
+     y2="31.5"
+     style="stroke:#000000;stroke-width:1px"
+     id="line344" />
+  <rect
+     x="456.5"
+     y="186.5"
+     width="14"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect346" />
+  <text
+     x="458.5"
+     y="195.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text348">id</text>
+  <rect
+     x="508.5"
+     y="217.5"
+     width="11"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect350" />
+  <text
+     x="510.5"
+     y="226.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text352">{</text>
+  <rect
+     x="1005.5"
+     y="155.5"
+     width="108"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect354" />
+  <text
+     x="1007.5"
+     y="164.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text356">componentMethod</text>
+  <rect
+     x="656.5"
+     y="155.5"
+     width="50"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect358" />
+  <text
+     x="658.5"
+     y="164.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text360">element</text>
+  <rect
+     x="785.5"
+     y="310.5"
+     width="14"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect362" />
+  <text
+     x="787.5"
+     y="319.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text364">id</text>
+  <rect
+     x="90.5"
+     y="155.5"
+     width="50"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect366" />
+  <text
+     x="92.5"
+     y="164.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text368">element</text>
+  <rect
+     x="488.5"
+     y="217.5"
+     width="13"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect370" />
+  <text
+     x="490.5"
+     y="226.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text372">&gt;</text>
+  <rect
+     x="364.5"
+     y="217.5"
+     width="13"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect374" />
+  <text
+     x="366.5"
+     y="226.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text376">&gt;</text>
+  <rect
+     x="20.5"
+     y="124.5"
+     width="36"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect378" />
+  <text
+     x="22.5"
+     y="133.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text380">ruleid</text>
+  <rect
+     x="537"
+     y="279.5"
+     width="50"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect382" />
+  <text
+     x="538.5"
+     y="288.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text384">element</text>
+  <rect
+     x="754.5"
+     y="341.5"
+     width="13"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect386" />
+  <text
+     x="756.5"
+     y="350.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text388">&lt;</text>
+  <rect
+     x="649.5"
+     y="248.5"
+     width="64"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect390" />
+  <text
+     x="651.5"
+     y="257.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text392">alternative</text>
+  <rect
+     x="555"
+     y="310.5"
+     width="14"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect394" />
+  <text
+     x="556.5"
+     y="319.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text396">id</text>
+  <rect
+     x="1420"
+     y="248.5"
+     width="8"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect398" />
+  <text
+     x="1421.5"
+     y="257.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text400">|</text>
+  <rect
+     x="760.5"
+     y="248.5"
+     width="64"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect402" />
+  <text
+     x="762.5"
+     y="257.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text404">alternative</text>
+  <rect
+     x="767.5"
+     y="155.5"
+     width="50"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect406" />
+  <text
+     x="769.5"
+     y="164.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text408">element</text>
+  <rect
+     x="998.5"
+     y="217.5"
+     width="13"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect410" />
+  <text
+     x="1000.5"
+     y="226.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text412">&gt;</text>
+  <rect
+     x="30"
+     y="155.5"
+     width="17"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect414" />
+  <text
+     x="31.5"
+     y="164.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text416">joi</text>
+  <rect
+     x="321.5"
+     y="217.5"
+     width="36"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect418" />
+  <text
+     x="323.5"
+     y="226.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text420">ruleid</text>
+  <rect
+     x="1369"
+     y="62.5"
+     width="21"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect422" />
+  <text
+     x="1370.5"
+     y="71.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text424">lhs</text>
+  <rect
+     x="1327.5"
+     y="217.5"
+     width="13"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect426" />
+  <text
+     x="1329.5"
+     y="226.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text428">&gt;</text>
+  <rect
+     x="1041.5"
+     y="124.5"
+     width="36"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect430" />
+  <text
+     x="1043.5"
+     y="133.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text432">ruleid</text>
+  <rect
+     x="1447"
+     y="341.5"
+     width="40"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect434" />
+  <text
+     x="1448.5"
+     y="350.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text436">'A'..'Z'</text>
+  <rect
+     x="389"
+     y="186.5"
+     width="25"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect438" />
+  <text
+     x="390.5"
+     y="195.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text440">text</text>
+  <rect
+     x="82"
+     y="248.5"
+     width="67"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect442" />
+  <text
+     x="83.5"
+     y="257.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text444">component</text>
+  <rect
+     x="376.5"
+     y="155.5"
+     width="50"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect446" />
+  <text
+     x="378.5"
+     y="164.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text448">element</text>
+  <rect
+     x="627.5"
+     y="372.5"
+     width="108"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect450" />
+  <text
+     x="629.5"
+     y="381.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text452">componentMethod</text>
+  <rect
+     x="774.5"
+     y="341.5"
+     width="36"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect454" />
+  <text
+     x="776.5"
+     y="350.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text456">ruleid</text>
+  <rect
+     x="314.5"
+     y="155.5"
+     width="50"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect458" />
+  <text
+     x="316.5"
+     y="164.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text460">element</text>
+  <rect
+     x="1521"
+     y="248.5"
+     width="64"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect462" />
+  <text
+     x="1522.5"
+     y="257.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text464">alternative</text>
+  <rect
+     x="527"
+     y="186.5"
+     width="70"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect466" />
+  <text
+     x="528.5"
+     y="195.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text468">zeroormore</text>
+  <rect
+     x="604.5"
+     y="217.5"
+     width="11"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect470" />
+  <text
+     x="606.5"
+     y="226.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text472">}</text>
+  <rect
+     x="1110"
+     y="93.5"
+     width="71"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect474" />
+  <text
+     x="1111.5"
+     y="102.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text476">alternatives</text>
+  <rect
+     x="917.25"
+     y="62.5"
+     width="21"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect478" />
+  <text
+     x="918.5"
+     y="71.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text480">::=</text>
+  <rect
+     x="587"
+     y="341.5"
+     width="13"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect482" />
+  <text
+     x="588.5"
+     y="350.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text484">&gt;</text>
+  <rect
+     x="31.5"
+     y="93.5"
+     width="14"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect486" />
+  <text
+     x="33.5"
+     y="102.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text488">id</text>
+  <rect
+     x="1607"
+     y="248.5"
+     width="64"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect490" />
+  <text
+     x="1608.5"
+     y="257.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text492">alternative</text>
+  <rect
+     x="757.5"
+     y="186.5"
+     width="70"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect494" />
+  <text
+     x="759.5"
+     y="195.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text496">zeroormore</text>
+  <rect
+     x="966.5"
+     y="186.5"
+     width="14"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect498" />
+  <text
+     x="968.5"
+     y="195.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text500">id</text>
+  <rect
+     x="1347.5"
+     y="310.5"
+     width="67"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect502" />
+  <text
+     x="1349.5"
+     y="319.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text504">letterrange</text>
+  <rect
+     x="1413.625"
+     y="62.5"
+     width="21"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect506" />
+  <text
+     x="1415.5"
+     y="71.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text508">::=</text>
+  <rect
+     x="757"
+     y="217.5"
+     width="71"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect510" />
+  <text
+     x="758.5"
+     y="226.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text512">alternatives</text>
+  <rect
+     x="746"
+     y="372.5"
+     width="93"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect514" />
+  <text
+     x="747.5"
+     y="381.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text516">componentField</text>
+  <rect
+     x="83.5"
+     y="124.5"
+     width="64"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect518" />
+  <text
+     x="85.5"
+     y="133.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text520">alternative</text>
+  <rect
+     x="1186"
+     y="124.5"
+     width="13"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect522" />
+  <text
+     x="1187.5"
+     y="133.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text524">&lt;</text>
+  <rect
+     x="1247.25"
+     y="31.5"
+     width="32"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect526" />
+  <text
+     x="1248.5"
+     y="40.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text528">rule_</text>
+  <rect
+     x="1456.5"
+     y="217.5"
+     width="11"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect530" />
+  <text
+     x="1458.5"
+     y="226.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text532">{</text>
+  <rect
+     x="174.5"
+     y="124.5"
+     width="36"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect534" />
+  <text
+     x="176.5"
+     y="133.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text536">ruleid</text>
+  <rect
+     x="445.5"
+     y="217.5"
+     width="36"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect538" />
+  <text
+     x="447.5"
+     y="226.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text540">ruleid</text>
+  <rect
+     x="154.5"
+     y="124.5"
+     width="13"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect542" />
+  <text
+     x="156.5"
+     y="133.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text544">&lt;</text>
+  <rect
+     x="706.5"
+     y="341.5"
+     width="13"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect546" />
+  <text
+     x="708.5"
+     y="350.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text548">&gt;</text>
+  <rect
+     x="1170.5"
+     y="217.5"
+     width="13"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect550" />
+  <text
+     x="1172.5"
+     y="226.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text552">&gt;</text>
+  <rect
+     x="767.5"
+     y="279.5"
+     width="50"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect554" />
+  <text
+     x="769.5"
+     y="288.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text556">element</text>
+  <rect
+     x="1091.5"
+     y="62.5"
+     width="21"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect558" />
+  <text
+     x="1093.5"
+     y="71.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text560">::=</text>
+  <rect
+     x="1506"
+     y="248.5"
+     width="8"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect562" />
+  <text
+     x="1507.5"
+     y="257.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text564">|</text>
+  <rect
+     x="347.875"
+     y="62.5"
+     width="21"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect566" />
+  <text
+     x="349.5"
+     y="71.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text568">::=</text>
+  <rect
+     x="245.5"
+     y="186.5"
+     width="25"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect570" />
+  <text
+     x="247.5"
+     y="195.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text572">text</text>
+  <rect
+     x="1447.625"
+     y="31.5"
+     width="44"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect574" />
+  <text
+     x="1449.5"
+     y="40.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text576">&lt;EOF&gt;</text>
+  <rect
+     x="1341.5"
+     y="124.5"
+     width="13"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect578" />
+  <text
+     x="1343.5"
+     y="133.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text580">&lt;</text>
+  <rect
+     x="63.5"
+     y="124.5"
+     width="13"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect582" />
+  <text
+     x="65.5"
+     y="133.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text584">&gt;</text>
+  <rect
+     x="66"
+     y="62.5"
+     width="21"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect586" />
+  <text
+     x="67.5"
+     y="71.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text588">::=</text>
+  <rect
+     x="544"
+     y="341.5"
+     width="36"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect590" />
+  <text
+     x="545.5"
+     y="350.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text592">ruleid</text>
+  <rect
+     x="80"
+     y="93.5"
+     width="71"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect594" />
+  <text
+     x="81.5"
+     y="102.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text596">alternatives</text>
+  <rect
+     x="663.5"
+     y="341.5"
+     width="36"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect598" />
+  <text
+     x="665.5"
+     y="350.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text600">ruleid</text>
+  <rect
+     x="530"
+     y="248.5"
+     width="64"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect602" />
+  <text
+     x="531.5"
+     y="257.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text604">alternative</text>
+  <rect
+     x="1217"
+     y="93.5"
+     width="14"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect606" />
+  <text
+     x="1218.5"
+     y="102.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text608">id</text>
+  <rect
+     x="1120.5"
+     y="155.5"
+     width="50"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect610" />
+  <text
+     x="1122.5"
+     y="164.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text612">element</text>
+  <rect
+     x="1361.5"
+     y="124.5"
+     width="36"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect614" />
+  <text
+     x="1363.5"
+     y="133.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text616">ruleid</text>
+  <rect
+     x="1396"
+     y="186.5"
+     width="67"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect618" />
+  <text
+     x="1397.5"
+     y="195.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text620">letterrange</text>
+  <rect
+     x="1138.5"
+     y="186.5"
+     width="14"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect622" />
+  <text
+     x="1140.5"
+     y="195.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text624">id</text>
+  <rect
+     x="342.875"
+     y="31.5"
+     width="32"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect626" />
+  <text
+     x="344.5"
+     y="40.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text628">rule_</text>
+  <rect
+     x="948.5"
+     y="155.5"
+     width="50"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect630" />
+  <text
+     x="950.5"
+     y="164.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text632">element</text>
+  <rect
+     x="61"
+     y="31.5"
+     width="32"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect634" />
+  <text
+     x="62.5"
+     y="40.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text636">rule_</text>
+  <rect
+     x="493.25"
+     y="124.5"
+     width="64"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect638" />
+  <text
+     x="494.5"
+     y="133.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text640">alternative</text>
+  <rect
+     x="221.5"
+     y="217.5"
+     width="73"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect642" />
+  <text
+     x="223.5"
+     y="226.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text644">'component'</text>
+  <rect
+     x="1485"
+     y="155.5"
+     width="50"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect646" />
+  <text
+     x="1486.5"
+     y="164.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text648">element</text>
+  <rect
+     x="1361.5"
+     y="155.5"
+     width="36"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect650" />
+  <text
+     x="1363.5"
+     y="164.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text652">name</text>
+  <rect
+     x="643.5"
+     y="341.5"
+     width="13"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect654" />
+  <text
+     x="645.5"
+     y="350.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text656">&lt;</text>
+  <rect
+     x="656.5"
+     y="279.5"
+     width="50"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect658" />
+  <text
+     x="658.5"
+     y="288.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text660">element</text>
+  <rect
+     x="1284.5"
+     y="248.5"
+     width="36"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect662" />
+  <text
+     x="1286.5"
+     y="257.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text664">name</text>
+  <rect
+     x="935.5"
+     y="217.5"
+     width="13"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect666" />
+  <text
+     x="937.5"
+     y="226.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text668">&lt;</text>
+  <rect
+     x="77.5"
+     y="217.5"
+     width="13"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect670" />
+  <text
+     x="79.5"
+     y="226.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text672">&lt;</text>
+  <rect
+     x="941.5"
+     y="124.5"
+     width="64"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect674" />
+  <text
+     x="943.5"
+     y="133.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text676">alternative</text>
+  <rect
+     x="876"
+     y="93.5"
+     width="14"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect678" />
+  <text
+     x="877.5"
+     y="102.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text680">id</text>
+  <rect
+     x="724"
+     y="217.5"
+     width="8"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect682" />
+  <text
+     x="725.5"
+     y="226.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text684">)</text>
+  <rect
+     x="739"
+     y="217.5"
+     width="11"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect686" />
+  <text
+     x="740.5"
+     y="226.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text688">{</text>
+  <rect
+     x="0.5"
+     y="124.5"
+     width="13"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect690" />
+  <text
+     x="2.5"
+     y="133.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text692">&lt;</text>
+  <rect
+     x="1252.25"
+     y="62.5"
+     width="21"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect694" />
+  <text
+     x="1253.5"
+     y="71.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text696">::=</text>
+  <rect
+     x="1404.5"
+     y="124.5"
+     width="13"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect698" />
+  <text
+     x="1406.5"
+     y="133.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text700">&gt;</text>
+  <rect
+     x="845"
+     y="124.5"
+     width="13"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect702" />
+  <text
+     x="846.5"
+     y="133.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text704">&lt;</text>
+  <rect
+     x="182"
+     y="62.5"
+     width="21"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect706" />
+  <text
+     x="183.5"
+     y="71.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text708">lhs</text>
+  <rect
+     x="962"
+     y="62.5"
+     width="23"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect710" />
+  <text
+     x="963.5"
+     y="71.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text712">rhs</text>
+  <rect
+     x="1127.5"
+     y="248.5"
+     width="36"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect714" />
+  <text
+     x="1129.5"
+     y="257.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text716">name</text>
+  <rect
+     x="1474.5"
+     y="217.5"
+     width="71"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect718" />
+  <text
+     x="1476.5"
+     y="226.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text720">alternatives</text>
+  <rect
+     x="1528"
+     y="279.5"
+     width="50"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect722" />
+  <text
+     x="1529.5"
+     y="288.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text724">element</text>
+  <rect
+     x="1372.5"
+     y="93.5"
+     width="14"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect726" />
+  <text
+     x="1374.5"
+     y="102.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text728">id</text>
+  <rect
+     x="1435"
+     y="248.5"
+     width="64"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect730" />
+  <text
+     x="1436.5"
+     y="257.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text732">alternative</text>
+  <rect
+     x="513.75"
+     y="62.5"
+     width="23"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect734" />
+  <text
+     x="515.5"
+     y="71.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text736">rhs</text>
+  <rect
+     x="438.5"
+     y="155.5"
+     width="50"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect738" />
+  <text
+     x="440.5"
+     y="164.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text740">element</text>
+  <rect
+     x="301.5"
+     y="217.5"
+     width="13"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect742" />
+  <text
+     x="303.5"
+     y="226.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text744">&lt;</text>
+  <rect
+     x="1113.5"
+     y="124.5"
+     width="64"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect746" />
+  <text
+     x="1115.5"
+     y="133.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text748">alternative</text>
+  <rect
+     x="1534"
+     y="341.5"
+     width="38"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect750" />
+  <text
+     x="1535.5"
+     y="350.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text752">'0'..'9'</text>
+  <rect
+     x="1408.625"
+     y="31.5"
+     width="32"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect754" />
+  <text
+     x="1410.5"
+     y="40.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text756">rule_</text>
+  <rect
+     x="1475"
+     y="186.5"
+     width="70"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect758" />
+  <text
+     x="1476.5"
+     y="195.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text760">zeroormore</text>
+  <rect
+     x="526.5"
+     y="217.5"
+     width="71"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect762" />
+  <text
+     x="528.5"
+     y="226.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text764">alternatives</text>
+  <rect
+     x="912.25"
+     y="31.5"
+     width="32"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect766" />
+  <text
+     x="913.5"
+     y="40.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text768">rule_</text>
+  <rect
+     x="1213.5"
+     y="62.5"
+     width="21"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect770" />
+  <text
+     x="1215.5"
+     y="71.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text772">lhs</text>
+  <rect
+     x="646.5"
+     y="186.5"
+     width="70"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect774" />
+  <text
+     x="648.5"
+     y="195.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text776">precedence</text>
+  <rect
+     x="865"
+     y="124.5"
+     width="36"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect778" />
+  <text
+     x="866.5"
+     y="133.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text780">ruleid</text>
+  <rect
+     x="28"
+     y="62.5"
+     width="21"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect782" />
+  <text
+     x="29.5"
+     y="71.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text784">lhs</text>
+  <rect
+     x="835"
+     y="217.5"
+     width="11"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect786" />
+  <text
+     x="836.5"
+     y="226.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text788">}</text>
+  <rect
+     x="1021.5"
+     y="124.5"
+     width="13"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect790" />
+  <text
+     x="1023.5"
+     y="133.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text792">&lt;</text>
+  <rect
+     x="384.5"
+     y="217.5"
+     width="34"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect794" />
+  <text
+     x="386.5"
+     y="226.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text796">'impl'</text>
+  <rect
+     x="1107.5"
+     y="217.5"
+     width="13"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect798" />
+  <text
+     x="1109.5"
+     y="226.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text800">&lt;</text>
+  <rect
+     x="1356"
+     y="279.5"
+     width="50"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect802" />
+  <text
+     x="1357.5"
+     y="288.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text804">element</text>
+  <rect
+     x="1592"
+     y="248.5"
+     width="8"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect806" />
+  <text
+     x="1593.5"
+     y="257.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text808">|</text>
+  <rect
+     x="233"
+     y="155.5"
+     width="50"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect810" />
+  <text
+     x="234.5"
+     y="164.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text812">element</text>
+  <rect
+     x="1433.5"
+     y="310.5"
+     width="67"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect814" />
+  <text
+     x="1435.5"
+     y="319.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text816">letterrange</text>
+  <rect
+     x="1437.75"
+     y="124.5"
+     width="64"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect818" />
+  <text
+     x="1439.5"
+     y="133.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text820">alternative</text>
+  <rect
+     x="140.5"
+     y="217.5"
+     width="13"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect822" />
+  <text
+     x="142.5"
+     y="226.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text824">&gt;</text>
+  <rect
+     x="1264.5"
+     y="217.5"
+     width="13"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect826" />
+  <text
+     x="1266.5"
+     y="226.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text828">&lt;</text>
+  <rect
+     x="1127.5"
+     y="217.5"
+     width="36"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect830" />
+  <text
+     x="1129.5"
+     y="226.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text832">ruleid</text>
+  <rect
+     x="1631"
+     y="341.5"
+     width="16"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect834" />
+  <text
+     x="1632.5"
+     y="350.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text836">'_'</text>
+  <rect
+     x="1295.5"
+     y="186.5"
+     width="14"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect838" />
+  <text
+     x="1297.5"
+     y="195.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text840">id</text>
+  <rect
+     x="1626.5"
+     y="310.5"
+     width="25"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect842" />
+  <text
+     x="1628.5"
+     y="319.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text844">text</text>
+  <rect
+     x="185.5"
+     y="93.5"
+     width="14"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect846" />
+  <text
+     x="187.5"
+     y="102.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text848">id</text>
+  <rect
+     x="674.5"
+     y="310.5"
+     width="14"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect850" />
+  <text
+     x="676.5"
+     y="319.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text852">id</text>
+  <rect
+     x="503.5"
+     y="372.5"
+     width="117"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect854" />
+  <text
+     x="505.5"
+     y="381.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text856">componentInterface</text>
+  <rect
+     x="1134"
+     y="62.5"
+     width="23"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect858" />
+  <text
+     x="1135.5"
+     y="71.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text860">rhs</text>
+  <rect
+     x="751.8125"
+     y="0.5"
+     width="43"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect862" />
+  <text
+     x="753.5"
+     y="9.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text864">rulelist</text>
+  <rect
+     x="1404.5"
+     y="155.5"
+     width="50"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect866" />
+  <text
+     x="1406.5"
+     y="164.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text868">element</text>
+  <rect
+     x="872.5"
+     y="62.5"
+     width="21"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect870" />
+  <text
+     x="874.5"
+     y="71.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text872">lhs</text>
+  <rect
+     x="1267"
+     y="93.5"
+     width="71"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect874" />
+  <text
+     x="1268.5"
+     y="102.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text876">alternatives</text>
+  <rect
+     x="1277.5"
+     y="155.5"
+     width="50"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect878" />
+  <text
+     x="1279.5"
+     y="164.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text880">element</text>
+  <rect
+     x="489.75"
+     y="93.5"
+     width="71"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect882" />
+  <text
+     x="491.5"
+     y="102.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text884">alternatives</text>
+  <rect
+     x="1349"
+     y="248.5"
+     width="64"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect886" />
+  <text
+     x="1350.5"
+     y="257.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text888">alternative</text>
+  <rect
+     x="524"
+     y="341.5"
+     width="13"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect890" />
+  <text
+     x="525.5"
+     y="350.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text892">&lt;</text>
+  <rect
+     x="955.5"
+     y="248.5"
+     width="36"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect894" />
+  <text
+     x="957.5"
+     y="257.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text896">name</text>
+  <rect
+     x="321.5"
+     y="248.5"
+     width="36"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect898" />
+  <text
+     x="323.5"
+     y="257.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text900">name</text>
+  <rect
+     x="1086.5"
+     y="31.5"
+     width="32"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect902" />
+  <text
+     x="1088.5"
+     y="40.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text904">rule_</text>
+  <rect
+     x="332.5"
+     y="186.5"
+     width="14"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect906" />
+  <text
+     x="334.5"
+     y="195.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text908">id</text>
+  <rect
+     x="1363"
+     y="341.5"
+     width="36"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect910" />
+  <text
+     x="1364.5"
+     y="350.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text912">'a'..'z'</text>
+  <rect
+     x="646"
+     y="217.5"
+     width="71"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect914" />
+  <text
+     x="647.5"
+     y="226.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text916">alternatives</text>
+  <rect
+     x="1519.5"
+     y="310.5"
+     width="67"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect918" />
+  <text
+     x="1521.5"
+     y="319.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text920">letterrange</text>
+  <rect
+     x="537"
+     y="155.5"
+     width="50"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect922" />
+  <text
+     x="538.5"
+     y="164.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text924">element</text>
+  <rect
+     x="1614"
+     y="279.5"
+     width="50"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect926" />
+  <text
+     x="1615.5"
+     y="288.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text928">element</text>
+  <rect
+     x="1084.5"
+     y="124.5"
+     width="13"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect930" />
+  <text
+     x="1086.5"
+     y="133.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text932">&gt;</text>
+  <rect
+     x="1284.5"
+     y="217.5"
+     width="36"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect934" />
+  <text
+     x="1286.5"
+     y="226.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text936">ruleid</text>
+  <rect
+     x="1177.5"
+     y="155.5"
+     width="93"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect938" />
+  <text
+     x="1179.5"
+     y="164.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text940">componentField</text>
+  <rect
+     x="1291"
+     y="62.5"
+     width="23"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect942" />
+  <text
+     x="1292.5"
+     y="71.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text944">rhs</text>
+  <rect
+     x="217.5"
+     y="124.5"
+     width="13"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect946" />
+  <text
+     x="219.5"
+     y="133.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text948">&gt;</text>
+  <rect
+     x="97.5"
+     y="217.5"
+     width="36"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect950" />
+  <text
+     x="99.5"
+     y="226.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text952">ruleid</text>
+  <rect
+     x="1206"
+     y="124.5"
+     width="36"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect954" />
+  <text
+     x="1207.5"
+     y="133.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text956">ruleid</text>
+  <rect
+     x="1434.25"
+     y="93.5"
+     width="71"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect958" />
+  <text
+     x="1435.5"
+     y="102.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text960">alternatives</text>
+  <rect
+     x="1442"
+     y="279.5"
+     width="50"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect962" />
+  <text
+     x="1443.5"
+     y="288.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text964">element</text>
+  <rect
+     x="1409.5"
+     y="217.5"
+     width="40"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect966" />
+  <text
+     x="1411.5"
+     y="226.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text968">'A'..'Z'</text>
+  <rect
+     x="955.5"
+     y="217.5"
+     width="36"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect970" />
+  <text
+     x="957.5"
+     y="226.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text972">ruleid</text>
+  <rect
+     x="159"
+     y="155.5"
+     width="67"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect974" />
+  <text
+     x="160.5"
+     y="164.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text976">component</text>
+  <rect
+     x="908"
+     y="124.5"
+     width="13"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect978" />
+  <text
+     x="909.5"
+     y="133.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text980">&gt;</text>
+  <rect
+     x="108.5"
+     y="186.5"
+     width="14"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect982" />
+  <text
+     x="110.5"
+     y="195.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text984">id</text>
+  <rect
+     x="104"
+     y="62.5"
+     width="23"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect986" />
+  <text
+     x="105.5"
+     y="71.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text988">rhs</text>
+  <rect
+     x="1270.5"
+     y="124.5"
+     width="64"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect990" />
+  <text
+     x="1272.5"
+     y="133.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text992">alternative</text>
+  <rect
+     x="405"
+     y="248.5"
+     width="117"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect994" />
+  <text
+     x="406.5"
+     y="257.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text996">componentInterface</text>
+  <rect
+     x="631"
+     y="217.5"
+     width="8"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect998" />
+  <text
+     x="632.5"
+     y="226.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text1000">(</text>
+  <rect
+     x="425.5"
+     y="217.5"
+     width="13"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect1002" />
+  <text
+     x="427.5"
+     y="226.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text1004">&lt;</text>
+  <rect
+     x="1052.5"
+     y="93.5"
+     width="14"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect1006" />
+  <text
+     x="1054.5"
+     y="102.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text1008">id</text>
+  <rect
+     x="824.5"
+     y="155.5"
+     width="117"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect1010" />
+  <text
+     x="826.5"
+     y="164.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text1012">componentInterface</text>
+  <rect
+     x="1249"
+     y="124.5"
+     width="13"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect1014" />
+  <text
+     x="1250.5"
+     y="133.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text1016">&gt;</text>
+  <rect
+     x="1552.5"
+     y="217.5"
+     width="11"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect1018" />
+  <text
+     x="1554.5"
+     y="226.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text1020">}</text>
+  <rect
+     x="1458.25"
+     y="62.5"
+     width="23"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect1022" />
+  <text
+     x="1459.5"
+     y="71.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text1024">rhs</text>
+  <rect
+     x="938"
+     y="93.5"
+     width="71"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect1026" />
+  <text
+     x="939.5"
+     y="102.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text1028">alternatives</text>
+  <rect
+     x="1049"
+     y="62.5"
+     width="21"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect1030" />
+  <text
+     x="1050.5"
+     y="71.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text1032">lhs</text>
+  <rect
+     x="817.5"
+     y="341.5"
+     width="13"
+     height="14"
+     style="fill:#ffa500;stroke:#000000"
+     rx="1"
+     id="rect1034" />
+  <text
+     x="819.5"
+     y="350.5"
+     style="font-size:10px;font-family:sans-serif"
+     id="text1036">&gt;</text>
+</svg>

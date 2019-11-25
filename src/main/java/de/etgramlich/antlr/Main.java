@@ -55,6 +55,7 @@ public final class Main {
         } catch (ParseException e) {
             e.printStackTrace();
             System.err.println("Wrong grammar file!");
+            return;
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("Grammar file could not be read!");
@@ -93,7 +94,7 @@ public final class Main {
         final ComponentNameProvider<Scope> vertexProvider = scope -> "S_" + scope.getName();
         final ComponentNameProvider<Scope> vertexIdProvider = scope -> "S_id_" + scope.getName();
         final ComponentNameProvider<ScopeEdge> edgeProvider =
-                scopeEdge -> "E_" + scopeEdge.getNodes().get(0).getName() + "(" + scopeEdge.getNodes().size() + ")";
+                scopeEdge -> "E_" + scopeEdge.getNodes().get(0).getName() + "(" + scopeEdge.getTotalNumberOfNodes() + ")";
         final GraphExporter<Scope, ScopeEdge> exporter =
                 new DOTExporter<>(vertexIdProvider, vertexProvider, edgeProvider);
         final Writer writer = new StringWriter();

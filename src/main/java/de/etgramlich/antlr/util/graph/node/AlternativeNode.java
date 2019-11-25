@@ -12,6 +12,15 @@ public final class AlternativeNode extends Node {
         this(name, Collections.emptyList());
     }
 
+    @Override
+    public int getTotalAmountOfChildNodes() {
+        int counter = alternatives.size();
+        for (Node node : alternatives) {
+            counter += node.getTotalAmountOfChildNodes();
+        }
+        return counter;
+    }
+
     public AlternativeNode(final String name, final Collection<SequenceNode> nodes) {
         super(name);
         alternatives = new ArrayList<>(nodes);

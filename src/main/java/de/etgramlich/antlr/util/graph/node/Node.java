@@ -14,6 +14,8 @@ public abstract class Node {
         this.name = name;
     }
 
+    public abstract int getTotalAmountOfChildNodes();
+
     public String getName() {
         return name;
     }

@@ -64,8 +64,11 @@ public final class Rule implements BnfType, BnfElement {
 
     @Override
     public void removeNonTerminals() {
-        // ToDo
-        SymbolTable.addRule(lhs.getName(), isTerminal());
+        // ToDo: Replace rhs Alternatives in-place
+        for (int i = 0; i < rhs.size(); ++i) {
+            if (rhs.get(i).isTerminal()) continue;
+            BnfType terminal = SymbolTable.getType(rhs.get(i).getName());
+        }
     }
 
     @Override

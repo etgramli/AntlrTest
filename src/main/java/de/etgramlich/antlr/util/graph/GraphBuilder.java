@@ -38,6 +38,7 @@ public final class GraphBuilder {
     }
 
 
+    // ToDo: Method naming
     /**
      * Adds a Scope as vertex to the graph, and associates the node with the forward directed edge and also creates
      * also a second edge with null as Node, indicating that the node in the other edge can be omitted.
