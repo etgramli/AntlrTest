@@ -42,8 +42,6 @@ public final class SequenceNode extends Node {
 
     @Override
     public int hashCode() {
-        final int superHashCode = super.hashCode();
-        final int successorHashCode = successor != null ? successor.hashCode() : 0;
-        return 31 * superHashCode + successorHashCode;
+        return 31 * super.hashCode() + (successor != null ? successor.hashCode() : 0);
     }
 }
