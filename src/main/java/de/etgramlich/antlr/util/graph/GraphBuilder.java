@@ -13,10 +13,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.AsUnmodifiableGraph;
-import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DirectedPseudograph;
 import org.jgrapht.graph.ParanoidGraph;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -37,6 +37,46 @@ public final class GraphBuilder {
         nonTerminalRules.forEach(rule -> addAlternatives(rule.getRhs()));
     }
 
+
+    /**
+     * Splits the RHS of the rule on every terminal and adds the edges for each terminal.
+     * @param rule Rule to process its RHS.
+     */
+    public void addRuleToGraph(@NotNull final Rule rule) {
+        final List<Node> ruleScopes =
+                getAlternativeScopes(rule.getRhs()).stream().map(this::getNode).collect(Collectors.toList());
+        for (Node node : ruleScopes) {
+            // ToDo
+            addSequence(new Scope(rule.getName()), node);
+        }
+    }
+
+    @NotNull
+    private static List<List<Alternative>> getAlternativeScopes(@NotNull final List<Alternative> alternatives) {
+        final List<List<Alternative>> scopes = new ArrayList<>();
+
+        List<Alternative> currentList = new ArrayList<>();
+        for (Alternative alternative : alternatives) {
+            if (alternative.isTerminal() && !currentList.isEmpty()) {
+                scopes.add(currentList);
+                currentList = new ArrayList<>();
+            }
+            currentList.add(alternative);
+        }
+        if (!currentList.isEmpty()) {
+            scopes.add(currentList);
+        }
+
+        return scopes;
+    }
+    private Node getNode(@NotNull final List<Alternative> alternatives) {
+        if (alternatives.stream().filter(Alternative::isTerminal).count() > 1) {
+            throw new IllegalArgumentException("Must only contain one Terminal!");
+        }
+        // ToDo
+
+        return null;
+    }
 
     // ToDo: Method naming
     /**
@@ -103,7 +143,7 @@ public final class GraphBuilder {
             throw new IllegalArgumentException("Alternatives is empty!!");
         }
         final Scope scope = new Scope(alternatives.get(0).getName());
-        final List<SequenceNode> nodeList = alternatives.stream().map(this::getAlternative).collect(Collectors.toList());
+        final List<SequenceNode> nodeList = alternatives.stream().map(this::getAlternativeSequence).collect(Collectors.toList());
         final AlternativeNode node = new AlternativeNode(alternatives.get(0).getName(), nodeList);
         addSequence(scope, node);
     }
@@ -115,7 +155,8 @@ public final class GraphBuilder {
      */
     @NotNull
     private AlternativeNode getAlternatives(@NotNull final List<Alternative> alternatives) {
-        List<SequenceNode> alternativesNodes = alternatives.stream().map(this::getAlternative).collect(Collectors.toList());
+        final List<SequenceNode> alternativesNodes =
+                alternatives.stream().map(this::getAlternativeSequence).collect(Collectors.toList());
         return new AlternativeNode(alternatives.get(0).getName(), alternativesNodes);
     }
 
@@ -123,8 +164,8 @@ public final class GraphBuilder {
      * Adds alternative in a Scope to the graph.
      * @param alternative Alternative to be added to the scope.
      */
-    private void addAlterative(@NotNull Alternative alternative) {
-        addSequence(new Scope(alternative.getName()), getAlternative(alternative));
+    private void addAlterativeSequence(@NotNull Alternative alternative) {
+        addSequence(new Scope(alternative.getName()), getAlternativeSequence(alternative));
     }
 
     /**
@@ -133,7 +174,7 @@ public final class GraphBuilder {
      * @param alternative Non-Null Alternative with at least 1 element.
      * @return SequenceNode, not null.
      */
-    private SequenceNode getAlternative(@NotNull final Alternative alternative) {
+    private SequenceNode getAlternativeSequence(@NotNull final Alternative alternative) {
         if (alternative.getElements().size() == 0) {
             throw new IllegalArgumentException("Alternatives with no elements!");
         }
@@ -227,11 +268,11 @@ public final class GraphBuilder {
      */
     @NotNull
     private Scope getStartScope() {
-        Optional<Scope> startScope = graph.vertexSet().stream().filter(o -> graph.inDegreeOf(o) == 0).findFirst();
-        if (startScope.isEmpty()) {
-            throw new NullPointerException("No starting node!");
+        List<Scope> scopes = graph.vertexSet().stream().filter(o -> graph.inDegreeOf(o) == 0).collect(Collectors.toList());
+        if (scopes.size() != 1) {
+            throw new NullPointerException("There must be exactly one starting node! (found: " + scopes.size() + ")");
         }
-        return startScope.get();
+        return scopes.get(0);
     }
 
     /**
@@ -239,15 +280,16 @@ public final class GraphBuilder {
      * @return A scope, if no scope found a NPE is thrown.
      */
     @NotNull
-    private Scope getEndNode() {
-        Optional<Scope> endNode = graph.vertexSet().stream().filter(o -> graph.outDegreeOf(o) == 0).findFirst();
-        if (endNode.isEmpty()) {
-            throw new NullPointerException("No end node!");
+    public Scope getEndNode() {
+        List<Scope> scopes = graph.vertexSet().stream().filter(o -> graph.outDegreeOf(o) == 0).collect(Collectors.toList());
+
+        if (scopes.size() != 1) {
+            throw new NullPointerException("There msut be exactly one end node! (found: " + scopes.size() + ")");
         }
-        return endNode.get();
+        return scopes.get(0);
     }
 
-    private String getAltName(final Scope scope) {
+    public String getAltName(final Scope scope) {
         Optional<ScopeEdge> edge = graph.outgoingEdgesOf(scope).stream().filter(e -> !e.isEmpty()).findFirst();
         if (edge.isEmpty()) {
             return "EndScope";
