@@ -76,18 +76,4 @@ public final class Rule implements BnfType, BnfElement {
         visitor.visit(this);
         rhs.forEach(alternative -> alternative.accept(visitor));
     }
-
-    private static class Method {
-        private final String returnType, name;
-        private Method(final String returnType, final String name) {
-            this.returnType = returnType;
-            this.name = name;
-        }
-        public String getName() {
-            return name;
-        }
-        public String getReturnType() {
-            return returnType;
-        }
-    }
 }

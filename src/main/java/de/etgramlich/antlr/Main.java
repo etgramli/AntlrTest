@@ -62,8 +62,7 @@ public final class Main {
             return;
         }
 
-        bnfLexer lexer = new bnfLexer(CharStreams.fromString(grammar));
-        bnfParser parser = new bnfParser(new CommonTokenStream(lexer));
+        bnfParser parser = new bnfParser(new CommonTokenStream(new bnfLexer(CharStreams.fromString(grammar))));
 
         RuleListListener listener = new RuleListListener();
         parser.rulelist().enterRule(listener);

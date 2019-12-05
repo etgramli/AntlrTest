@@ -1,6 +1,7 @@
 package de.etgramlich.antlr.parser.type.terminal;
 
 import de.etgramlich.antlr.parser.type.BnfType;
+import de.etgramlich.antlr.util.StringUtil;
 import de.etgramlich.antlr.util.visitor.BnfElement;
 import de.etgramlich.antlr.util.visitor.BnfTypeVisitor;
 import org.jetbrains.annotations.Contract;
@@ -33,6 +34,9 @@ public abstract class AbstractId implements BnfType, BnfElement {
     AbstractId(final String id) {
         if (keywords.contains(id)) {
             throw new IllegalArgumentException("ID is a keyword of the host language: " + id);
+        }
+        if (StringUtil.isBlank(id)) {
+            throw new IllegalArgumentException("ID must be non-null and not blank!");
         }
         this.id = id;
     }
