@@ -18,7 +18,6 @@ import org.jgrapht.graph.ParanoidGraph;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -51,6 +50,16 @@ public final class GraphBuilder {
         }
     }
 
+    private List<Node> getRuleNodes(@NotNull final Rule rule) {
+        return getAlternativeScopes(rule.getRhs()).stream().map(this::getNode).collect(Collectors.toList());
+    }
+
+    /**
+     * Splits the passed list into sublist from one terminal (inclusive) to the next terminal (exclusive).
+     * So each sub-list contains one terminal as the first element followed by zero or more non-terminals.
+     * @param alternatives List of alternatives (RHS of a rule).
+     * @return A List of List of Alternatives, not null, may be empty.
+     */
     @NotNull
     private static List<List<Alternative>> getAlternativeScopes(@NotNull final List<Alternative> alternatives) {
         final List<List<Alternative>> scopes = new ArrayList<>();
@@ -73,7 +82,7 @@ public final class GraphBuilder {
         if (alternatives.stream().filter(Alternative::isTerminal).count() > 1) {
             throw new IllegalArgumentException("Must only contain one Terminal!");
         }
-        // ToDo
+        // ToDo 
 
         return null;
     }
@@ -282,19 +291,9 @@ public final class GraphBuilder {
     @NotNull
     public Scope getEndNode() {
         List<Scope> scopes = graph.vertexSet().stream().filter(o -> graph.outDegreeOf(o) == 0).collect(Collectors.toList());
-
         if (scopes.size() != 1) {
             throw new NullPointerException("There msut be exactly one end node! (found: " + scopes.size() + ")");
         }
         return scopes.get(0);
-    }
-
-    public String getAltName(final Scope scope) {
-        Optional<ScopeEdge> edge = graph.outgoingEdgesOf(scope).stream().filter(e -> !e.isEmpty()).findFirst();
-        if (edge.isEmpty()) {
-            return "EndScope";
-        } else {
-            return edge.get().getNodes().get(0).getName();
-        }
     }
 }
