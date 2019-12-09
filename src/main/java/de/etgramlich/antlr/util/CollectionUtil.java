@@ -1,7 +1,7 @@
 package de.etgramlich.antlr.util;
 
-import de.etgramlich.antlr.util.graph.node.Node;
-import de.etgramlich.antlr.util.graph.node.SequenceNode;
+import de.etgramlich.antlr.util.graph.type.node.Node;
+import de.etgramlich.antlr.util.graph.type.node.SequenceNode;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 

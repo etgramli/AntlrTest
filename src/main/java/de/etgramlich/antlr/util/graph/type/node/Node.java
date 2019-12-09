@@ -1,4 +1,4 @@
-package de.etgramlich.antlr.util.graph.node;
+package de.etgramlich.antlr.util.graph.type.node;
 
 import de.etgramlich.antlr.util.StringUtil;
 import org.jetbrains.annotations.Contract;

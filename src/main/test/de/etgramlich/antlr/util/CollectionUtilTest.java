@@ -1,10 +1,9 @@
 package de.etgramlich.antlr.util;
 
-import de.etgramlich.antlr.util.graph.node.Node;
-import de.etgramlich.antlr.util.graph.node.SequenceNode;
+import de.etgramlich.antlr.util.graph.type.node.Node;
+import de.etgramlich.antlr.util.graph.type.node.SequenceNode;
 import org.junit.jupiter.api.Test;
 
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;

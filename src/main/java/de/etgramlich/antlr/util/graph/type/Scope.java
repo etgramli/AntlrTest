@@ -1,4 +1,4 @@
-package de.etgramlich.antlr.util.graph;
+package de.etgramlich.antlr.util.graph.type;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;

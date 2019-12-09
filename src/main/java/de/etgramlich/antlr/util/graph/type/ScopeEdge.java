@@ -1,6 +1,6 @@
-package de.etgramlich.antlr.util.graph;
+package de.etgramlich.antlr.util.graph.type;
 
-import de.etgramlich.antlr.util.graph.node.Node;
+import de.etgramlich.antlr.util.graph.type.node.Node;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jgrapht.graph.DefaultEdge;
