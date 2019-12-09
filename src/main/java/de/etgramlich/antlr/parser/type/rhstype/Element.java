@@ -3,15 +3,13 @@ package de.etgramlich.antlr.parser.type.rhstype;
 import de.etgramlich.antlr.parser.type.BnfType;
 import de.etgramlich.antlr.parser.type.rhstype.repetition.AbstractRepetition;
 import de.etgramlich.antlr.parser.type.terminal.AbstractId;
-import de.etgramlich.antlr.util.visitor.BnfElement;
-import de.etgramlich.antlr.util.visitor.BnfTypeVisitor;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
 
-public final class Element implements BnfType, BnfElement {
+public final class Element implements BnfType {
     private final AbstractId id;
     private final AbstractRepetition repetition;
     private final LetterRange range;
@@ -76,18 +74,6 @@ public final class Element implements BnfType, BnfElement {
     @Contract(pure = true)
     public LetterRange getRange() {
         return range;
-    }
-
-    @Override
-    public void accept(BnfTypeVisitor visitor) {
-        if (id != null) {
-            id.accept(visitor);
-        } else if (repetition != null) {
-            repetition.accept(visitor);
-        } else if (range != null) {
-            range.accept(visitor);
-        }
-        visitor.visit(this);
     }
 
     @Contract(pure = true)

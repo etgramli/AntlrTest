@@ -3,10 +3,7 @@ package de.etgramlich.antlr.parser.type;
 import de.etgramlich.antlr.parser.type.rhstype.Alternative;
 import de.etgramlich.antlr.parser.type.terminal.AbstractId;
 import de.etgramlich.antlr.util.SymbolTable;
-import de.etgramlich.antlr.util.visitor.BnfElement;
-import de.etgramlich.antlr.util.visitor.BnfTypeVisitor;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -14,7 +11,7 @@ import java.util.*;
 /**
  * Rhs: respect call sequence and mutual exclusive rules
  */
-public final class Rule implements BnfType, BnfElement {
+public final class Rule implements BnfType {
     private static final String INTERFACE_ST_FILENAME = "src/main/resources/ebnf.stg";
 
     private final AbstractId lhs;
@@ -69,11 +66,5 @@ public final class Rule implements BnfType, BnfElement {
             if (rhs.get(i).isTerminal()) continue;
             BnfType terminal = SymbolTable.getType(rhs.get(i).getName());
         }
-    }
-
-    @Override
-    public void accept(@NotNull BnfTypeVisitor visitor) {
-        visitor.visit(this);
-        rhs.forEach(alternative -> alternative.accept(visitor));
     }
 }

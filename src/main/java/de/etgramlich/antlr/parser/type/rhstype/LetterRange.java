@@ -2,15 +2,13 @@ package de.etgramlich.antlr.parser.type.rhstype;
 
 import de.etgramlich.antlr.parser.type.BnfType;
 import de.etgramlich.antlr.util.StringUtil;
-import de.etgramlich.antlr.util.visitor.BnfElement;
-import de.etgramlich.antlr.util.visitor.BnfTypeVisitor;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
 
-public final class LetterRange implements BnfType, BnfElement {
+public final class LetterRange implements BnfType {
     private final boolean isLetter;
     private final char beginChar, endChar;
 
@@ -57,10 +55,5 @@ public final class LetterRange implements BnfType, BnfElement {
     @Override
     public void removeNonTerminals() {
         // ToDo
-    }
-
-    @Override
-    public void accept(@NotNull BnfTypeVisitor visitor) {
-        visitor.visit(this);
     }
 }

@@ -2,10 +2,7 @@ package de.etgramlich.antlr.parser.type.terminal;
 
 import de.etgramlich.antlr.parser.type.BnfType;
 import de.etgramlich.antlr.util.StringUtil;
-import de.etgramlich.antlr.util.visitor.BnfElement;
-import de.etgramlich.antlr.util.visitor.BnfTypeVisitor;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -13,7 +10,7 @@ import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class AbstractId implements BnfType, BnfElement {
+public abstract class AbstractId implements BnfType {
     // ToDo: Maybe move to SymbolTable
     private static final String HOST_LANG_KEYWORD_FILENAME = "src/main/resources/keywords-java.txt";
     private static final List<String> keywords;
@@ -53,11 +50,6 @@ public abstract class AbstractId implements BnfType, BnfElement {
     @Override
     public String toString() {
         return id;
-    }
-
-    @Override
-    public void accept(@NotNull BnfTypeVisitor visitor) {
-        visitor.visit(this);
     }
 
     @Override

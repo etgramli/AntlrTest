@@ -3,13 +3,12 @@ package de.etgramlich.antlr.parser.type.rhstype.repetition;
 import de.etgramlich.antlr.parser.type.rhstype.Alternative;
 import de.etgramlich.antlr.parser.type.BnfType;
 import de.etgramlich.antlr.util.StringUtil;
-import de.etgramlich.antlr.util.visitor.BnfElement;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public abstract class AbstractRepetition implements BnfType, BnfElement {
+public abstract class AbstractRepetition implements BnfType {
     private final List<Alternative> alternatives;
 
     AbstractRepetition(final Collection<Alternative> alternatives) {
@@ -37,7 +36,7 @@ public abstract class AbstractRepetition implements BnfType, BnfElement {
 
     @Override
     public List<String> getNonTerminalDependants() {
-        return getAlternatives().stream().flatMap(alternative -> alternative.getNonTerminalDependants().stream()).collect(Collectors.toList());
+        return getAlternatives().stream().flatMap(a -> a.getNonTerminalDependants().stream()).collect(Collectors.toList());
     }
 
     @Override
