@@ -11,6 +11,31 @@ import static org.junit.jupiter.api.Assertions.*;
 class StringUtilTest {
 
     @Test
+    void test_isAllNumeric_noValue_returnsFalse() {
+        assertFalse(StringUtil.isAllNumeric());
+    }
+
+    @Test
+    void test_isAllNumeric_null_returnsFalse() {
+        assertFalse(StringUtil.isAllNumeric((char[]) null));
+    }
+
+    @Test
+    void test_isAllNumeric_zero_returnsTrue() {
+        assertTrue(StringUtil.isAllNumeric('0'));
+    }
+
+    @Test
+    void test_isAllNumeric_zeroToTwelve_returnsTrue() {
+        assertTrue(StringUtil.isAllNumeric('0', '1', '2', '3', '4', '5', '6', '7', '8', '9'));
+    }
+
+    @Test
+    void test_isAllNumeric_zeroToTwelveAndA_returnsFalse() {
+        assertFalse(StringUtil.isAllNumeric('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A'));
+    }
+
+    @Test
     void stripBlankLines_noBlankLines_returnsListWithSameElements() {
         final List<String> original = List.of(
                 "First",

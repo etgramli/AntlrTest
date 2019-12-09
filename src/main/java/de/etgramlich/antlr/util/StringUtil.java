@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public final class StringUtil extends StringUtils {
     private StringUtil() {}
@@ -50,12 +51,11 @@ public final class StringUtil extends StringUtils {
 
     @Contract("null -> false")
     public static boolean isAllNumeric(char... cs) {
-        if (cs == null) return false;
-        for (char c : cs) {
-            if (!isNumeric(c)) {
-                return false;
-            }
-        }
-        return true;
+        if (cs == null || cs.length == 0) return false;
+        return toCharList(cs).stream().filter(c -> !isNumeric(c)).findAny().isEmpty();
+    }
+
+    private static List<Character> toCharList(final char... cs) {
+        return new String(cs).chars().mapToObj(c -> (char) c).collect(Collectors.toList());
     }
 }
