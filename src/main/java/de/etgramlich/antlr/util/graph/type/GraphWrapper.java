@@ -1,6 +1,7 @@
 package de.etgramlich.antlr.util.graph.type;
 
 import de.etgramlich.antlr.util.graph.type.node.Node;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.AsUnmodifiableGraph;
@@ -22,10 +23,21 @@ public final class GraphWrapper {
     }
 
 
+    @NotNull
+    @Contract(value = " -> new", pure = true)
     public Graph<Scope, ScopeEdge> getGraph() {
         return new AsUnmodifiableGraph<>(graph);
     }
 
+    public boolean isGraphConsistent() {
+        try {
+            getStartScope();
+            getEndScope();
+        } catch (NullPointerException e) {
+            return false;
+        }
+        return true;
+    }
 
     /**
      * Adds a Scope as vertex to the graph, and associates the node with the forward directed edge and also creates
@@ -75,7 +87,7 @@ public final class GraphWrapper {
      * @param scope Scope to find its successors.
      * @return List of Scopes.
      */
-    public List<Scope> findSuccessors(final Scope scope) {
+    public List<Scope> getSuccessors(final Scope scope) {
         return graph.outgoingEdgesOf(scope).stream().map(ScopeEdge::getTarget).collect(Collectors.toList());
     }
 
@@ -84,7 +96,7 @@ public final class GraphWrapper {
      * @param scope Scope to search its predecessors.
      * @return List of nodes.
      */
-    public List<Scope> findPredecessors(@NotNull final Scope scope) {
+    public List<Scope> getPredecessors(@NotNull final Scope scope) {
         return graph.incomingEdgesOf(scope).stream().map(ScopeEdge::getSource).collect(Collectors.toList());
     }
 
@@ -108,7 +120,7 @@ public final class GraphWrapper {
      * @return A scope, if no scope found a NPE is thrown.
      */
     @NotNull
-    public Scope getEndNode() {
+    public Scope getEndScope() {
         final List<Scope> scopesWithoutOutgoingEdges =
                 graph.vertexSet().stream().filter(o -> graph.outDegreeOf(o) == 0).collect(Collectors.toList());
         if (scopesWithoutOutgoingEdges.size() != 1) {

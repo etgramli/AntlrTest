@@ -9,6 +9,7 @@ import de.etgramlich.antlr.util.graph.type.GraphWrapper;
 import de.etgramlich.antlr.util.graph.type.Scope;
 import de.etgramlich.antlr.util.graph.type.ScopeEdge;
 import de.etgramlich.antlr.util.graph.type.node.AlternativeNode;
+import de.etgramlich.antlr.util.graph.type.node.LoopNode;
 import de.etgramlich.antlr.util.graph.type.node.Node;
 import de.etgramlich.antlr.util.graph.type.node.SequenceNode;
 import org.jetbrains.annotations.Contract;
@@ -21,34 +22,33 @@ import java.util.stream.Collectors;
 
 /**
  * Builds a Graph with Scopes as vertices and Node as edges.
+ * List of rules must be passed as constructor argument, getGraph can be passed on each constructed object.
  */
 public final class GraphBuilder {
-
-    private final GraphWrapper graphWrapper;
+    private final GraphWrapper graphWrapper = new GraphWrapper();
 
     public GraphBuilder(@NotNull final RuleList ruleList) {
-        graphWrapper = new GraphWrapper();
-
         final List<Rule> nonTerminalRules = ruleList.getRules().stream().filter(rule -> !rule.isTerminal()).collect(Collectors.toList());
-        nonTerminalRules.forEach(rule -> addAlternatives(rule.getRhs()));
-    }
 
-
-    /**
-     * Splits the RHS of the rule on every terminal and adds the edges for each terminal.
-     * @param rule Rule to process its RHS.
-     */
-    public void addRuleToGraph(@NotNull final Rule rule) {
-        final List<Node> ruleScopes =
-                getAlternativeScopes(rule.getRhs()).stream().map(this::getNode).collect(Collectors.toList());
-        for (Node node : ruleScopes) {
-            // ToDo
-            graphWrapper.addSequence(new Scope(rule.getName()), node);
+        for (Rule rule : nonTerminalRules) {
+            for (List<Alternative> alternativeScope : getAlternativeScopes(rule.getRhs())) {
+                Scope scope = new Scope(alternativeScope.get(0).getName());
+                Node node = getNode(alternativeScope);
+                // ToDo: Add Precedence / Sequence / Alternative / Loop
+                if (node instanceof LoopNode) {
+                    graphWrapper.addLoop(scope, node);
+                } else if (node instanceof SequenceNode) {
+                    if (node.isOptional())  graphWrapper.addOptional(scope, node);
+                    else                    graphWrapper.addSequence(scope, node);
+                } else if (node instanceof AlternativeNode) {
+                    graphWrapper.addSequence(scope, node);
+                }
+            }
         }
     }
 
-    private List<Node> getRuleNodes(@NotNull final Rule rule) {
-        return getAlternativeScopes(rule.getRhs()).stream().map(this::getNode).collect(Collectors.toList());
+    private static List<Node> getRuleNodes(@NotNull final Rule rule) {
+        return getAlternativeScopes(rule.getRhs()).stream().map(GraphBuilder::getNode).collect(Collectors.toList());
     }
 
     /**
@@ -75,15 +75,54 @@ public final class GraphBuilder {
 
         return scopes;
     }
-    private Node getNode(@NotNull final List<Alternative> alternatives) {
-        if (alternatives.stream().filter(Alternative::isTerminal).count() > 1) {
+
+    private static Node getNode(@NotNull final List<Alternative> rhs) {
+        final long numTerminalNodes = rhs.stream().filter(Alternative::isTerminal).count();
+        if (numTerminalNodes > 1) {
             throw new IllegalArgumentException("Must only contain one Terminal!");
         }
-        // ToDo 
 
-        return null;
+        if (rhs.size() - numTerminalNodes > 1) {   // Alternative
+            return buildAlternative(rhs);
+        } else {
+            List<Element> elements = rhs.stream().filter(a -> !a.isTerminal()).findFirst().get().getElements();
+            if (elements.size() > 1) {              // Sequenz
+                return buildSequence(elements);
+            } else {
+                Element element = elements.get(0);
+                if (element.isRepetition()) {       // Loop
+                    return buildLoop(element);
+                } else {                            // Single element
+                    return new SequenceNode(element.getName(), element.isOptional());
+                }
+            }
+        }
     }
 
+    @NotNull
+    private static LoopNode buildLoop(@NotNull final Element element) {
+        SequenceNode child = new SequenceNode(element.getName());
+        return new LoopNode(element.getName(), child);
+    }
+
+    @NotNull
+    private static AlternativeNode buildAlternative(@NotNull final List<Alternative> rhs) {
+        final String name = rhs.get(0).getName();
+        final List<Element> elements =
+                rhs.stream().filter(a->!a.isTerminal()).map(alternative -> alternative.getElements().get(0))
+                        .collect(Collectors.toList());
+        final List<SequenceNode> alternatives =
+                elements.stream().map(element -> new SequenceNode(element.getName())).collect(Collectors.toList());
+        return new AlternativeNode(name, alternatives);
+    }
+
+    private static SequenceNode buildSequence(final List<Element> elements) {
+        SequenceNode begin = null;
+        for (Element element : Lists.reverse(elements)) {
+            begin = new SequenceNode(element.getName(), begin);
+        }
+        return begin;
+    }
 
     /**
      * Returns an unmodifiable view of the graph built by the constructor.
@@ -94,76 +133,5 @@ public final class GraphBuilder {
     @Contract(pure = true)
     public Graph<Scope, ScopeEdge> getGraph() {
         return graphWrapper.getGraph();
-    }
-
-    /**
-     * Adds a Scope with alternatives to the graph.
-     * @param alternatives Alternatives list, must not be null and not empty.
-     */
-    private void addAlternatives(@NotNull final List<Alternative> alternatives) {
-        if (alternatives.isEmpty()) {
-            throw new IllegalArgumentException("Alternatives is empty!!");
-        }
-        final Scope scope = new Scope(alternatives.get(0).getName());
-        final List<SequenceNode> nodeList = alternatives.stream().map(this::getAlternativeSequence).collect(Collectors.toList());
-        final AlternativeNode node = new AlternativeNode(alternatives.get(0).getName(), nodeList);
-        graphWrapper.addSequence(scope, node);
-    }
-
-    /**
-     * Get alternatives contained in one AlternativeNode
-     * @param alternatives List of alternatives, must not be null.
-     * @return An AlternativeNode, never null.
-     */
-    @NotNull
-    private AlternativeNode getAlternatives(@NotNull final List<Alternative> alternatives) {
-        final List<SequenceNode> alternativesNodes =
-                alternatives.stream().map(this::getAlternativeSequence).collect(Collectors.toList());
-        return new AlternativeNode(alternatives.get(0).getName(), alternativesNodes);
-    }
-
-    /**
-     * Returns a sequence of Sequence of nodes for the elements of the given Alternative (bnf).
-     * If there is only one element in the alternative, the first SequenceNode's successor is null.
-     * @param alternative Non-Null Alternative with at least 1 element.
-     * @return SequenceNode, not null.
-     */
-    private SequenceNode getAlternativeSequence(@NotNull final Alternative alternative) {
-        if (alternative.getElements().size() == 0) {
-            throw new IllegalArgumentException("Alternatives with no elements!");
-        }
-
-        SequenceNode alternativeNode = null;
-        for (Element element : Lists.reverse(alternative.getElements())) {
-            alternativeNode = new SequenceNode(element.getName(), alternativeNode);
-        }
-
-        return alternativeNode;
-    }
-
-    private void addElement(@NotNull final Element element) {
-        final Scope scope = new Scope(element.getName());
-        final Node elementNode = getElement(element);
-
-        if (element.isOptional()) {
-            graphWrapper.addOptional(scope, elementNode);
-        } else if (element.isRepetition()) {
-            graphWrapper.addLoop(scope, elementNode);
-        } else if(element.isPrecedence() || element.isId()) {
-            graphWrapper.addSequence(scope, elementNode);
-        } else {
-            throw new UnsupportedOperationException("Unknown element type!");
-        }
-    }
-
-    @NotNull
-    private Node getElement(@NotNull final Element element) {
-        if (element.isId()) {
-            return new SequenceNode(element.getId().getText());
-        } else if (element.isRepetition()) {
-            return getAlternatives(element.getRepetition());
-        } else {// Is LetterRange
-            return new SequenceNode(element.getName());
-        }
     }
 }

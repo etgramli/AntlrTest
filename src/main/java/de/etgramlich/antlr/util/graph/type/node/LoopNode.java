@@ -18,6 +18,11 @@ public final class LoopNode extends Node {
     }
 
     @Override
+    public boolean isOptional() {
+        return true;
+    }
+
+    @Override
     public int getTotalAmountOfChildNodes() {
         return 1 + child.getTotalAmountOfChildNodes();
     }
