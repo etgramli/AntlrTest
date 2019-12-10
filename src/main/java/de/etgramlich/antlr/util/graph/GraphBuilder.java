@@ -34,12 +34,12 @@ public final class GraphBuilder {
             for (List<Alternative> alternativeScope : getAlternativeScopes(rule.getRhs())) {
                 Scope scope = new Scope(alternativeScope.get(0).getName());
                 Node node = getNode(alternativeScope);
-                // ToDo: Add Precedence / Sequence / Alternative / Loop
+
                 if (node instanceof LoopNode) {
                     graphWrapper.addLoop(scope, node);
                 } else if (node instanceof SequenceNode) {
-                    if (node.isOptional())  graphWrapper.addOptional(scope, node);
-                    else                    graphWrapper.addSequence(scope, node);
+                    if (node.isOptional())  graphWrapper.addOptional(scope, node);  // Optional
+                    else                    graphWrapper.addSequence(scope, node);  // Sequnce / one element
                 } else if (node instanceof AlternativeNode) {
                     graphWrapper.addSequence(scope, node);
                 }

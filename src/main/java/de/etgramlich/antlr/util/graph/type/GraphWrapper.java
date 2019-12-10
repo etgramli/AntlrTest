@@ -22,6 +22,13 @@ public final class GraphWrapper {
         lastAddedScope = null;
     }
 
+    public GraphWrapper(final String startScopeName) {
+        final Graph<Scope, ScopeEdge> tmpGraph = new DirectedPseudograph<>(null, null, false);
+        graph = new ParanoidGraph<>(tmpGraph);
+        lastAddedScope = new Scope(startScopeName);
+        graph.addVertex(lastAddedScope);
+    }
+
 
     @NotNull
     @Contract(value = " -> new", pure = true)
@@ -30,6 +37,9 @@ public final class GraphWrapper {
     }
 
     public boolean isGraphConsistent() {
+        if (graph.edgeSet().isEmpty() && graph.vertexSet().isEmpty()) {
+            return true;
+        }
         try {
             getStartScope();
             getEndScope();
