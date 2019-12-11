@@ -108,9 +108,4 @@ public final class Element implements BnfType {
             return Collections.emptyList();
         }
     }
-
-    @Override
-    public void removeNonTerminals() {
-        // ToDo
-    }
 }

@@ -3,10 +3,10 @@ package de.etgramlich.antlr.util;
 import de.etgramlich.antlr.parser.type.BnfType;
 import org.jetbrains.annotations.Contract;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.*;
 
 /**
  * Singleton class to store symbols of the parsed EBNF grammar.
@@ -14,6 +14,19 @@ import java.util.Set;
 public final class SymbolTable {
     private static final Map<String, BnfType> symbolTable = new HashMap<>();
     private static final Map<String, Boolean> rules = new HashMap<>();
+
+    private static final String HOST_LANG_KEYWORD_FILENAME = "src/main/resources/keywords-java.txt";
+    private static final Set<String> keywords;
+    static {
+        List<String> readKeywords = Collections.emptyList();
+        try {
+            readKeywords = Files.readAllLines(Path.of(HOST_LANG_KEYWORD_FILENAME));
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            keywords = Collections.unmodifiableSet(Set.copyOf(readKeywords));
+        }
+    }
 
     @Contract(pure = true)
     private SymbolTable() {}
@@ -49,6 +62,10 @@ public final class SymbolTable {
 
     public static int getSize() {
         return symbolTable.size();
+    }
+
+    public static boolean isKeyword(final String id) {
+        return keywords.contains(id);
     }
 
     public enum SymbolType {

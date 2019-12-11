@@ -45,9 +45,4 @@ public final class Alternative implements BnfType {
         if (isTerminal()) return Collections.emptyList();
         return elements.stream().flatMap(e -> e.getNonTerminalDependants().stream()).collect(Collectors.toList());
     }
-
-    @Override
-    public void removeNonTerminals() {
-        // ToDo
-    }
 }

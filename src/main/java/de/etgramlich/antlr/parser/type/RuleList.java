@@ -32,12 +32,4 @@ public class RuleList implements BnfType {
     public List<String> getNonTerminalDependants() {
         return Collections.emptyList();
     }
-
-    @Override
-    public void removeNonTerminals() {
-        for (Rule rule : rules) {
-            if (rule.isTerminal()) continue;
-            rule.removeNonTerminals();
-        }
-    }
 }

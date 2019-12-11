@@ -47,10 +47,6 @@ public final class GraphBuilder {
         }
     }
 
-    private static List<Node> getRuleNodes(@NotNull final Rule rule) {
-        return getAlternativeScopes(rule.getRhs()).stream().map(GraphBuilder::getNode).collect(Collectors.toList());
-    }
-
     /**
      * Splits the passed list into sublist from one terminal (inclusive) to the next terminal (exclusive).
      * So each sub-list contains one terminal as the first element followed by zero or more non-terminals.
@@ -60,6 +56,7 @@ public final class GraphBuilder {
     @NotNull
     private static List<List<Alternative>> getAlternativeScopes(@NotNull final List<Alternative> alternatives) {
         final List<List<Alternative>> scopes = new ArrayList<>();
+        // ToDo: is always 1
 
         List<Alternative> currentList = new ArrayList<>();
         for (Alternative alternative : alternatives) {
@@ -97,6 +94,11 @@ public final class GraphBuilder {
                 }
             }
         }
+    }
+
+    private static Node getNode(final Element element) {
+        // ToDo
+        return null;
     }
 
     @NotNull

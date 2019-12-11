@@ -30,9 +30,4 @@ public final class Optional extends AbstractRepetition {
     public boolean isPrecedence() {
         return false;
     }
-
-    @Override
-    public void removeNonTerminals() {
-        // ToDo
-    }
 }

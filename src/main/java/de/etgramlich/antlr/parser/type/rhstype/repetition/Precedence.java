@@ -27,9 +27,4 @@ public final class Precedence extends AbstractRepetition {
     public boolean isPrecedence() {
         return true;
     }
-
-    @Override
-    public void removeNonTerminals() {
-        // ToDo
-    }
 }

@@ -22,9 +22,4 @@ public interface BnfType {
      * @return List of Strings, not null.
      */
     List<String> getNonTerminalDependants();
-
-    /**
-     * Replaces all non-terminals by terminals.
-     */
-    void removeNonTerminals();
 }

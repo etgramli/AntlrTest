@@ -51,9 +51,4 @@ public final class LetterRange implements BnfType {
     public List<String> getNonTerminalDependants() {
         return Collections.emptyList();
     }
-
-    @Override
-    public void removeNonTerminals() {
-        // ToDo
-    }
 }

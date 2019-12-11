@@ -58,13 +58,4 @@ public final class Rule implements BnfType {
         }
         return Collections.unmodifiableList(nonTerminals);
     }
-
-    @Override
-    public void removeNonTerminals() {
-        // ToDo: Replace rhs Alternatives in-place
-        for (int i = 0; i < rhs.size(); ++i) {
-            if (rhs.get(i).isTerminal()) continue;
-            BnfType terminal = SymbolTable.getType(rhs.get(i).getName());
-        }
-    }
 }

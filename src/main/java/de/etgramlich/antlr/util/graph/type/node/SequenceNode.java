@@ -5,7 +5,6 @@ import org.jetbrains.annotations.Contract;
 import java.util.Objects;
 
 public final class SequenceNode extends Node {
-    private final SequenceNode successor;
     private final boolean isOptional;
 
     public SequenceNode(final String name) {
@@ -21,8 +20,7 @@ public final class SequenceNode extends Node {
     }
 
     public SequenceNode(final String name, final SequenceNode successor, final boolean isOptional) {
-        super(name);
-        this.successor = successor;
+        super(name, successor);
         this.isOptional = isOptional;
     }
 
@@ -35,12 +33,7 @@ public final class SequenceNode extends Node {
     @Contract(pure = true)
     @Override
     public int getTotalAmountOfChildNodes() {
-        return 1 + (successor != null ? successor.getTotalAmountOfChildNodes() : 0);
-    }
-
-    @Contract(pure = true)
-    public SequenceNode getSuccessor() {
-        return successor;
+        return 1 + (getSuccessor() != null ? getSuccessor().getTotalAmountOfChildNodes() : 0);
     }
 
     @Override
@@ -52,13 +45,13 @@ public final class SequenceNode extends Node {
         SequenceNode that = (SequenceNode) o;
 
         if (isOptional != that.isOptional) return false;
-        return Objects.equals(successor, that.successor);
+        return Objects.equals(getSuccessor(), that.getSuccessor());
     }
 
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + (successor != null ? successor.hashCode() : 0);
+        result = 31 * result + (getSuccessor() != null ? getSuccessor().hashCode() : 0);
         result = 31 * result + (isOptional ? 1 : 0);
         return result;
     }

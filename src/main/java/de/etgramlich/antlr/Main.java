@@ -67,7 +67,6 @@ public final class Main {
         RuleListListener listener = new RuleListListener();
         parser.rulelist().enterRule(listener);
         RuleList ruleList = listener.getRuleList();
-        ruleList.removeNonTerminals();
 
         GraphBuilder gb = new GraphBuilder(ruleList);
         Graph<Scope, ScopeEdge> graph = gb.getGraph();

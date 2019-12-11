@@ -27,9 +27,4 @@ public final class ZeroOrMore extends AbstractRepetition {
     public boolean isPrecedence() {
         return false;
     }
-
-    @Override
-    public void removeNonTerminals() {
-        // ToDo
-    }
 }

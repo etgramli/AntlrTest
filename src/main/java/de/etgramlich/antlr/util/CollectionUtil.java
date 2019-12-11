@@ -41,10 +41,10 @@ public final class CollectionUtil {
      */
     @NotNull
     public static List<Node> toList(@NotNull final SequenceNode node) {
-        List<SequenceNode> nodeList = new ArrayList<>();
+        List<Node> nodeList = new ArrayList<>();
         nodeList.add(node);
 
-        SequenceNode currentNode = node;
+        Node currentNode = node;
         while (currentNode.getSuccessor() != null) {
             currentNode = currentNode.getSuccessor();
             nodeList.add(currentNode);
