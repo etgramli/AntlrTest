@@ -7,13 +7,14 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Singleton class to store symbols of the parsed EBNF grammar.
  */
 public final class SymbolTable {
-    private static final Map<String, BnfType> symbolTable = new HashMap<>();
-    private static final Map<String, Boolean> rules = new HashMap<>();
+    private static final Map<String, BnfType> symbolTable = new ConcurrentHashMap<>();
+    private static final Map<String, Boolean> rules = new ConcurrentHashMap<>();
 
     private static final String HOST_LANG_KEYWORD_FILENAME = "src/main/resources/keywords-java.txt";
     private static final Set<String> keywords;
@@ -66,10 +67,5 @@ public final class SymbolTable {
 
     public static boolean isKeyword(final String id) {
         return keywords.contains(id);
-    }
-
-    public enum SymbolType {
-        SCOPE,
-        ID
     }
 }

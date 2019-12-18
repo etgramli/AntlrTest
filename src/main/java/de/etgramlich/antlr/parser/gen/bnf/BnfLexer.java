@@ -1,4 +1,4 @@
-// Generated from /home/eti/IdeaProjects/AntlrTest/src/main/resources/bnf.g4 by ANTLR 4.7.2
+// Generated from C:/Users/Eti/IdeaProjects/AntlrTest/src/main/resources\Bnf.g4 by ANTLR 4.7.2
 package de.etgramlich.antlr.parser.gen.bnf;
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
@@ -10,15 +10,15 @@ import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.misc.*;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
-public class bnfLexer extends Lexer {
+public class BnfLexer extends Lexer {
 	static { RuntimeMetaData.checkVersion("4.7.2", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		ASSIGN=1, LPAREN=2, RPAREN=3, LBRACE=4, RBRACE=5, LEND=6, REND=7, BAR=8, 
-		GT=9, LT=10, TEXT=11, ID=12, LETTERRANGE=13, LETTER=14, DIGIT=15, WS=16;
+		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, T__6=7, T__7=8, NT=9, 
+		KEYWORD=10, TYPE=11, WS=12;
 	public static String[] channelNames = {
 		"DEFAULT_TOKEN_CHANNEL", "HIDDEN"
 	};
@@ -29,23 +29,22 @@ public class bnfLexer extends Lexer {
 
 	private static String[] makeRuleNames() {
 		return new String[] {
-			"ASSIGN", "LPAREN", "RPAREN", "LBRACE", "RBRACE", "LEND", "REND", "BAR", 
-			"GT", "LT", "TEXT", "ID", "LETTERRANGE", "LETTER", "DIGIT", "WS"
+			"T__0", "T__1", "T__2", "T__3", "T__4", "T__5", "T__6", "T__7", "NT", 
+			"KEYWORD", "TYPE", "WS"
 		};
 	}
 	public static final String[] ruleNames = makeRuleNames();
 
 	private static String[] makeLiteralNames() {
 		return new String[] {
-			null, "'::='", "')'", "'('", "'}'", "'{'", "']'", "'['", "'|'", "'>'", 
-			"'<'"
+			null, "'::='", "'|'", "'['", "']'", "'{'", "'}'", "'('", "')'"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
 	private static String[] makeSymbolicNames() {
 		return new String[] {
-			null, "ASSIGN", "LPAREN", "RPAREN", "LBRACE", "RBRACE", "LEND", "REND", 
-			"BAR", "GT", "LT", "TEXT", "ID", "LETTERRANGE", "LETTER", "DIGIT", "WS"
+			null, null, null, null, null, null, null, null, null, "NT", "KEYWORD", 
+			"TYPE", "WS"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -83,13 +82,13 @@ public class bnfLexer extends Lexer {
 	}
 
 
-	public bnfLexer(CharStream input) {
+	public BnfLexer(CharStream input) {
 		super(input);
 		_interp = new LexerATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
 
 	@Override
-	public String getGrammarFileName() { return "bnf.g4"; }
+	public String getGrammarFileName() { return "Bnf.g4"; }
 
 	@Override
 	public String[] getRuleNames() { return ruleNames; }
@@ -107,32 +106,25 @@ public class bnfLexer extends Lexer {
 	public ATN getATN() { return _ATN; }
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\2\22c\b\1\4\2\t\2\4"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\2\16G\b\1\4\2\t\2\4"+
 		"\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t"+
-		"\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\3\2\3\2\3"+
-		"\2\3\2\3\3\3\3\3\4\3\4\3\5\3\5\3\6\3\6\3\7\3\7\3\b\3\b\3\t\3\t\3\n\3\n"+
-		"\3\13\3\13\3\f\3\f\3\f\7\f=\n\f\f\f\16\f@\13\f\3\f\3\f\3\r\3\r\6\rF\n"+
-		"\r\r\r\16\rG\3\16\3\16\3\16\3\16\3\16\3\16\3\16\3\16\3\16\3\16\3\16\3"+
-		"\16\5\16V\n\16\3\17\3\17\3\17\3\17\3\20\3\20\3\20\3\20\3\21\3\21\3\21"+
-		"\3\21\2\2\22\3\3\5\4\7\5\t\6\13\7\r\b\17\t\21\n\23\13\25\f\27\r\31\16"+
-		"\33\17\35\20\37\21!\22\3\2\7\5\2C\\aac|\b\2\"\"//\62<C\\aac|\4\2C\\c|"+
-		"\b\2\"\"//\62;C\\aac|\5\2\13\f\17\17\"\"\2e\2\3\3\2\2\2\2\5\3\2\2\2\2"+
-		"\7\3\2\2\2\2\t\3\2\2\2\2\13\3\2\2\2\2\r\3\2\2\2\2\17\3\2\2\2\2\21\3\2"+
-		"\2\2\2\23\3\2\2\2\2\25\3\2\2\2\2\27\3\2\2\2\2\31\3\2\2\2\2\33\3\2\2\2"+
-		"\2\35\3\2\2\2\2\37\3\2\2\2\2!\3\2\2\2\3#\3\2\2\2\5\'\3\2\2\2\7)\3\2\2"+
-		"\2\t+\3\2\2\2\13-\3\2\2\2\r/\3\2\2\2\17\61\3\2\2\2\21\63\3\2\2\2\23\65"+
-		"\3\2\2\2\25\67\3\2\2\2\279\3\2\2\2\31C\3\2\2\2\33U\3\2\2\2\35W\3\2\2\2"+
-		"\37[\3\2\2\2!_\3\2\2\2#$\7<\2\2$%\7<\2\2%&\7?\2\2&\4\3\2\2\2\'(\7+\2\2"+
-		"(\6\3\2\2\2)*\7*\2\2*\b\3\2\2\2+,\7\177\2\2,\n\3\2\2\2-.\7}\2\2.\f\3\2"+
-		"\2\2/\60\7_\2\2\60\16\3\2\2\2\61\62\7]\2\2\62\20\3\2\2\2\63\64\7~\2\2"+
-		"\64\22\3\2\2\2\65\66\7@\2\2\66\24\3\2\2\2\678\7>\2\28\26\3\2\2\29:\7)"+
-		"\2\2:>\t\2\2\2;=\t\3\2\2<;\3\2\2\2=@\3\2\2\2><\3\2\2\2>?\3\2\2\2?A\3\2"+
-		"\2\2@>\3\2\2\2AB\7)\2\2B\30\3\2\2\2CE\t\4\2\2DF\t\5\2\2ED\3\2\2\2FG\3"+
-		"\2\2\2GE\3\2\2\2GH\3\2\2\2H\32\3\2\2\2IJ\5\35\17\2JK\7\60\2\2KL\7\60\2"+
-		"\2LM\3\2\2\2MN\5\35\17\2NV\3\2\2\2OP\5\37\20\2PQ\7\60\2\2QR\7\60\2\2R"+
-		"S\3\2\2\2ST\5\37\20\2TV\3\2\2\2UI\3\2\2\2UO\3\2\2\2V\34\3\2\2\2WX\7)\2"+
-		"\2XY\t\4\2\2YZ\7)\2\2Z\36\3\2\2\2[\\\7)\2\2\\]\4\62;\2]^\7)\2\2^ \3\2"+
-		"\2\2_`\t\6\2\2`a\3\2\2\2ab\b\21\2\2b\"\3\2\2\2\6\2>GU\3\b\2\2";
+		"\13\4\f\t\f\4\r\t\r\3\2\3\2\3\2\3\2\3\3\3\3\3\4\3\4\3\5\3\5\3\6\3\6\3"+
+		"\7\3\7\3\b\3\b\3\t\3\t\3\n\3\n\3\n\6\n\61\n\n\r\n\16\n\62\3\n\3\n\3\13"+
+		"\3\13\6\139\n\13\r\13\16\13:\3\13\3\13\3\f\6\f@\n\f\r\f\16\fA\3\r\3\r"+
+		"\3\r\3\r\2\2\16\3\3\5\4\7\5\t\6\13\7\r\b\17\t\21\n\23\13\25\f\27\r\31"+
+		"\16\3\2\4\4\2C\\c|\5\2\13\f\17\17\"\"\2I\2\3\3\2\2\2\2\5\3\2\2\2\2\7\3"+
+		"\2\2\2\2\t\3\2\2\2\2\13\3\2\2\2\2\r\3\2\2\2\2\17\3\2\2\2\2\21\3\2\2\2"+
+		"\2\23\3\2\2\2\2\25\3\2\2\2\2\27\3\2\2\2\2\31\3\2\2\2\3\33\3\2\2\2\5\37"+
+		"\3\2\2\2\7!\3\2\2\2\t#\3\2\2\2\13%\3\2\2\2\r\'\3\2\2\2\17)\3\2\2\2\21"+
+		"+\3\2\2\2\23-\3\2\2\2\25\66\3\2\2\2\27?\3\2\2\2\31C\3\2\2\2\33\34\7<\2"+
+		"\2\34\35\7<\2\2\35\36\7?\2\2\36\4\3\2\2\2\37 \7~\2\2 \6\3\2\2\2!\"\7]"+
+		"\2\2\"\b\3\2\2\2#$\7_\2\2$\n\3\2\2\2%&\7}\2\2&\f\3\2\2\2\'(\7\177\2\2"+
+		"(\16\3\2\2\2)*\7*\2\2*\20\3\2\2\2+,\7+\2\2,\22\3\2\2\2-.\7>\2\2.\60\4"+
+		"c|\2/\61\t\2\2\2\60/\3\2\2\2\61\62\3\2\2\2\62\60\3\2\2\2\62\63\3\2\2\2"+
+		"\63\64\3\2\2\2\64\65\7@\2\2\65\24\3\2\2\2\668\7)\2\2\679\t\2\2\28\67\3"+
+		"\2\2\29:\3\2\2\2:8\3\2\2\2:;\3\2\2\2;<\3\2\2\2<=\7)\2\2=\26\3\2\2\2>@"+
+		"\t\2\2\2?>\3\2\2\2@A\3\2\2\2A?\3\2\2\2AB\3\2\2\2B\30\3\2\2\2CD\t\3\2\2"+
+		"DE\3\2\2\2EF\b\r\2\2F\32\3\2\2\2\6\2\62:A\3\b\2\2";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

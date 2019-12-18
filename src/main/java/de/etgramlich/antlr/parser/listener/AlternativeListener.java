@@ -1,7 +1,7 @@
 package de.etgramlich.antlr.parser.listener;
 
-import de.etgramlich.antlr.parser.gen.bnf.bnfBaseListener;
-import de.etgramlich.antlr.parser.gen.bnf.bnfParser;
+import de.etgramlich.antlr.parser.gen.bnf.BnfBaseListener;
+import de.etgramlich.antlr.parser.gen.bnf.BnfParser;
 import de.etgramlich.antlr.parser.type.rhstype.Alternative;
 import de.etgramlich.antlr.parser.type.rhstype.Element;
 import org.jetbrains.annotations.Contract;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public final class AlternativeListener extends bnfBaseListener {
+public final class AlternativeListener extends BnfBaseListener {
     private Alternative alternative;
     private final List<Alternative> alternatives = new ArrayList<>();
 
@@ -22,19 +22,19 @@ public final class AlternativeListener extends bnfBaseListener {
     }
 
     @Override
-    public void enterAlternatives(@NotNull bnfParser.AlternativesContext ctx) {
-        for (bnfParser.AlternativeContext context : ctx.alternative()) {
-            enterAlternative(context);
+    public void enterAlternatives(@NotNull BnfParser.AlternativesContext ctx) {
+        for (BnfParser.SequenceContext context : ctx.sequence()) {
+            enterSequence(context);
             alternatives.add(alternative);
         }
     }
 
     @Override
-    public void enterAlternative(@NotNull bnfParser.AlternativeContext ctx) {
+    public void enterSequence(@NotNull BnfParser.SequenceContext ctx) {
         List<Element> elements = new ArrayList<>(ctx.getChildCount());
         ElementListener listener = new ElementListener();
 
-        for (bnfParser.ElementContext elementContext : ctx.element()) {
+        for (BnfParser.ElementContext elementContext : ctx.element()) {
             listener.enterElement(elementContext);
             elements.add(listener.getElement());
         }
@@ -42,12 +42,12 @@ public final class AlternativeListener extends bnfBaseListener {
     }
 
     @Override
-    public void exitAlternative(@NotNull bnfParser.AlternativeContext ctx) {
-        super.exitAlternative(ctx);
+    public void exitSequence(@NotNull BnfParser.SequenceContext ctx) {
+        super.exitSequence(ctx);
     }
 
     @Override
-    public void exitAlternatives(bnfParser.AlternativesContext ctx) {
+    public void exitAlternatives(BnfParser.AlternativesContext ctx) {
         super.exitAlternatives(ctx);
     }
 }

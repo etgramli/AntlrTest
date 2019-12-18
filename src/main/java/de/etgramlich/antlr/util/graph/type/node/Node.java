@@ -2,12 +2,13 @@ package de.etgramlich.antlr.util.graph.type.node;
 
 import de.etgramlich.antlr.util.StringUtil;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
 public abstract class Node {
     private final String name;
-    private final Node successor;
+    private Node successor;
 
     protected Node(final String name) {
         this(name, null);
@@ -32,6 +33,10 @@ public abstract class Node {
 
     public Node getSuccessor() {
         return successor;
+    }
+
+    public void setSuccessor(@NotNull final Node successor) {
+        this.successor = successor;
     }
 
     @Override

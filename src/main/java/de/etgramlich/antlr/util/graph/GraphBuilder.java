@@ -5,6 +5,8 @@ import de.etgramlich.antlr.parser.type.Rule;
 import de.etgramlich.antlr.parser.type.RuleList;
 import de.etgramlich.antlr.parser.type.rhstype.Alternative;
 import de.etgramlich.antlr.parser.type.rhstype.Element;
+import de.etgramlich.antlr.parser.type.terminal.AbstractId;
+import de.etgramlich.antlr.util.StringUtil;
 import de.etgramlich.antlr.util.graph.type.GraphWrapper;
 import de.etgramlich.antlr.util.graph.type.Scope;
 import de.etgramlich.antlr.util.graph.type.ScopeEdge;
@@ -25,27 +27,118 @@ import java.util.stream.Collectors;
  * List of rules must be passed as constructor argument, getGraph can be passed on each constructed object.
  */
 public final class GraphBuilder {
-    private final GraphWrapper graphWrapper = new GraphWrapper();
+    private final GraphWrapper graphWrapper;
+
+    private Node currentNode;
+    private boolean isInAlternatives;
+    private boolean isInAlternative;
+    private boolean isInRepetition;
+    private boolean isInSequence;
+
+    private void reset() {
+        isInAlternatives = false;
+        isInAlternative  = false;
+        isInRepetition   = false;
+        isInSequence     = false;
+
+        currentNode = null;
+    }
 
     public GraphBuilder(@NotNull final RuleList ruleList) {
-        final List<Rule> nonTerminalRules = ruleList.getRules().stream().filter(rule -> !rule.isTerminal()).collect(Collectors.toList());
+        final List<Rule> startRules = ruleList.getRules().stream().filter(Rule::isStartRule).collect(Collectors.toList());
+        if (startRules.size() == 0) {
+            throw new IllegalArgumentException("Rule-list must have exactly one Start rule");
+        }
+        final Rule startRule = startRules.get(0);
+        final List<Rule> nonTerminalRules = ruleList.getRules().stream().filter(
+                rule -> !rule.isTerminal() && rule.getNonTerminalDependants().size() > 1
+        ).collect(Collectors.toList());
+        graphWrapper = new GraphWrapper(startRule.getName());
+        nonTerminalRules.remove(startRule);
 
         for (Rule rule : nonTerminalRules) {
-            for (List<Alternative> alternativeScope : getAlternativeScopes(rule.getRhs())) {
-                Scope scope = new Scope(alternativeScope.get(0).getName());
-                Node node = getNode(alternativeScope);
+            processAlternatives(rule.getRhs());
+        }
+    }
 
-                if (node instanceof LoopNode) {
-                    graphWrapper.addLoop(scope, node);
-                } else if (node instanceof SequenceNode) {
-                    if (node.isOptional())  graphWrapper.addOptional(scope, node);  // Optional
-                    else                    graphWrapper.addSequence(scope, node);  // Sequnce / one element
-                } else if (node instanceof AlternativeNode) {
-                    graphWrapper.addSequence(scope, node);
-                }
+    private void addNode(final String nextScopeName) {
+        if (StringUtil.isBlank(nextScopeName)) {
+            throw new IllegalArgumentException("Scope name must not be blank!");
+        }
+        Scope currentScope = new Scope(nextScopeName);
+        if (currentNode instanceof LoopNode) {
+            graphWrapper.addLoop(currentScope, currentNode);
+        } else if (currentNode instanceof SequenceNode) {
+            if (currentNode.isOptional())  graphWrapper.addOptional(currentScope, currentNode);  // Optional
+            else                           graphWrapper.addSequence(currentScope, currentNode);  // Sequnce / one element
+        } else if (currentNode instanceof AlternativeNode) {
+            graphWrapper.addSequence(currentScope, currentNode);
+        }
+        reset();
+    }
+
+    private void processAlternatives(@NotNull final List<Alternative> alternatives) {
+        assert (!alternatives.isEmpty());
+        if (alternatives.size() > 1) {
+            reset();
+            isInAlternatives = true;
+            if (currentNode == null) {
+                currentNode = new AlternativeNode(alternatives.get(0).getName());
+            }
+        }
+        // Alternative, Sequence, Optional, ZeroOrMore, Precedence, ID or LetterRange
+        for (Alternative alternative : alternatives) {
+            processAlternative(alternative);
+        }
+    }
+    private void processAlternative(@NotNull final Alternative alternative) {
+        assert (alternative.getElements().size() > 0);
+        if (isInAlternatives) {                             // Alternative
+            ((AlternativeNode) currentNode).addAlternative(new SequenceNode(alternative.getName()));
+        } else if (alternative.getElements().size() > 1) {  // Sequence
+            reset();
+            isInSequence = true;
+            for (Element element : alternative.getElements()) {
+                processElement(element);
+            }
+        } else {    // Optional, ZeroOrMore, Precedence, ID or LetterRange
+            processElement(alternative.getElements().get(0));
+        }
+    }
+
+    private void processElement(@NotNull final Element element) {
+        if (isInSequence) { // Sequence
+            getLastOfSequence().setSuccessor(new SequenceNode(element.getName()));
+        } else if (element.isOptional()) {
+            // ToDo: Optional
+        } else if (element.isRepetition()) {
+            // ToDo: Repetition
+        } else if (element.isPrecedence()) {
+            // ToDo: Precedence
+        } else if (element.isLetterRange()) {
+            // ToDo: LetterRange
+        } else {
+            // ToDo: Id
+            final AbstractId id = element.getId();
+            if (id.isTerminal()) {
+                addNode(id.getName());
+            } else {
+                // ToDo: id
             }
         }
     }
+
+    private Node getLastOfSequence() {
+        if (currentNode == null) {
+            return null;
+        }
+        Node current = currentNode;
+        while (current.getSuccessor() != null) {
+            current = current.getSuccessor();
+        }
+        return current;
+    }
+
 
     /**
      * Splits the passed list into sublist from one terminal (inclusive) to the next terminal (exclusive).
@@ -56,7 +149,6 @@ public final class GraphBuilder {
     @NotNull
     private static List<List<Alternative>> getAlternativeScopes(@NotNull final List<Alternative> alternatives) {
         final List<List<Alternative>> scopes = new ArrayList<>();
-        // ToDo: is always 1
 
         List<Alternative> currentList = new ArrayList<>();
         for (Alternative alternative : alternatives) {

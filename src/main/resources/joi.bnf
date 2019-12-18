@@ -1,0 +1,9 @@
+<joi> ::= <component>
+<component> ::= ('component' | 'singleton') <componentName>
+                <componentInterface> {<componentInterface>}
+                <componentMethod> {<componentMethod>}
+                {<componentField>}
+<componentName> ::= String
+<componentInterface> ::= 'impl' String
+<componentMethod> ::= 'method' String
+<componentField> ::= 'field' String

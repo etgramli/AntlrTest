@@ -1,7 +1,7 @@
 package de.etgramlich.antlr;
 
-import de.etgramlich.antlr.parser.gen.bnf.bnfLexer;
-import de.etgramlich.antlr.parser.gen.bnf.bnfParser;
+import de.etgramlich.antlr.parser.gen.bnf.BnfLexer;
+import de.etgramlich.antlr.parser.gen.bnf.BnfParser;
 import de.etgramlich.antlr.parser.listener.RuleListListener;
 import de.etgramlich.antlr.parser.type.RuleList;
 import de.etgramlich.antlr.util.StringUtil;
@@ -62,10 +62,10 @@ public final class Main {
             return;
         }
 
-        bnfParser parser = new bnfParser(new CommonTokenStream(new bnfLexer(CharStreams.fromString(grammar))));
+        BnfParser parser = new BnfParser(new CommonTokenStream(new BnfLexer(CharStreams.fromString(grammar))));
 
         RuleListListener listener = new RuleListListener();
-        parser.rulelist().enterRule(listener);
+        parser.bnf().enterRule(listener);
         RuleList ruleList = listener.getRuleList();
 
         GraphBuilder gb = new GraphBuilder(ruleList);

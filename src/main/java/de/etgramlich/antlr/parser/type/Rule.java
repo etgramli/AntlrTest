@@ -49,6 +49,11 @@ public final class Rule implements BnfType {
         return rhs.stream().filter(alternative -> !alternative.isTerminal()).findAny().isEmpty();
     }
 
+    public boolean isStartRule() {
+        return !isTerminal() && hasOnlyOneAlternative()
+                && rhs.get(0).getElements().size() == 1 && rhs.get(0).getElements().get(0).isId();
+    }
+
     @Override
     public List<String> getNonTerminalDependants() {
         if (isTerminal()) return Collections.emptyList();

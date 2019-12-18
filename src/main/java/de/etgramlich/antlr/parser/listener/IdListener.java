@@ -1,7 +1,7 @@
 package de.etgramlich.antlr.parser.listener;
 
-import de.etgramlich.antlr.parser.gen.bnf.bnfBaseListener;
-import de.etgramlich.antlr.parser.gen.bnf.bnfParser;
+import de.etgramlich.antlr.parser.gen.bnf.BnfBaseListener;
+import de.etgramlich.antlr.parser.gen.bnf.BnfParser;
 import de.etgramlich.antlr.parser.type.terminal.AbstractId;
 import de.etgramlich.antlr.parser.type.terminal.Id;
 import de.etgramlich.antlr.parser.type.terminal.RuleId;
@@ -13,33 +13,33 @@ import org.jetbrains.annotations.NotNull;
  * Listener that queries the IDs (ruleid and id) and text rules of the ANTLR4 BNF grammar.
  * The rule function must be called according to the current rule. The (unescaped id) string can be queried with getText().
  */
-public final class IdListener extends bnfBaseListener {
+public final class IdListener extends BnfBaseListener {
     private AbstractId id;
 
     @Override
-    public void enterText(@NotNull bnfParser.TextContext ctx) {
+    public void enterKeyword(@NotNull BnfParser.KeywordContext ctx) {
         String textString = ctx.getText().trim();
         id = new Text(textString);
     }
 
     @Override
-    public void exitText(bnfParser.TextContext ctx) {
-        super.exitText(ctx);
+    public void exitKeyword(BnfParser.KeywordContext ctx) {
+        super.exitKeyword(ctx);
     }
 
     @Override
-    public void enterRuleid(@NotNull bnfParser.RuleidContext ctx) {
+    public void enterType(@NotNull BnfParser.TypeContext ctx) {
         String trimmedRuleId = ctx.getText().trim();
         id = new RuleId(trimmedRuleId);
     }
 
     @Override
-    public void exitRuleid(bnfParser.RuleidContext ctx) {
-        super.exitRuleid(ctx);
+    public void exitType(BnfParser.TypeContext ctx) {
+        super.exitType(ctx);
     }
 
     @Override
-    public void enterId(@NotNull bnfParser.IdContext ctx) {
+    public void enterNt(@NotNull BnfParser.NtContext ctx) {
         String strippedId = stripLTGT(ctx.getText());
         id = new Id(strippedId);
     }
@@ -52,8 +52,8 @@ public final class IdListener extends bnfBaseListener {
     }
 
     @Override
-    public void exitId(bnfParser.IdContext ctx) {
-        super.exitId(ctx);
+    public void exitNt(BnfParser.NtContext ctx) {
+        super.exitNt(ctx);
     }
 
 

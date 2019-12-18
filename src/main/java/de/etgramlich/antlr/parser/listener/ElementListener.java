@@ -1,7 +1,7 @@
 package de.etgramlich.antlr.parser.listener;
 
-import de.etgramlich.antlr.parser.gen.bnf.bnfBaseListener;
-import de.etgramlich.antlr.parser.gen.bnf.bnfParser;
+import de.etgramlich.antlr.parser.gen.bnf.BnfBaseListener;
+import de.etgramlich.antlr.parser.gen.bnf.BnfParser;
 import de.etgramlich.antlr.parser.type.rhstype.Element;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -10,23 +10,21 @@ import org.jetbrains.annotations.NotNull;
  * Parses an element of ANTL4's bnf grammar.
  * Currently only allows text and id options.
  */
-public final class ElementListener extends bnfBaseListener {
+public final class ElementListener extends BnfBaseListener {
     private Element element;
 
     @Override
-    public void enterElement(@NotNull bnfParser.ElementContext ctx)  {
-        if (ctx.id() != null || ctx.text() != null) {
+    public void enterElement(@NotNull BnfParser.ElementContext ctx)  {
+        if (ctx.nt() != null || ctx.keyword() != null || ctx.type() != null) {
             IdListener listener = new IdListener();
-            if (ctx.id() != null) {
-                listener.enterId(ctx.id());
+            if (ctx.nt() != null) {
+                listener.enterNt(ctx.nt());
+            } else if (ctx.type() != null) {
+                listener.enterType(ctx.type());
             } else {
-                listener.enterText(ctx.text());
+                listener.enterKeyword(ctx.keyword());
             }
             element = new Element(listener.getId());
-        } else if (ctx.letterrange() != null) {
-            LetterrangeListener listener = new LetterrangeListener();
-            listener.enterLetterrange(ctx.letterrange());
-            element = new Element(listener.getLetterRange());
         } else if (ctx.children.size() == 1 && ctx.children.get(0).getText().equals("::=")) {
             System.out.println("Assignment - skipping!!!");
         } else {
@@ -43,8 +41,9 @@ public final class ElementListener extends bnfBaseListener {
             element = new Element(repetitionListener.getRepetition());
         }
     }
+
     @Override
-    public void exitElement(bnfParser.ElementContext ctx) {
+    public void exitElement(BnfParser.ElementContext ctx) {
         super.exitElement(ctx);
     }
 

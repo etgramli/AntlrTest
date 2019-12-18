@@ -56,6 +56,10 @@ public final class Element implements BnfType {
         return repetition != null && repetition.isPrecedence();
     }
 
+    public boolean isLetterRange() {
+        return range != null;
+    }
+
     @Contract(pure = true)
     public boolean isId() {
         return id != null;

@@ -1,6 +1,6 @@
 package de.etgramlich.antlr.parser.listener.bnf;
 
-import de.etgramlich.antlr.parser.gen.bnf.bnfParser;
+import de.etgramlich.antlr.parser.gen.bnf.BnfParser;
 import de.etgramlich.antlr.parser.listener.IdListener;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +14,7 @@ class IdListenerTest {
 
         IdListener listener = new IdListener();
 
-        listener.enterText(new TextMock(expectedId));
+        listener.enterKeyword(new KeywordMock(expectedId));
         assertEquals(expectedId, listener.getId().getText());
     }
 
@@ -23,7 +23,7 @@ class IdListenerTest {
         final String expectedId = "some-id-without-spaces in the end";
 
         IdListener listener = new IdListener();
-        listener.enterText(new TextMock(expectedId + "   "));
+        listener.enterKeyword(new KeywordMock(expectedId + "   "));
         assertEquals(expectedId, listener.getId().getText());
     }
 
@@ -33,7 +33,7 @@ class IdListenerTest {
 
         IdListener listener = new IdListener();
 
-        listener.enterRuleid(new RuleIdMock(expectedId));
+        listener.enterType(new TypeMock(expectedId));
         assertEquals(expectedId, listener.getId().getText());
     }
 
@@ -42,7 +42,7 @@ class IdListenerTest {
         final String expectedId = "some-id-without-spaces";
 
         IdListener listener = new IdListener();
-        listener.enterRuleid(new RuleIdMock(expectedId + "   "));
+        listener.enterType(new TypeMock(expectedId + "   "));
         assertEquals(expectedId, listener.getId().getText());
     }
 
@@ -52,7 +52,7 @@ class IdListenerTest {
 
         IdListener listener = new IdListener();
 
-        listener.enterId(new IdMock("<new-id>"));
+        listener.enterNt(new NtMock("<new-id>"));
         assertEquals(expectedId, listener.getId().getText());
     }
 
@@ -62,15 +62,15 @@ class IdListenerTest {
 
         IdListener listener = new IdListener();
 
-        listener.enterId(new IdMock(" <new-id   > "));
+        listener.enterNt(new NtMock(" <new-id   > "));
         assertEquals(expectedId, listener.getId().getText());
     }
 
 
     // Mock to set a static text (characters and - sign and spaces), set text in constructor and query only afterwards
-    private static class TextMock extends bnfParser.TextContext {
+    private static class KeywordMock extends BnfParser.KeywordContext {
         private final String text;
-        TextMock(final String text) {
+        KeywordMock(final String text) {
             super(null, 0);
             this.text = text;
         }
@@ -81,9 +81,9 @@ class IdListenerTest {
     }
 
     // Mock to set a static id (text with <> around) and query that id
-    private static class IdMock extends bnfParser.IdContext {
+    private static class NtMock extends BnfParser.NtContext {
         private final String text;
-        IdMock(final String text) {
+        NtMock(final String text) {
             super(null, 0);
             this.text = text;
         }
@@ -94,9 +94,9 @@ class IdListenerTest {
     }
 
     // Mock for a rule id (text, and - sign), the id can be set in constructor and only be queried
-    private static class RuleIdMock extends bnfParser.RuleidContext {
+    private static class TypeMock extends BnfParser.TypeContext {
         private final String text;
-        RuleIdMock(final String text) {
+        TypeMock(final String text) {
             super(null, 0);
             this.text = text;
         }

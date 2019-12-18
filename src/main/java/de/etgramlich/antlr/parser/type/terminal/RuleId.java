@@ -14,7 +14,7 @@ public final class RuleId extends AbstractId {
     @Contract(pure = true)
     @Override
     public boolean isTerminal() {
-        return false;
+        return true;
     }
 
     @NotNull

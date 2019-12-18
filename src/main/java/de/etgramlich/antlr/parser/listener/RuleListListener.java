@@ -1,7 +1,7 @@
 package de.etgramlich.antlr.parser.listener;
 
-import de.etgramlich.antlr.parser.gen.bnf.bnfBaseListener;
-import de.etgramlich.antlr.parser.gen.bnf.bnfParser;
+import de.etgramlich.antlr.parser.gen.bnf.BnfBaseListener;
+import de.etgramlich.antlr.parser.gen.bnf.BnfParser;
 import de.etgramlich.antlr.parser.type.Rule;
 import de.etgramlich.antlr.parser.type.RuleList;
 import org.jetbrains.annotations.Contract;
@@ -10,24 +10,24 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class RuleListListener extends bnfBaseListener {
+public final class RuleListListener extends BnfBaseListener {
     private RuleList ruleList;
 
     @Override
-    public void enterRulelist(@NotNull bnfParser.RulelistContext ctx) {
-        List<Rule> rules = new ArrayList<>(ctx.rule_().size());
+    public void enterBnf(@NotNull BnfParser.BnfContext ctx) {
+        List<Rule> rules = new ArrayList<>(ctx.bnfrule().size());
         RuleListener listener = new RuleListener();
 
-        for (bnfParser.Rule_Context context : ctx.rule_()) {
-            listener.enterRule_(context);
+        for (BnfParser.BnfruleContext context : ctx.bnfrule()) {
+            listener.enterBnfrule(context);
             rules.add(listener.getRule());
         }
         this.ruleList = new RuleList(rules);
     }
 
     @Override
-    public void exitRulelist(bnfParser.RulelistContext ctx) {
-        super.exitRulelist(ctx);
+    public void exitBnf(BnfParser.BnfContext ctx) {
+        super.exitBnf(ctx);
     }
 
     @Contract(pure = true)

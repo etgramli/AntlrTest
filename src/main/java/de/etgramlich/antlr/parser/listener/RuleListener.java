@@ -1,7 +1,7 @@
 package de.etgramlich.antlr.parser.listener;
 
-import de.etgramlich.antlr.parser.gen.bnf.bnfBaseListener;
-import de.etgramlich.antlr.parser.gen.bnf.bnfParser;
+import de.etgramlich.antlr.parser.gen.bnf.BnfBaseListener;
+import de.etgramlich.antlr.parser.gen.bnf.BnfParser;
 import de.etgramlich.antlr.parser.type.rhstype.Alternative;
 import de.etgramlich.antlr.parser.type.Rule;
 import de.etgramlich.antlr.parser.type.terminal.AbstractId;
@@ -11,14 +11,14 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public final class RuleListener extends bnfBaseListener {
+public final class RuleListener extends BnfBaseListener {
     private Rule rule;
 
     @Override
-    public void enterRule_(@NotNull bnfParser.Rule_Context ctx) {
+    public void enterBnfrule(@NotNull BnfParser.BnfruleContext ctx) {
         // LHS
         IdListener idListener = new IdListener();
-        idListener.enterId(ctx.lhs().id());
+        idListener.enterNt(ctx.lhs().nt());
         AbstractId lhs = idListener.getId();
 
         // RHS
@@ -34,8 +34,8 @@ public final class RuleListener extends bnfBaseListener {
     }
 
     @Override
-    public void exitRule_(bnfParser.Rule_Context ctx) {
-        super.exitRule_(ctx);
+    public void exitBnfrule(BnfParser.BnfruleContext ctx) {
+        super.exitBnfrule(ctx);
     }
 
     @Contract(pure = true)
