@@ -28,7 +28,7 @@ KEYWORD
 TYPE
 WS
 
-rule names:
+bnfRule names:
 bnf
 bnfrule
 lhs

@@ -1,14 +1,14 @@
-package de.etgramlich.parser.type.rhstype.repetition;
+package de.etgramlich.parser.type.repetition;
 
-import de.etgramlich.parser.type.rhstype.Alternative;
+import de.etgramlich.parser.type.Alternatives;
 import org.jetbrains.annotations.Contract;
 
 import java.util.Collection;
 
 public final class Optional extends AbstractRepetition {
-    public Optional(Collection<Alternative> alternatives) {
+    public Optional(final Alternatives alternatives) {
         super(alternatives);
-        if (alternatives.size() > 1) {
+        if (alternatives.getSequences().size() > 1) {
             throw new IllegalArgumentException("Optional argument has more than one Alternatives! (must be 0 or 1)");
         }
     }

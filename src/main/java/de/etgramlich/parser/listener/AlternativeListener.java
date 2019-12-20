@@ -2,30 +2,30 @@ package de.etgramlich.parser.listener;
 
 import de.etgramlich.parser.gen.bnf.BnfBaseListener;
 import de.etgramlich.parser.gen.bnf.BnfParser;
-import de.etgramlich.parser.type.rhstype.Alternative;
-import de.etgramlich.parser.type.rhstype.Element;
+import de.etgramlich.parser.type.Alternatives;
+import de.etgramlich.parser.type.Element;
+import de.etgramlich.parser.type.Sequence;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public final class AlternativeListener extends BnfBaseListener {
-    private Alternative alternative;
-    private final List<Alternative> alternatives = new ArrayList<>();
+    private Sequence sequence;
+    private final List<Sequence> alternatives = new ArrayList<>();
 
     @NotNull
     @Contract(pure = true)
-    public List<Alternative> getAlternatives() {
-        return Collections.unmodifiableList(alternatives);
+    public Alternatives getAlternatives() {
+        return new Alternatives(alternatives);
     }
 
     @Override
     public void enterAlternatives(@NotNull BnfParser.AlternativesContext ctx) {
         for (BnfParser.SequenceContext context : ctx.sequence()) {
             enterSequence(context);
-            alternatives.add(alternative);
+            alternatives.add(sequence);
         }
     }
 
@@ -38,7 +38,7 @@ public final class AlternativeListener extends BnfBaseListener {
             listener.enterElement(elementContext);
             elements.add(listener.getElement());
         }
-        alternative = new Alternative(elements);
+        sequence = new Sequence(elements);
     }
 
     @Override

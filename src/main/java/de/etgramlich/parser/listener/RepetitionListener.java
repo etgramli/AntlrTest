@@ -2,10 +2,10 @@ package de.etgramlich.parser.listener;
 
 import de.etgramlich.parser.gen.bnf.BnfBaseListener;
 import de.etgramlich.parser.gen.bnf.BnfParser;
-import de.etgramlich.parser.type.rhstype.repetition.AbstractRepetition;
-import de.etgramlich.parser.type.rhstype.repetition.Optional;
-import de.etgramlich.parser.type.rhstype.repetition.Precedence;
-import de.etgramlich.parser.type.rhstype.repetition.ZeroOrMore;
+import de.etgramlich.parser.type.repetition.AbstractRepetition;
+import de.etgramlich.parser.type.repetition.Optional;
+import de.etgramlich.parser.type.repetition.Precedence;
+import de.etgramlich.parser.type.repetition.ZeroOrMore;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 

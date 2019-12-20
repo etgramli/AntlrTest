@@ -1,19 +1,19 @@
-package de.etgramlich.parser.type.rhstype.repetition;
+package de.etgramlich.parser.type.repetition;
 
-import de.etgramlich.parser.type.rhstype.Alternative;
+import de.etgramlich.parser.type.Alternatives;
 import org.jetbrains.annotations.Contract;
 
 import java.util.Collection;
 
-public final class ZeroOrMore extends AbstractRepetition {
-    public ZeroOrMore(Collection<Alternative> alternatives) {
+public final class Precedence extends AbstractRepetition {
+    public Precedence(Alternatives alternatives) {
         super(alternatives);
     }
 
     @Contract(pure = true)
     @Override
     public boolean isRepetition() {
-        return true;
+        return false;
     }
 
     @Contract(pure = true)
@@ -25,6 +25,6 @@ public final class ZeroOrMore extends AbstractRepetition {
     @Contract(pure = true)
     @Override
     public boolean isPrecedence() {
-        return false;
+        return true;
     }
 }

@@ -2,24 +2,35 @@ package de.etgramlich.parser.listener;
 
 import de.etgramlich.parser.gen.bnf.BnfBaseListener;
 import de.etgramlich.parser.gen.bnf.BnfParser;
-import de.etgramlich.parser.type.terminal.AbstractId;
-import de.etgramlich.parser.type.terminal.Id;
-import de.etgramlich.parser.type.terminal.RuleId;
-import de.etgramlich.parser.type.terminal.Text;
-import org.jetbrains.annotations.Contract;
+import de.etgramlich.parser.type.Keyword;
+import de.etgramlich.parser.type.NonTerminal;
+import de.etgramlich.parser.type.Type;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Listener that queries the IDs (ruleid and id) and text rules of the ANTLR4 BNF grammar.
  * The rule function must be called according to the current rule. The (unescaped id) string can be queried with getText().
  */
-public final class IdListener extends BnfBaseListener {
-    private AbstractId id;
+public final class NonTerminalListener extends BnfBaseListener {
+    private NonTerminal id;
+    private Keyword keyword;
+    private Type type;
+
+    public NonTerminal getNonTerminal() {
+        return id;
+    }
+
+    public Keyword getKeyword() {
+        return keyword;
+    }
+
+    public Type getType() {
+        return type;
+    }
 
     @Override
     public void enterKeyword(@NotNull BnfParser.KeywordContext ctx) {
-        String textString = ctx.getText().trim();
-        id = new Text(textString);
+        keyword = new Keyword(ctx.getText().trim());
     }
 
     @Override
@@ -29,8 +40,7 @@ public final class IdListener extends BnfBaseListener {
 
     @Override
     public void enterType(@NotNull BnfParser.TypeContext ctx) {
-        String trimmedRuleId = ctx.getText().trim();
-        id = new RuleId(trimmedRuleId);
+        type = new Type(ctx.getText().trim());
     }
 
     @Override
@@ -40,8 +50,7 @@ public final class IdListener extends BnfBaseListener {
 
     @Override
     public void enterNt(@NotNull BnfParser.NtContext ctx) {
-        String strippedId = stripLTGT(ctx.getText());
-        id = new Id(strippedId);
+        id = new NonTerminal(stripLTGT(ctx.getText()));
     }
 
     @NotNull
@@ -54,11 +63,5 @@ public final class IdListener extends BnfBaseListener {
     @Override
     public void exitNt(BnfParser.NtContext ctx) {
         super.exitNt(ctx);
-    }
-
-
-    @Contract(pure = true)
-    public AbstractId getId() {
-        return id;
     }
 }

@@ -8,22 +8,22 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-public class RuleList implements BnfType {
-    private final List<Rule> rules;
+public class Bnf implements BnfType {
+    private final List<BnfRule> bnfRules;
 
-    public RuleList(final Collection<Rule> rules) {
-        this.rules = List.copyOf(rules);
+    public Bnf(final Collection<BnfRule> bnfRules) {
+        this.bnfRules = List.copyOf(bnfRules);
     }
 
     @NotNull
     @Contract(pure = true)
-    public List<Rule> getRules() {
-        return rules;
+    public List<BnfRule> getBnfRules() {
+        return bnfRules;
     }
 
     @Override
     public String getName() {
-        return rules.isEmpty() ? StringUtil.EMPTY : rules.get(0).getName();
+        return bnfRules.isEmpty() ? StringUtil.EMPTY : bnfRules.get(0).getName();
     }
 
     @NotNull

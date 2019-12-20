@@ -3,7 +3,7 @@ package de.etgramlich;
 import de.etgramlich.parser.gen.bnf.BnfLexer;
 import de.etgramlich.parser.gen.bnf.BnfParser;
 import de.etgramlich.parser.listener.RuleListListener;
-import de.etgramlich.parser.type.RuleList;
+import de.etgramlich.parser.type.Bnf;
 import de.etgramlich.util.StringUtil;
 import de.etgramlich.util.graph.GraphBuilder;
 import de.etgramlich.util.graph.type.Scope;
@@ -66,9 +66,9 @@ public final class Main {
 
         RuleListListener listener = new RuleListListener();
         parser.bnf().enterRule(listener);
-        RuleList ruleList = listener.getRuleList();
+        Bnf bnf = listener.getBnf();
 
-        GraphBuilder gb = new GraphBuilder(ruleList);
+        GraphBuilder gb = new GraphBuilder(bnf);
         Graph<Scope, ScopeEdge> graph = gb.getGraph();
         try {
             renderHrefGraph(graph);

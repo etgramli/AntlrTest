@@ -1,10 +1,10 @@
 package de.etgramlich.parser.listener.bnf;
 
 import de.etgramlich.parser.gen.bnf.BnfParser;
-import de.etgramlich.parser.listener.IdListener;
+import de.etgramlich.parser.listener.NonTerminalListener;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.assertEquals;
 
 class IdListenerTest {
 
@@ -12,58 +12,58 @@ class IdListenerTest {
     void enterText_normalText_returnsTextItself() {
         final String expectedId = "some-text is here with spaces inside";
 
-        IdListener listener = new IdListener();
+        NonTerminalListener listener = new NonTerminalListener();
 
         listener.enterKeyword(new KeywordMock(expectedId));
-        assertEquals(expectedId, listener.getId().getText());
+        assertEquals(expectedId, listener.getKeyword().getName());
     }
 
     @Test
     void enterText_endsWithEmptySpaces_returnsTrimmed() {
         final String expectedId = "some-id-without-spaces in the end";
 
-        IdListener listener = new IdListener();
+        NonTerminalListener listener = new NonTerminalListener();
         listener.enterKeyword(new KeywordMock(expectedId + "   "));
-        assertEquals(expectedId, listener.getId().getText());
+        assertEquals(expectedId, listener.getKeyword().getName());
     }
 
     @Test
     void enterRuleid_normalId_returnsIdItself() {
         final String expectedId = "some-id";
 
-        IdListener listener = new IdListener();
+        NonTerminalListener listener = new NonTerminalListener();
 
-        listener.enterType(new TypeMock(expectedId));
-        assertEquals(expectedId, listener.getId().getText());
+        listener.enterKeyword(new KeywordMock(expectedId));
+        assertEquals(expectedId, listener.getKeyword().getName());
     }
 
     @Test
     void enterRuleid_endsWithEmptySpaces_returnsTrimmed() {
         final String expectedId = "some-id-without-spaces";
 
-        IdListener listener = new IdListener();
+        NonTerminalListener listener = new NonTerminalListener();
         listener.enterType(new TypeMock(expectedId + "   "));
-        assertEquals(expectedId, listener.getId().getText());
+        assertEquals(expectedId, listener.getType().getName());
     }
 
     @Test
     void enterId_idWithoutSpaces_returnsIdWithoutLTGT() {
         final String expectedId = "new-id";
 
-        IdListener listener = new IdListener();
+        NonTerminalListener listener = new NonTerminalListener();
 
         listener.enterNt(new NtMock("<new-id>"));
-        assertEquals(expectedId, listener.getId().getText());
+        assertEquals(expectedId, listener.getNonTerminal().getName());
     }
 
     @Test
     void enterId_idWithSpaces_returnsIdWithoutSpacesAndLTGT() {
         final String expectedId = "new-id";
 
-        IdListener listener = new IdListener();
+        NonTerminalListener listener = new NonTerminalListener();
 
         listener.enterNt(new NtMock(" <new-id   > "));
-        assertEquals(expectedId, listener.getId().getText());
+        assertEquals(expectedId, listener.getNonTerminal().getName());
     }
 
 

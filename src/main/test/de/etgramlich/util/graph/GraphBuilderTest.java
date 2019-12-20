@@ -1,9 +1,8 @@
 package de.etgramlich.util.graph;
 
-import de.etgramlich.parser.type.rhstype.Alternative;
-import de.etgramlich.parser.type.rhstype.Element;
-import de.etgramlich.parser.type.terminal.Id;
-import de.etgramlich.parser.type.terminal.Text;
+import de.etgramlich.parser.type.Keyword;
+import de.etgramlich.parser.type.NonTerminal;
+import de.etgramlich.parser.type.Sequence;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.InvocationTargetException;
@@ -16,10 +15,10 @@ import static org.junit.Assert.assertEquals;
 class GraphBuilderTest {
     // sequenz: (cinoibebt, name)
     private static final String JOI_GRAMMAR = "<component> ::= 'component' <name> 'impl' <componentInterface> {'impl' <componentInterface>} (<componentMethod>) {<componentField>}";
-    private static final Text TEXT_FIRST = new Text("Text First");
-    private static final Text TEXT_SECOND = new Text("Text Second");
-    private static final Id ID_FIRST = new Id("ID First");
-    private static final Id ID_SECOND = new Id("ID Second");
+    private static final Keyword TEXT_FIRST  = new Keyword("Text First");
+    private static final Keyword TEXT_SECOND = new Keyword("Text Second");
+    private static final NonTerminal ID_FIRST = new NonTerminal("ID First");
+    private static final NonTerminal ID_SECOND = new NonTerminal("ID Second");
 
     @Test
     void addRuleToGraph() {
@@ -32,13 +31,13 @@ class GraphBuilderTest {
 
     @Test
     void test_getAlternativeScopes_oneTerminalOneNonTerminal_returnsOneListInList() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        final List<Alternative> alternatives = List.of(
-                new Alternative(List.of(new Element(TEXT_FIRST))),
-                new Alternative(List.of(new Element(ID_FIRST))));
+        final List<Sequence> alternatives = List.of(
+                new Sequence(List.of(TEXT_FIRST)),
+                new Sequence(List.of(ID_FIRST)));
 
         Method method = GraphBuilder.class.getDeclaredMethod("getAlternativeScopes", List.class);
         method.setAccessible(true);
-        final List<List<Alternative>> resultList = (List<List<Alternative>>) method.invoke(null, alternatives);
+        final List<List<Sequence>> resultList = (List<List<Sequence>>) method.invoke(null, alternatives);
 
         assertEquals(1, resultList.size());
         assertEquals(2, resultList.get(0).size());
@@ -47,16 +46,16 @@ class GraphBuilderTest {
 
     @Test
     void test_getAlternativeScopes_twoTerminalsFiveNonTerminal_returnsTwoListsInList() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        final List<Alternative> alternatives = List.of(
-                new Alternative(List.of(new Element(TEXT_FIRST))),
-                new Alternative(List.of(new Element(ID_FIRST))),
-                new Alternative(List.of(new Element(ID_SECOND))),
-                new Alternative(List.of(new Element(TEXT_SECOND))),
-                new Alternative(List.of(new Element(ID_SECOND))));
+        final List<Sequence> alternatives = List.of(
+                new Sequence(List.of(TEXT_FIRST)),
+                new Sequence(List.of(ID_FIRST)),
+                new Sequence(List.of(ID_SECOND)),
+                new Sequence(List.of(TEXT_SECOND)),
+                new Sequence(List.of(ID_SECOND)));
 
         Method method = GraphBuilder.class.getDeclaredMethod("getAlternativeScopes", List.class);
         method.setAccessible(true);
-        final List<List<Alternative>> resultList = (List<List<Alternative>>) method.invoke(null, alternatives);
+        final List<List<Sequence>> resultList = (List<List<Sequence>>) method.invoke(null, alternatives);
 
         assertEquals(2, resultList.size());
         assertEquals(3, resultList.get(0).size());
