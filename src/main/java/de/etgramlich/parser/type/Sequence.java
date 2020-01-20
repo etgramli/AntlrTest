@@ -25,7 +25,7 @@ public final class Sequence implements BnfType {
 
     @Override
     public boolean isTerminal() {
-        return false;
+        return elements.stream().filter(element -> !element.isTerminal()).findAny().isEmpty();
     }
 
     @Override
