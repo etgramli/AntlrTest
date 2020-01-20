@@ -3,7 +3,6 @@ package de.etgramlich.parser.listener;
 import de.etgramlich.parser.gen.bnf.BnfBaseListener;
 import de.etgramlich.parser.gen.bnf.BnfParser;
 import de.etgramlich.parser.type.Element;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -49,7 +48,6 @@ public final class ElementListener extends BnfBaseListener {
         super.exitElement(ctx);
     }
 
-    @Contract(pure = true)
     public Element getElement() {
         return element;
     }

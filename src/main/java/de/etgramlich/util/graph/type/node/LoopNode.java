@@ -1,7 +1,5 @@
 package de.etgramlich.util.graph.type.node;
 
-import org.jetbrains.annotations.Contract;
-
 import java.util.Objects;
 
 public final class LoopNode extends Node {
@@ -12,7 +10,6 @@ public final class LoopNode extends Node {
         this.child = child;
     }
 
-    @Contract(pure = true)
     public Node getChild() {
         return child;
     }
@@ -27,7 +24,6 @@ public final class LoopNode extends Node {
         return 1 + child.getTotalAmountOfChildNodes();
     }
 
-    @Contract(value = "null -> false", pure = true)
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -1,7 +1,6 @@
 package de.etgramlich.util.graph.type.node;
 
 import de.etgramlich.util.StringUtil;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -14,7 +13,6 @@ public abstract class Node {
         this(name, null);
     }
 
-    @Contract(pure = true)
     protected Node(final String name, final Node successor) {
         if (StringUtil.isBlank(name)) {
             throw new IllegalArgumentException("Name is blank!");

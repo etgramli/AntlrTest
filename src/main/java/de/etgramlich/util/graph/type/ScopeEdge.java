@@ -1,7 +1,6 @@
 package de.etgramlich.util.graph.type;
 
 import de.etgramlich.util.graph.type.node.Node;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jgrapht.graph.DefaultEdge;
 
@@ -21,24 +20,20 @@ public final class ScopeEdge extends DefaultEdge {
         this.nodes = List.copyOf(nodes);
     }
 
-    @Contract(pure = true)
     @Override
     public Scope getSource() {
         return source;
     }
 
-    @Contract(pure = true)
     @Override
     public Scope getTarget() {
         return target;
     }
 
-    @Contract(pure = true)
     public List<Node> getNodes() {
         return nodes;
     }
 
-    @Contract(pure = true)
     public boolean isSequence() {
         return nodes.size() > 1;
     }
@@ -55,12 +50,10 @@ public final class ScopeEdge extends DefaultEdge {
      * Returns true if there are no nodes associated with this edge. May be empty if this edge is used for a loop or optional element.
      * @return True if at least one node is associated.
      */
-    @Contract(pure = true)
     public boolean isEmpty() {
         return nodes.isEmpty();
     }
 
-    @Contract(value = "null -> false", pure = true)
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

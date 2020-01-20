@@ -5,7 +5,6 @@ import de.etgramlich.parser.gen.bnf.BnfParser;
 import de.etgramlich.parser.type.Alternatives;
 import de.etgramlich.parser.type.Element;
 import de.etgramlich.parser.type.Sequence;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -15,8 +14,6 @@ public final class AlternativeListener extends BnfBaseListener {
     private Sequence sequence;
     private final List<Sequence> alternatives = new ArrayList<>();
 
-    @NotNull
-    @Contract(pure = true)
     public Alternatives getAlternatives() {
         return new Alternatives(alternatives);
     }

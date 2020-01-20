@@ -1,7 +1,5 @@
 package de.etgramlich.util.graph.type.node;
 
-import org.jetbrains.annotations.Contract;
-
 import java.util.Objects;
 
 public final class SequenceNode extends Node {
@@ -30,7 +28,6 @@ public final class SequenceNode extends Node {
         return isOptional;
     }
 
-    @Contract(pure = true)
     @Override
     public int getTotalAmountOfChildNodes() {
         return 1 + (getSuccessor() != null ? getSuccessor().getTotalAmountOfChildNodes() : 0);

@@ -12,7 +12,6 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.apache.commons.cli.*;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
 import org.jgrapht.Graph;
 import org.jgrapht.io.ComponentNameProvider;
 import org.jgrapht.io.DOTExporter;
@@ -34,7 +33,7 @@ public final class Main {
         options.addOption("g", true, "Grammar file path");
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         String targetDirectory = "./";
         String grammar = StringUtils.EMPTY;
         String targetPackage = StringUtils.EMPTY;
@@ -77,7 +76,6 @@ public final class Main {
         }
     }
 
-    @NotNull
     private static String prepareGrammar(final String filepath) throws IOException {
         final List<String> grammar = Files.readAllLines(Paths.get(filepath));
         final int beginIndex = grammar.indexOf(

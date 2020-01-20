@@ -13,7 +13,6 @@ import de.etgramlich.util.graph.type.node.AlternativeNode;
 import de.etgramlich.util.graph.type.node.LoopNode;
 import de.etgramlich.util.graph.type.node.Node;
 import de.etgramlich.util.graph.type.node.SequenceNode;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jgrapht.Graph;
 
@@ -25,7 +24,7 @@ import java.util.stream.Collectors;
  * Builds a Graph with Scopes as vertices and Node as edges.
  * List of rules must be passed as constructor argument, getGraph can be passed on each constructed object.
  */
-public final class GraphBuilder {
+public final class GraphBuilder { 
     private final GraphWrapper graphWrapper;
 
     private Node currentNode;
@@ -145,7 +144,6 @@ public final class GraphBuilder {
      * @param alternatives List of alternatives (RHS of a rule).
      * @return A List of List of Alternatives, not null, may be empty.
      */
-    @NotNull
     private static List<List<Sequence>> getAlternativeScopes(@NotNull final List<Sequence> alternatives) {
         final List<List<Sequence>> scopes = new ArrayList<>();
 
@@ -192,13 +190,11 @@ public final class GraphBuilder {
         return null;
     }
 
-    @NotNull
     private static LoopNode buildLoop(@NotNull final Element element) {
         SequenceNode child = new SequenceNode(element.getName());
         return new LoopNode(element.getName(), child);
     }
 
-    @NotNull
     private static AlternativeNode buildAlternative(@NotNull final List<Sequence> rhs) {
         final String name = rhs.get(0).getName();
         final List<Element> elements =
@@ -222,8 +218,6 @@ public final class GraphBuilder {
      * Throws unsupported operation exception when trying to modify the graph.
      * @return Unmodifiable graph.
      */
-    @NotNull
-    @Contract(pure = true)
     public Graph<Scope, ScopeEdge> getGraph() {
         return graphWrapper.getGraph();
     }

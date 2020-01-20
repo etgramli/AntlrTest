@@ -1,9 +1,6 @@
 package de.etgramlich.parser.type.repetition;
 
 import de.etgramlich.parser.type.Alternatives;
-import org.jetbrains.annotations.Contract;
-
-import java.util.Collection;
 
 public final class Optional extends AbstractRepetition {
     public Optional(final Alternatives alternatives) {
@@ -13,19 +10,16 @@ public final class Optional extends AbstractRepetition {
         }
     }
 
-    @Contract(pure = true)
     @Override
     public boolean isRepetition() {
         return false;
     }
 
-    @Contract(pure = true)
     @Override
     public boolean isOptional() {
         return true;
     }
 
-    @Contract(pure = true)
     @Override
     public boolean isPrecedence() {
         return false;

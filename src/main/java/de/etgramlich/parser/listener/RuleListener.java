@@ -6,7 +6,6 @@ import de.etgramlich.parser.type.Alternatives;
 import de.etgramlich.parser.type.BnfRule;
 import de.etgramlich.parser.type.NonTerminal;
 import de.etgramlich.util.SymbolTable;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 public final class RuleListener extends BnfBaseListener {
@@ -36,7 +35,6 @@ public final class RuleListener extends BnfBaseListener {
         super.exitBnfrule(ctx);
     }
 
-    @Contract(pure = true)
     public BnfRule getBnfRule() {
         return bnfRule;
     }

@@ -2,7 +2,6 @@ package de.etgramlich.util.graph;
 
 import de.etgramlich.util.graph.type.Scope;
 import de.etgramlich.util.graph.type.node.Node;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jgrapht.Graph;
 import org.stringtemplate.v4.ST;
@@ -22,7 +21,6 @@ public final class InterfaceBuilder {
     private final String targetPackage;
     private final String packageDirectory;
 
-    @Contract(pure = true)
     public InterfaceBuilder(@NotNull final String targetDirectory, @NotNull final String targetPackage) {
         this.targetDirectory = targetDirectory;
         this.targetPackage = targetPackage;

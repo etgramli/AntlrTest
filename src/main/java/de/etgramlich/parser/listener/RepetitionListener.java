@@ -6,13 +6,11 @@ import de.etgramlich.parser.type.repetition.AbstractRepetition;
 import de.etgramlich.parser.type.repetition.Optional;
 import de.etgramlich.parser.type.repetition.Precedence;
 import de.etgramlich.parser.type.repetition.ZeroOrMore;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 public final class RepetitionListener extends BnfBaseListener {
     private AbstractRepetition repetition;
 
-    @Contract(pure = true)
     public AbstractRepetition getRepetition() {
         return repetition;
     }

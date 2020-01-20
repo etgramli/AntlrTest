@@ -1,8 +1,5 @@
 package de.etgramlich.util.graph.type.node;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.*;
 
 public final class AlternativeNode extends Node {
@@ -14,7 +11,7 @@ public final class AlternativeNode extends Node {
 
     public AlternativeNode(final String name, final Collection<SequenceNode> nodes) {
         super(name);
-        alternatives = List.copyOf(nodes);
+        alternatives = new ArrayList<>(nodes);
     }
 
     @Override
@@ -35,13 +32,10 @@ public final class AlternativeNode extends Node {
         alternatives.add(node);
     }
 
-    @NotNull
-    @Contract(pure = true)
     public List<Node> getAlternatives() {
         return Collections.unmodifiableList(alternatives);
     }
 
-    @Contract(value = "null -> false", pure = true)
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -1,8 +1,6 @@
 package de.etgramlich.parser.type;
 
 import de.etgramlich.util.StringUtil;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -15,8 +13,6 @@ public class Bnf implements BnfType {
         this.bnfRules = List.copyOf(bnfRules);
     }
 
-    @NotNull
-    @Contract(pure = true)
     public List<BnfRule> getBnfRules() {
         return bnfRules;
     }
@@ -26,8 +22,6 @@ public class Bnf implements BnfType {
         return bnfRules.isEmpty() ? StringUtil.EMPTY : bnfRules.get(0).getName();
     }
 
-    @NotNull
-    @Contract(pure = true)
     @Override
     public List<String> getNonTerminalDependants() {
         return Collections.emptyList();

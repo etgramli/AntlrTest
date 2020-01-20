@@ -1,7 +1,6 @@
 package de.etgramlich.util;
 
 import de.etgramlich.parser.type.BnfType;
-import org.jetbrains.annotations.Contract;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -29,10 +28,8 @@ public final class SymbolTable {
         }
     }
 
-    @Contract(pure = true)
     private SymbolTable() {}
 
-    @Contract(pure = true)
     public static boolean containsRule(final String ruleName) {
         return rules.containsKey(ruleName);
     }
@@ -43,7 +40,6 @@ public final class SymbolTable {
         return rules.get(rule);
     }
 
-    @Contract(pure = true)
     public static boolean contains(final String symbol) {
         return symbolTable.containsKey(symbol);
     }

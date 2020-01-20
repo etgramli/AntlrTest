@@ -1,7 +1,6 @@
 package de.etgramlich.util.graph.type;
 
 import de.etgramlich.util.graph.type.node.Node;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.AsUnmodifiableGraph;
@@ -29,9 +28,6 @@ public final class GraphWrapper {
         graph.addVertex(lastAddedScope);
     }
 
-
-    @NotNull
-    @Contract(value = " -> new", pure = true)
     public Graph<Scope, ScopeEdge> getGraph() {
         return new AsUnmodifiableGraph<>(graph);
     }
@@ -114,7 +110,6 @@ public final class GraphWrapper {
      * Returns the (first) node with no ingoing edges.
      * @return A scope, if no scope found a NPE is thrown.
      */
-    @NotNull
     public Scope getStartScope() {
         final List<Scope> scopesWithoutIngoingEdges =
                 graph.vertexSet().stream().filter(o -> graph.inDegreeOf(o) == 0).collect(Collectors.toList());
@@ -129,7 +124,6 @@ public final class GraphWrapper {
      * Returns the (first) node with no outgoing edges.
      * @return A scope, if no scope found a NPE is thrown.
      */
-    @NotNull
     public Scope getEndScope() {
         final List<Scope> scopesWithoutOutgoingEdges =
                 graph.vertexSet().stream().filter(o -> graph.outDegreeOf(o) == 0).collect(Collectors.toList());
