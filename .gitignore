@@ -49,3 +49,5 @@ hs_err_pid*
 # Gradle
 .idea/**/gradle.xml
 .idea/**/libraries
+
+src/main/java/de/etgramlich/antlr
