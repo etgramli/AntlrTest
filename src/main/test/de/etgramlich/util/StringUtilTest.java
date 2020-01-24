@@ -239,4 +239,90 @@ class StringUtilTest {
 
         assertTrue(StringUtil.isAllBlank(lines));
     }
+
+    @Test
+    void startsWithUpperCase_allUpperCase_returnsTrue() {
+        final String string = "ABC";
+
+        assertTrue(StringUtil.startsWithUpperCase(string));
+    }
+    @Test
+    void startsWithUpperCase_allLowerCase_returnsFalse() {
+        final String string = "abc";
+
+        assertFalse(StringUtil.startsWithUpperCase(string));
+    }
+    @Test
+    void startsWithUpperCase_firstUpperCase_returnsTrue() {
+        final String string = "Abc";
+
+        assertTrue(StringUtil.startsWithUpperCase(string));
+    }
+    @Test
+    void startsWithUpperCase_firstLowerCase_returnsFalse() {
+        final String string = "aBC";
+
+        assertFalse(StringUtil.startsWithUpperCase(string));
+    }
+    @Test
+    void startsWithUpperCase_null_returnsFalse() {
+        final String string = null;
+
+        assertFalse(StringUtil.startsWithUpperCase(string));
+    }
+    @Test
+    void startsWithUpperCase_emptyString_returnsFalse() {
+        final String string = "";
+
+        assertFalse(StringUtil.startsWithUpperCase(string));
+    }
+    @Test
+    void startsWithUpperCase_blankString_returnsFalse() {
+        final String string = "  \t";
+
+        assertFalse(StringUtil.startsWithUpperCase(string));
+    }
+
+    @Test
+    void startsWithLowerCase_allUpperCase_returnsFalse() {
+        final String string = "ABC";
+
+        assertFalse(StringUtil.startsWithLowerCase(string));
+    }
+    @Test
+    void startsWithLowerCase_allLowerCase_returnsTrue() {
+        final String string = "abc";
+
+        assertTrue(StringUtil.startsWithLowerCase(string));
+    }
+    @Test
+    void startsWithLowerCase_firstUpperCase_returnsFalse() {
+        final String string = "Abc";
+
+        assertFalse(StringUtil.startsWithLowerCase(string));
+    }
+    @Test
+    void startsWithLowerCase_firstLowerCase_returnsTrue() {
+        final String string = "aBC";
+
+        assertTrue(StringUtil.startsWithLowerCase(string));
+    }
+    @Test
+    void startsWithLowerCase_null_returnsFalse() {
+        final String string = null;
+
+        assertFalse(StringUtil.startsWithLowerCase(string));
+    }
+    @Test
+    void startsWithLowerCase_emptyString_returnsFalse() {
+        final String string = "";
+
+        assertFalse(StringUtil.startsWithLowerCase(string));
+    }
+    @Test
+    void startsWithLowerCase_blankString_returnsFalse() {
+        final String string = "  \t";
+
+        assertFalse(StringUtil.startsWithLowerCase(string));
+    }
 }

@@ -50,4 +50,20 @@ public final class StringUtil extends StringUtils {
     private static List<Character> toCharList(final char... cs) {
         return new String(cs).chars().mapToObj(c -> (char) c).collect(Collectors.toList());
     }
+
+    public static boolean startsWithUpperCase(final CharSequence charSequence) {
+        if (charSequence == null || charSequence.length() == 0) {
+            return false;
+        }
+        final char firstChar = charSequence.charAt(0);
+        return firstChar >= 'A' && firstChar <= 'Z';
+    }
+
+    public static boolean startsWithLowerCase(final CharSequence charSequence) {
+        if (charSequence == null || charSequence.length() == 0) {
+            return false;
+        }
+        final char firstChar = charSequence.charAt(0);
+        return firstChar >= 'a' && firstChar <= 'z';
+    }
 }
