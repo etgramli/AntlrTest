@@ -44,7 +44,7 @@ public final class GraphBuilder {
 
     public GraphBuilder(@NotNull final Bnf bnf) {
         final List<BnfRule> startBnfRules = bnf.getBnfRules().stream().filter(BnfRule::isStartRule).collect(Collectors.toList());
-        if (startBnfRules.size() == 0) {
+        if (startBnfRules.size() != 1) {
             throw new IllegalArgumentException("Rule-list must have exactly one Start rule");
         }
         final BnfRule startBnfRule = startBnfRules.get(0);
