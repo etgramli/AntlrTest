@@ -3,11 +3,14 @@ package de.etgramlich.util.graph.type;
 import de.etgramlich.util.graph.type.node.Node;
 import org.jetbrains.annotations.NotNull;
 import org.jgrapht.Graph;
+import org.jgrapht.Graphs;
 import org.jgrapht.graph.AsUnmodifiableGraph;
 import org.jgrapht.graph.DirectedPseudograph;
 import org.jgrapht.graph.ParanoidGraph;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public final class GraphWrapper {
@@ -15,17 +18,34 @@ public final class GraphWrapper {
     private final Graph<Scope, ScopeEdge> graph;
     private Scope lastAddedScope;
 
+    /**
+     * Creates a GraphWrapper with an empty directed pseudo graph.
+     */
     public GraphWrapper() {
         final Graph<Scope, ScopeEdge> tmpGraph = new DirectedPseudograph<>(null, null, false);
         graph = new ParanoidGraph<>(tmpGraph);
         lastAddedScope = null;
     }
 
+    /**
+     * Creates a GraphWrapper with a directed pseudo graph with one node with the given name.
+     * @param startScopeName Name of the first scope.
+     */
     public GraphWrapper(final String startScopeName) {
         final Graph<Scope, ScopeEdge> tmpGraph = new DirectedPseudograph<>(null, null, false);
         graph = new ParanoidGraph<>(tmpGraph);
         lastAddedScope = new Scope(startScopeName);
         graph.addVertex(lastAddedScope);
+    }
+
+    /**
+     * Copies the provided graph.
+     * @param graph Graph to copy into the wrapper.
+     */
+    public GraphWrapper(final Graph<Scope, ScopeEdge> graph) {
+        this.graph = new ParanoidGraph<>(new DirectedPseudograph<>(null, null, false));
+        Graphs.addGraph(this.graph, graph);
+        lastAddedScope = getEndScope();
     }
 
     public Graph<Scope, ScopeEdge> getGraph() {
@@ -132,5 +152,10 @@ public final class GraphWrapper {
                     "There must be exactly one end node! (found: " + scopesWithoutOutgoingEdges.size() + ")");
         }
         return scopesWithoutOutgoingEdges.get(0);
+    }
+
+    public List<Node> getOutGoingNodes(final Scope scope) {
+        Set<ScopeEdge> edges = graph.outgoingEdgesOf(scope);
+        return edges.stream().flatMap(scopeEdge -> scopeEdge.getNodes().stream()).collect(Collectors.toList());
     }
 }
