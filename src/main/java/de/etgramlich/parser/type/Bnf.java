@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-public class Bnf implements BnfType {
+public final class Bnf implements BnfType {
     private final List<BnfRule> bnfRules;
 
     public Bnf(final Collection<BnfRule> bnfRules) {

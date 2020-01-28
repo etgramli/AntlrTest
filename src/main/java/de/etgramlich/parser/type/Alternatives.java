@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-public class Alternatives implements BnfType {
+public final class Alternatives implements BnfType {
     private final List<Sequence> sequences;
 
     public Alternatives(final Collection<Sequence> sequences) {
