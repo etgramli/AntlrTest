@@ -1,4 +1,4 @@
-// Generated from C:/Users/Eti/IdeaProjects/AntlrTest/src/main/resources\Bnf.g4 by ANTLR 4.7.2
+// Generated from /home/eti/IdeaProjects/AntlrTest/src/main/resources/Bnf.g4 by ANTLR 4.8
 package de.etgramlich.parser.gen.bnf;
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
@@ -8,7 +8,7 @@ import java.util.List;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class BnfParser extends Parser {
-	static { RuntimeMetaData.checkVersion("4.7.2", RuntimeMetaData.VERSION); }
+	static { RuntimeMetaData.checkVersion("4.8", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
@@ -111,6 +111,11 @@ public class BnfParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof BnfListener ) ((BnfListener)listener).exitBnf(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof BnfVisitor ) return ((BnfVisitor<? extends T>)visitor).visitBnf(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final BnfContext bnf() throws RecognitionException {
@@ -168,6 +173,11 @@ public class BnfParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof BnfListener ) ((BnfListener)listener).exitBnfrule(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof BnfVisitor ) return ((BnfVisitor<? extends T>)visitor).visitBnfrule(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final BnfruleContext bnfrule() throws RecognitionException {
@@ -211,6 +221,11 @@ public class BnfParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof BnfListener ) ((BnfListener)listener).exitLhs(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof BnfVisitor ) return ((BnfVisitor<? extends T>)visitor).visitLhs(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final LhsContext lhs() throws RecognitionException {
@@ -249,6 +264,11 @@ public class BnfParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof BnfListener ) ((BnfListener)listener).exitRhs(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof BnfVisitor ) return ((BnfVisitor<? extends T>)visitor).visitRhs(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -291,6 +311,11 @@ public class BnfParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof BnfListener ) ((BnfListener)listener).exitAlternatives(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof BnfVisitor ) return ((BnfVisitor<? extends T>)visitor).visitAlternatives(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -350,6 +375,11 @@ public class BnfParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof BnfListener ) ((BnfListener)listener).exitSequence(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof BnfVisitor ) return ((BnfVisitor<? extends T>)visitor).visitSequence(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -423,6 +453,11 @@ public class BnfParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof BnfListener ) ((BnfListener)listener).exitElement(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof BnfVisitor ) return ((BnfVisitor<? extends T>)visitor).visitElement(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -506,6 +541,11 @@ public class BnfParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof BnfListener ) ((BnfListener)listener).exitOptional(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof BnfVisitor ) return ((BnfVisitor<? extends T>)visitor).visitOptional(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final OptionalContext optional() throws RecognitionException {
@@ -548,6 +588,11 @@ public class BnfParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof BnfListener ) ((BnfListener)listener).exitZeroormore(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof BnfVisitor ) return ((BnfVisitor<? extends T>)visitor).visitZeroormore(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -592,6 +637,11 @@ public class BnfParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof BnfListener ) ((BnfListener)listener).exitPrecedence(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof BnfVisitor ) return ((BnfVisitor<? extends T>)visitor).visitPrecedence(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final PrecedenceContext precedence() throws RecognitionException {
@@ -633,6 +683,11 @@ public class BnfParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof BnfListener ) ((BnfListener)listener).exitNt(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof BnfVisitor ) return ((BnfVisitor<? extends T>)visitor).visitNt(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final NtContext nt() throws RecognitionException {
@@ -670,6 +725,11 @@ public class BnfParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof BnfListener ) ((BnfListener)listener).exitKeyword(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof BnfVisitor ) return ((BnfVisitor<? extends T>)visitor).visitKeyword(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final KeywordContext keyword() throws RecognitionException {
@@ -706,6 +766,11 @@ public class BnfParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof BnfListener ) ((BnfListener)listener).exitType(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof BnfVisitor ) return ((BnfVisitor<? extends T>)visitor).visitType(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 

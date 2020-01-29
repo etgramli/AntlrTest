@@ -1,4 +1,4 @@
-// Generated from C:/Users/Eti/IdeaProjects/AntlrTest/src/main/resources\Bnf.g4 by ANTLR 4.7.2
+// Generated from /home/eti/IdeaProjects/AntlrTest/src/main/resources/Bnf.g4 by ANTLR 4.8
 package de.etgramlich.parser.gen.bnf;
 
 import org.antlr.v4.runtime.ParserRuleContext;

@@ -104,6 +104,10 @@ public final class GraphBuilder {
         }
     }
 
+    /**
+     * Processes gíven element and adds it to the Graph.
+     * @param element Element of EBNF grammar to be added, must not be null.
+     */
     private void processElement(@NotNull final Element element) {
         if (isInSequence) { // Sequence
             getLastOfSequence().setSuccessor(new SequenceNode(element.getName()));
@@ -126,11 +130,24 @@ public final class GraphBuilder {
         }
     }
 
+    /**
+     * Last Node of current Node (sequence).
+     * @return (Current) Node or null, if currentNode is null.
+     */
     private Node getLastOfSequence() {
-        if (currentNode == null) {
+        return getLastOfSequence(currentNode);
+    }
+
+    /**
+     * Returns last Node of a sequence.
+     * @param node Node, may be null.
+     * @return Node (argument if it has no successor), or null if argument is null.
+     */
+    private static Node getLastOfSequence(final Node node) {
+        if (node == null) {
             return null;
         }
-        Node current = currentNode;
+        Node current = node;
         while (current.getSuccessor() != null) {
             current = current.getSuccessor();
         }
@@ -176,7 +193,7 @@ public final class GraphBuilder {
                 return buildSequence(elements);
             } else {
                 Element element = elements.get(0);
-                if (element instanceof ZeroOrMore) {       // Loop
+                if (element instanceof ZeroOrMore) {// Loop
                     return buildLoop(element);
                 } else {                            // Single element
                     return new SequenceNode(element.getName(), element instanceof Optional);
@@ -191,7 +208,7 @@ public final class GraphBuilder {
     }
 
     private static LoopNode buildLoop(@NotNull final Element element) {
-        SequenceNode child = new SequenceNode(element.getName());
+        final SequenceNode child = new SequenceNode(element.getName());
         return new LoopNode(element.getName(), child);
     }
 

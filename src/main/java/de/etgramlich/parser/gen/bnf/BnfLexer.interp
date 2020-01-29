@@ -28,7 +28,7 @@ KEYWORD
 TYPE
 WS
 
-bnfRule names:
+rule names:
 T__0
 T__1
 T__2
