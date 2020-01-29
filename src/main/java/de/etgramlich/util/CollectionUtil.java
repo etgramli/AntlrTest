@@ -23,11 +23,8 @@ public final class CollectionUtil {
      */
     @SafeVarargs
     public static <T> List<T> toList(T... items) {
-        if (items == null) {
-            return new ArrayList<>();
-        } else {
-            return new ArrayList<>(Arrays.asList(items));
-        }
+        final List<T> itemsList = items != null ? Arrays.asList(items) : Collections.emptyList();
+        return new ArrayList<>(itemsList);
     }
 
     /**

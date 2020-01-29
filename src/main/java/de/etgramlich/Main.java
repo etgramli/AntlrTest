@@ -34,8 +34,8 @@ public final class Main {
     }
 
     public static void main(final String[] args) {
+        final String grammar;
         String targetDirectory = "./";
-        String grammar = StringUtils.EMPTY;
         String targetPackage = StringUtils.EMPTY;
         try {
             CommandLine cmd = new DefaultParser().parse(options, args);
@@ -61,14 +61,19 @@ public final class Main {
             return;
         }
 
+        // Create Lexer and Parser
         BnfParser parser = new BnfParser(new CommonTokenStream(new BnfLexer(CharStreams.fromString(grammar))));
 
+        // Parse given Grammar and get tree of types
         RuleListListener listener = new RuleListListener();
         parser.bnf().enterRule(listener);
         Bnf bnf = listener.getBnf();
 
+        // Convert tree of types to graph of Scopes and Nodes
         GraphBuilder gb = new GraphBuilder(bnf);
         Graph<Scope, ScopeEdge> graph = gb.getGraph();
+
+        // Render graph
         try {
             renderHrefGraph(graph);
         } catch (ExportException e) {
