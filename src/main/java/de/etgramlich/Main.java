@@ -2,7 +2,7 @@ package de.etgramlich;
 
 import de.etgramlich.parser.gen.bnf.BnfLexer;
 import de.etgramlich.parser.gen.bnf.BnfParser;
-import de.etgramlich.parser.listener.RuleListListener;
+import de.etgramlich.parser.listener.BnfListener;
 import de.etgramlich.parser.type.Bnf;
 import de.etgramlich.util.StringUtil;
 import de.etgramlich.util.graph.GraphBuilder;
@@ -65,8 +65,8 @@ public final class Main {
         BnfParser parser = new BnfParser(new CommonTokenStream(new BnfLexer(CharStreams.fromString(grammar))));
 
         // Parse given Grammar and get tree of types
-        RuleListListener listener = new RuleListListener();
-        parser.bnf().enterRule(listener);
+        BnfListener listener = new BnfListener();
+        listener.enterBnf(parser.bnf());
         Bnf bnf = listener.getBnf();
 
         // Convert tree of types to graph of Scopes and Nodes

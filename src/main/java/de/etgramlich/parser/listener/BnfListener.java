@@ -10,12 +10,12 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class RuleListListener extends BnfBaseListener {
+public final class BnfListener extends BnfBaseListener {
     private Bnf bnf;
 
     @Override
     public void enterBnf(@NotNull BnfParser.BnfContext ctx) {
-        List<BnfRule> bnfRules = new ArrayList<>(ctx.bnfrule().size());
+        final List<BnfRule> bnfRules = new ArrayList<>(ctx.bnfrule().size());
         RuleListener listener = new RuleListener();
 
         for (BnfParser.BnfruleContext context : ctx.bnfrule()) {
