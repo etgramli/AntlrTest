@@ -118,7 +118,10 @@ public final class GraphBuilder {
     private void processElement(@NotNull final Element element) {
         // ToDo: In case of optional, zeroOrMore and precedence: make recursive
         if (isInSequence) { // Sequence
-            getLastOfSequence().setSuccessor(new SequenceNode(element.getName()));
+            if (currentNode != null) {
+                getLastOfSequence().setSuccessor(new SequenceNode(element.getName()));
+            }
+            currentNode = new SequenceNode(element.getName());
         } else if (element instanceof Optional) {
             addNode(element.getName());
         } else if (element instanceof ZeroOrMore) {
