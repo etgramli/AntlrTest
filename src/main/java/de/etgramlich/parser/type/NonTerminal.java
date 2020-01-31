@@ -14,6 +14,11 @@ public final class NonTerminal extends TextElement {
     }
 
     @Override
+    public int getNumberOfElements() {
+        return 1;
+    }
+
+    @Override
     public List<String> getNonTerminalDependants() {
         return Collections.emptyList();
     }

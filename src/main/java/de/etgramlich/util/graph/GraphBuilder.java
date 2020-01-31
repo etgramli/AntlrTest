@@ -49,7 +49,7 @@ public final class GraphBuilder {
         }
         final BnfRule startBnfRule = startBnfRules.get(0);
         final List<BnfRule> nonTerminalBnfRules = bnf.getBnfRules().stream().filter(
-                bnfRule -> !bnfRule.isTerminal() && bnfRule.getNonTerminalDependants().size() > 1
+                bnfRule -> !bnfRule.isTerminal() && bnfRule.getNumberOfElements() > 1
         ).collect(Collectors.toList());
         graphWrapper = new GraphWrapper(startBnfRule.getName());
         nonTerminalBnfRules.remove(startBnfRule);
@@ -59,16 +59,21 @@ public final class GraphBuilder {
         }
     }
 
+    /**
+     * Adds the current node to the GraphWrapper, between the last added Scope and a new one with the given name.
+     * ToDo: generate Scope names
+     * @param nextScopeName Non-blank String containing the name of the next Scope in the graph.
+     */
     private void addNode(final String nextScopeName) {
         if (StringUtil.isBlank(nextScopeName)) {
             throw new IllegalArgumentException("Scope name must not be blank!");
         }
-        Scope currentScope = new Scope(nextScopeName);
+        final Scope currentScope = new Scope(nextScopeName);
         if (currentNode instanceof LoopNode) {
             graphWrapper.addLoop(currentScope, currentNode);
         } else if (currentNode instanceof SequenceNode) {
             if (currentNode.isOptional())  graphWrapper.addOptional(currentScope, currentNode);  // Optional
-            else                           graphWrapper.addSequence(currentScope, currentNode);  // Sequnce / one element
+            else                           graphWrapper.addSequence(currentScope, currentNode);  // Sequence / one element
         } else if (currentNode instanceof AlternativeNode) {
             graphWrapper.addSequence(currentScope, currentNode);
         }
@@ -80,9 +85,11 @@ public final class GraphBuilder {
         if (alternatives.getSequences().size() > 1) {
             reset();
             isInAlternatives = true;
-            if (currentNode == null) {
-                currentNode = new AlternativeNode(alternatives.getSequences().get(0).getName());
+            currentNode = new AlternativeNode(alternatives.getSequences().get(0).getName());
+            for (Sequence sequence : alternatives.getSequences()) {
+                processSequence(sequence);
             }
+            addNode(alternatives.getName());
         }
         // Alternative, Sequence, Optional, ZeroOrMore, Precedence, ID or LetterRange
         for (Sequence sequence : alternatives.getSequences()) {
@@ -105,14 +112,15 @@ public final class GraphBuilder {
     }
 
     /**
-     * Processes gíven element and adds it to the Graph.
+     * Processes given element and adds it to the Graph.
      * @param element Element of EBNF grammar to be added, must not be null.
      */
     private void processElement(@NotNull final Element element) {
+        // ToDo: In case of optional, zeroOrMore and precedence: make recursive
         if (isInSequence) { // Sequence
             getLastOfSequence().setSuccessor(new SequenceNode(element.getName()));
         } else if (element instanceof Optional) {
-            // ToDo: Optional
+            addNode(element.getName());
         } else if (element instanceof ZeroOrMore) {
             // ToDo: Repetition
         } else if (element instanceof Precedence) {
@@ -189,7 +197,7 @@ public final class GraphBuilder {
             return buildAlternative(rhs);
         } else {
             List<Element> elements = rhs.stream().filter(a -> !a.isTerminal()).findFirst().get().getElements();
-            if (elements.size() > 1) {              // Sequenz
+            if (elements.size() > 1) {              // Sequence
                 return buildSequence(elements);
             } else {
                 Element element = elements.get(0);

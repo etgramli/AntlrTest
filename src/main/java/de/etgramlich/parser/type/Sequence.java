@@ -29,6 +29,15 @@ public final class Sequence implements BnfType {
     }
 
     @Override
+    public int getNumberOfElements() {
+        int counter = 0;
+        for (Element element : elements) {
+            counter += element.getNumberOfElements();
+        }
+        return counter;
+    }
+
+    @Override
     public List<String> getNonTerminalDependants() {
         return elements.stream().flatMap(element -> element.getNonTerminalDependants().stream()).collect(Collectors.toList());
     }

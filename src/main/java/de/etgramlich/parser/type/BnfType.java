@@ -17,6 +17,8 @@ public interface BnfType {
         return false;
     }
 
+    int getNumberOfElements();
+
     /**
      * Returns a list of IDs of the non-terminals this thingy depends on.
      * @return List of Strings, not null.

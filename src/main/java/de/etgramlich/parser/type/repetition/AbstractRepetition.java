@@ -41,6 +41,11 @@ public abstract class AbstractRepetition implements Element, BnfType {
     }
 
     @Override
+    public int getNumberOfElements() {
+        return alternatives.getNumberOfElements();
+    }
+
+    @Override
     public String getName() {
         return alternatives.getSequences().isEmpty() ? StringUtil.EMPTY : alternatives.getSequences().get(0).getName();
     }

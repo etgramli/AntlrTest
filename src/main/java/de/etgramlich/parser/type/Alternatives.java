@@ -22,6 +22,14 @@ public final class Alternatives implements BnfType {
         return sequences.size() == 1 ? sequences.get(0).getElements() : Collections.emptyList();
     }
 
+    public boolean isAlternative() {
+        return sequences.size() > 1;
+    }
+
+    public boolean isSequence() {
+        return !isAlternative() && sequences.get(0).getElements().size() > 1;
+    }
+
     @Override
     public String getName() {
         return null;
@@ -30,6 +38,15 @@ public final class Alternatives implements BnfType {
     @Override
     public boolean isTerminal() {
         return false;
+    }
+
+    @Override
+    public int getNumberOfElements() {
+        int counter = 0;
+        for (Sequence sequence : sequences) {
+            counter += sequence.getNumberOfElements();
+        }
+        return counter;
     }
 
     @Override
