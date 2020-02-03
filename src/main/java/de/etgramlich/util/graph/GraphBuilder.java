@@ -36,11 +36,12 @@ public final class GraphBuilder {
         final List<BnfRule> nonTerminalBnfRules = bnf.getBnfRules().stream().filter(
                 bnfRule -> !bnfRule.isTerminal() && bnfRule.getNumberOfElements() > 1
         ).collect(Collectors.toList());
-        graphWrapper = new GraphWrapper(startBnfRule.getName());
         nonTerminalBnfRules.remove(startBnfRule);
 
+        graphWrapper = new GraphWrapper(nonTerminalBnfRules.get(0).getLhs().getName());
         for (BnfRule bnfRule : nonTerminalBnfRules) {
             processAlternatives(bnfRule.getRhs());
+            addNode();
         }
     }
 
@@ -62,14 +63,6 @@ public final class GraphBuilder {
 
     private void processAlternatives(@NotNull final Alternatives alternatives) {
         assert (!alternatives.getSequences().isEmpty());
-        if (alternatives.getSequences().size() > 1) {
-            currentNode = new AlternativeNode(alternatives.getSequences().get(0).getName());
-            for (Sequence sequence : alternatives.getSequences()) {
-                processSequence(sequence);
-            }
-            addNode();
-        }
-        // Alternative, Sequence, Optional, ZeroOrMore, Precedence, ID or LetterRange
         for (Sequence sequence : alternatives.getSequences()) {
             processSequence(sequence);
         }
@@ -86,9 +79,10 @@ public final class GraphBuilder {
      * @param element Element of EBNF grammar to be added, must not be null.
      */
     private void processElement(@NotNull final Element element) {
-        // ToDo: In case of optional, zeroOrMore and precedence: make recursive
-        if (element instanceof TextElement) { // Sequence
-            // ToDo
+        if (element instanceof TextElement) {
+            TextElement textElement = (TextElement) element;
+            addNode();
+            currentNode = new SequenceNode(element.getName());
         } else if (element instanceof AbstractRepetition) {
             AbstractRepetition repetition = (AbstractRepetition) element;
             for (Sequence sequence : repetition.getAlternatives().getSequences()) {
