@@ -65,12 +65,14 @@ public final class GraphBuilder {
         assert (!alternatives.getSequences().isEmpty());
         for (Sequence sequence : alternatives.getSequences()) {
             processSequence(sequence);
+            // ToDo: Add new node, all with connection to previous one
         }
     }
     private void processSequence(@NotNull final Sequence sequence) {
         assert (sequence.getElements().size() > 0);
         for (Element element : sequence.getElements()) {
             processElement(element);
+            // ToDo: Add nodes in sequence
         }
     }
 
