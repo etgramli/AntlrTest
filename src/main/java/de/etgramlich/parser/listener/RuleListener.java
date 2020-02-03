@@ -4,7 +4,7 @@ import de.etgramlich.parser.gen.bnf.BnfBaseListener;
 import de.etgramlich.parser.gen.bnf.BnfParser;
 import de.etgramlich.parser.type.Alternatives;
 import de.etgramlich.parser.type.BnfRule;
-import de.etgramlich.parser.type.NonTerminal;
+import de.etgramlich.parser.type.text.NonTerminal;
 import de.etgramlich.util.SymbolTable;
 import org.jetbrains.annotations.NotNull;
 

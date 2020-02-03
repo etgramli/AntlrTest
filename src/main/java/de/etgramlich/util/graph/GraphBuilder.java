@@ -2,10 +2,8 @@ package de.etgramlich.util.graph;
 
 import com.google.common.collect.Lists;
 import de.etgramlich.parser.type.*;
-import de.etgramlich.parser.type.repetition.Optional;
-import de.etgramlich.parser.type.repetition.Precedence;
-import de.etgramlich.parser.type.repetition.ZeroOrMore;
-import de.etgramlich.util.StringUtil;
+import de.etgramlich.parser.type.repetition.AbstractRepetition;
+import de.etgramlich.parser.type.text.TextElement;
 import de.etgramlich.util.graph.type.GraphWrapper;
 import de.etgramlich.util.graph.type.Scope;
 import de.etgramlich.util.graph.type.ScopeEdge;
@@ -16,7 +14,6 @@ import de.etgramlich.util.graph.type.node.SequenceNode;
 import org.jetbrains.annotations.NotNull;
 import org.jgrapht.Graph;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,23 +21,11 @@ import java.util.stream.Collectors;
  * Builds a Graph with Scopes as vertices and Node as edges.
  * List of rules must be passed as constructor argument, getGraph can be passed on each constructed object.
  */
-public final class GraphBuilder { 
+public final class GraphBuilder {
     private final GraphWrapper graphWrapper;
 
-    private Node currentNode;
-    private boolean isInAlternatives;
-    private boolean isInAlternative;
-    private boolean isInRepetition;
-    private boolean isInSequence;
-
-    private void reset() {
-        isInAlternatives = false;
-        isInAlternative  = false;
-        isInRepetition   = false;
-        isInSequence     = false;
-
-        currentNode = null;
-    }
+    private int scopeNumber = 0;
+    private Node currentNode = null;
 
     public GraphBuilder(@NotNull final Bnf bnf) {
         final List<BnfRule> startBnfRules = bnf.getBnfRules().stream().filter(BnfRule::isStartRule).collect(Collectors.toList());
@@ -61,14 +46,10 @@ public final class GraphBuilder {
 
     /**
      * Adds the current node to the GraphWrapper, between the last added Scope and a new one with the given name.
-     * ToDo: generate Scope names
      * @param nextScopeName Non-blank String containing the name of the next Scope in the graph.
      */
-    private void addNode(final String nextScopeName) {
-        if (StringUtil.isBlank(nextScopeName)) {
-            throw new IllegalArgumentException("Scope name must not be blank!");
-        }
-        final Scope currentScope = new Scope(nextScopeName);
+    private void addNode() {
+        final Scope currentScope = new Scope(getNextScopeName());
         if (currentNode instanceof LoopNode) {
             graphWrapper.addLoop(currentScope, currentNode);
         } else if (currentNode instanceof SequenceNode) {
@@ -77,19 +58,16 @@ public final class GraphBuilder {
         } else if (currentNode instanceof AlternativeNode) {
             graphWrapper.addSequence(currentScope, currentNode);
         }
-        reset();
     }
 
     private void processAlternatives(@NotNull final Alternatives alternatives) {
         assert (!alternatives.getSequences().isEmpty());
         if (alternatives.getSequences().size() > 1) {
-            reset();
-            isInAlternatives = true;
             currentNode = new AlternativeNode(alternatives.getSequences().get(0).getName());
             for (Sequence sequence : alternatives.getSequences()) {
                 processSequence(sequence);
             }
-            addNode(alternatives.getName());
+            addNode();
         }
         // Alternative, Sequence, Optional, ZeroOrMore, Precedence, ID or LetterRange
         for (Sequence sequence : alternatives.getSequences()) {
@@ -98,16 +76,8 @@ public final class GraphBuilder {
     }
     private void processSequence(@NotNull final Sequence sequence) {
         assert (sequence.getElements().size() > 0);
-        if (isInAlternatives) {                             // Alternative
-            ((AlternativeNode) currentNode).addAlternative(new SequenceNode(sequence.getName()));
-        } else if (sequence.getElements().size() > 1) {  // Sequence
-            reset();
-            isInSequence = true;
-            for (Element element : sequence.getElements()) {
-                processElement(element);
-            }
-        } else {    // Optional, ZeroOrMore, Precedence, ID or LetterRange
-            processElement(sequence.getElements().get(0));
+        for (Element element : sequence.getElements()) {
+            processElement(element);
         }
     }
 
@@ -117,27 +87,15 @@ public final class GraphBuilder {
      */
     private void processElement(@NotNull final Element element) {
         // ToDo: In case of optional, zeroOrMore and precedence: make recursive
-        if (isInSequence) { // Sequence
-            if (currentNode != null) {
-                getLastOfSequence().setSuccessor(new SequenceNode(element.getName()));
+        if (element instanceof TextElement) { // Sequence
+            // ToDo
+        } else if (element instanceof AbstractRepetition) {
+            AbstractRepetition repetition = (AbstractRepetition) element;
+            for (Sequence sequence : repetition.getAlternatives().getSequences()) {
+                processSequence(sequence);
             }
-            currentNode = new SequenceNode(element.getName());
-        } else if (element instanceof Optional) {
-            addNode(element.getName());
-        } else if (element instanceof ZeroOrMore) {
-            // ToDo: Repetition
-        } else if (element instanceof Precedence) {
-            // ToDo: Precedence
-        } else if (element instanceof NonTerminal) {
-            // ToDo: NonTerminal
         } else {
-            // ToDo: TextElement
-            TextElement id = (TextElement) element;
-            if (id.isTerminal()) {
-                addNode(id.getName());
-            } else {
-                // ToDo: id
-            }
+            System.err.println("Unknown Element type... Should not happen!");
         }
     }
 
@@ -165,80 +123,12 @@ public final class GraphBuilder {
         return current;
     }
 
-
-    /**
-     * Splits the passed list into sublist from one terminal (inclusive) to the next terminal (exclusive).
-     * So each sub-list contains one terminal as the first element followed by zero or more non-terminals.
-     * @param alternatives List of alternatives (RHS of a rule).
-     * @return A List of List of Alternatives, not null, may be empty.
-     */
-    private static List<List<Sequence>> getAlternativeScopes(@NotNull final List<Sequence> alternatives) {
-        final List<List<Sequence>> scopes = new ArrayList<>();
-
-        List<Sequence> currentList = new ArrayList<>();
-        for (Sequence alternative : alternatives) {
-            if (alternative.isTerminal() && !currentList.isEmpty()) {
-                scopes.add(currentList);
-                currentList = new ArrayList<>();
-            }
-            currentList.add(alternative);
+    private static SequenceNode getSequence(final List<Sequence> sequences) {
+        SequenceNode sequenceNode = null;
+        for (Sequence sequence : Lists.reverse(sequences)) {
+            sequenceNode = new SequenceNode(sequence.getName(), sequenceNode);
         }
-        if (!currentList.isEmpty()) {
-            scopes.add(currentList);
-        }
-
-        return scopes;
-    }
-
-    private static Node getNode(@NotNull final List<Sequence> rhs) {
-        final long numTerminalNodes = rhs.stream().filter(Sequence::isTerminal).count();
-        if (numTerminalNodes > 1) {
-            throw new IllegalArgumentException("Must only contain one Terminal!");
-        }
-
-        if (rhs.size() - numTerminalNodes > 1) {   // Alternative
-            return buildAlternative(rhs);
-        } else {
-            List<Element> elements = rhs.stream().filter(a -> !a.isTerminal()).findFirst().get().getElements();
-            if (elements.size() > 1) {              // Sequence
-                return buildSequence(elements);
-            } else {
-                Element element = elements.get(0);
-                if (element instanceof ZeroOrMore) {// Loop
-                    return buildLoop(element);
-                } else {                            // Single element
-                    return new SequenceNode(element.getName(), element instanceof Optional);
-                }
-            }
-        }
-    }
-
-    private static Node getNode(final Element element) {
-        // ToDo
-        return null;
-    }
-
-    private static LoopNode buildLoop(@NotNull final Element element) {
-        final SequenceNode child = new SequenceNode(element.getName());
-        return new LoopNode(element.getName(), child);
-    }
-
-    private static AlternativeNode buildAlternative(@NotNull final List<Sequence> rhs) {
-        final String name = rhs.get(0).getName();
-        final List<Element> elements =
-                rhs.stream().filter(a->!a.isTerminal()).map(alternative -> alternative.getElements().get(0))
-                        .collect(Collectors.toList());
-        final List<SequenceNode> alternatives =
-                elements.stream().map(element -> new SequenceNode(element.getName())).collect(Collectors.toList());
-        return new AlternativeNode(name, alternatives);
-    }
-
-    private static SequenceNode buildSequence(final List<Element> elements) {
-        SequenceNode begin = null;
-        for (Element element : Lists.reverse(elements)) {
-            begin = new SequenceNode(element.getName(), begin);
-        }
-        return begin;
+        return sequenceNode;
     }
 
     /**
@@ -248,5 +138,9 @@ public final class GraphBuilder {
      */
     public Graph<Scope, ScopeEdge> getGraph() {
         return graphWrapper.getGraph();
+    }
+
+    private String getNextScopeName() {
+        return "Scope_" + scopeNumber++;
     }
 }

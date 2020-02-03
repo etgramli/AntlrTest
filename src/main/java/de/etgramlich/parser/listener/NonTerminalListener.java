@@ -2,9 +2,9 @@ package de.etgramlich.parser.listener;
 
 import de.etgramlich.parser.gen.bnf.BnfBaseListener;
 import de.etgramlich.parser.gen.bnf.BnfParser;
-import de.etgramlich.parser.type.Keyword;
-import de.etgramlich.parser.type.NonTerminal;
-import de.etgramlich.parser.type.Type;
+import de.etgramlich.parser.type.text.Keyword;
+import de.etgramlich.parser.type.text.NonTerminal;
+import de.etgramlich.parser.type.text.Type;
 import org.jetbrains.annotations.NotNull;
 
 /**

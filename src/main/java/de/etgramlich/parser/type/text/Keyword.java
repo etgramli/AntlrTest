@@ -1,4 +1,4 @@
-package de.etgramlich.parser.type;
+package de.etgramlich.parser.type.text;
 
 public final class Keyword extends TextElement {
     public Keyword(final String name) {

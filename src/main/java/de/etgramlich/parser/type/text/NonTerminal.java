@@ -1,4 +1,4 @@
-package de.etgramlich.parser.type;
+package de.etgramlich.parser.type.text;
 
 import java.util.Collections;
 import java.util.List;

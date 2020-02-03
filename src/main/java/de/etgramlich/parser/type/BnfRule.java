@@ -1,5 +1,7 @@
 package de.etgramlich.parser.type;
 
+import de.etgramlich.parser.type.text.NonTerminal;
+
 import java.util.*;
 import java.util.stream.Collectors;
 

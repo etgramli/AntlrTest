@@ -1,5 +1,7 @@
 package de.etgramlich.parser.type;
 
+import de.etgramlich.parser.type.text.NonTerminal;
+import de.etgramlich.parser.type.text.Type;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

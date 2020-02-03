@@ -1,5 +1,7 @@
-package de.etgramlich.parser.type;
+package de.etgramlich.parser.type.text;
 
+import de.etgramlich.parser.type.BnfType;
+import de.etgramlich.parser.type.Element;
 import de.etgramlich.util.StringUtil;
 
 import java.util.Collections;
