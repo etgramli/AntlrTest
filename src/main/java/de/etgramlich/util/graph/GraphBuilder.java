@@ -1,6 +1,5 @@
 package de.etgramlich.util.graph;
 
-import com.google.common.collect.Lists;
 import de.etgramlich.parser.type.*;
 import de.etgramlich.parser.type.repetition.AbstractRepetition;
 import de.etgramlich.parser.type.text.TextElement;
@@ -14,7 +13,6 @@ import de.etgramlich.util.graph.type.node.SequenceNode;
 import org.jetbrains.annotations.NotNull;
 import org.jgrapht.Graph;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,7 +25,6 @@ public final class GraphBuilder {
 
     private int scopeNumber = 0;
     private Node currentNode = null;
-    private Node previousAlternativeNode = null;
 
     public GraphBuilder(@NotNull final Bnf bnf) {
         final List<BnfRule> startBnfRules = bnf.getBnfRules().stream().filter(BnfRule::isStartRule).collect(Collectors.toList());
@@ -56,7 +53,7 @@ public final class GraphBuilder {
     }
 
     private void addNode(final Node node) {
-        final Scope currentScope = new Scope(getNextScopeName());
+        final Scope currentScope = getNextScope();
         if (node instanceof LoopNode) {
             graphWrapper.addLoop(currentScope, node);
         } else if (node instanceof SequenceNode) {
@@ -70,18 +67,12 @@ public final class GraphBuilder {
     private void processAlternatives(@NotNull final Alternatives alternatives) {
         assert (!alternatives.getSequences().isEmpty());
 
-        final List<Node> alternativeNodes = new ArrayList<>(alternatives.getSequences().size());
-        for (Sequence sequence : alternatives.getSequences()) {
-            processSequence(sequence);
-            alternativeNodes.add(new AlternativeNode(sequence.getName()));
-        }
-        graphWrapper.addAlternatives(new Scope(getNextScopeName()), alternativeNodes);
     }
     private void processSequence(@NotNull final Sequence sequence) {
         assert (sequence.getElements().size() > 0);
         for (Element element : sequence.getElements()) {
             processElement(element);
-            // ToDo: Add nodes in sequence
+            graphWrapper.addSequence(getNextScope(), new SequenceNode(element.getName()));
         }
     }
 
@@ -90,8 +81,8 @@ public final class GraphBuilder {
      * @param element Element of EBNF grammar to be added, must not be null.
      */
     private void processElement(@NotNull final Element element) {
+        // ToDo
         if (element instanceof TextElement) {
-            TextElement textElement = (TextElement) element;
             addNode();
             currentNode = new SequenceNode(element.getName());
         } else if (element instanceof AbstractRepetition) {
@@ -105,38 +96,6 @@ public final class GraphBuilder {
     }
 
     /**
-     * Last Node of current Node (sequence).
-     * @return (Current) Node or null, if currentNode is null.
-     */
-    private Node getLastOfSequence() {
-        return getLastOfSequence(currentNode);
-    }
-
-    /**
-     * Returns last Node of a sequence.
-     * @param node Node, may be null.
-     * @return Node (argument if it has no successor), or null if argument is null.
-     */
-    private static Node getLastOfSequence(final Node node) {
-        if (node == null) {
-            return null;
-        }
-        Node current = node;
-        while (current.getSuccessor() != null) {
-            current = current.getSuccessor();
-        }
-        return current;
-    }
-
-    private static SequenceNode getSequence(final List<Sequence> sequences) {
-        SequenceNode sequenceNode = null;
-        for (Sequence sequence : Lists.reverse(sequences)) {
-            sequenceNode = new SequenceNode(sequence.getName(), sequenceNode);
-        }
-        return sequenceNode;
-    }
-
-    /**
      * Returns an unmodifiable view of the graph built by the constructor.
      * Throws unsupported operation exception when trying to modify the graph.
      * @return Unmodifiable graph.
@@ -145,7 +104,7 @@ public final class GraphBuilder {
         return graphWrapper.getGraph();
     }
 
-    private String getNextScopeName() {
-        return "Scope_" + scopeNumber++;
+    private Scope getNextScope() {
+        return new Scope("Scope_" + scopeNumber++);
     }
 }
