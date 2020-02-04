@@ -8,6 +8,7 @@ import org.jgrapht.graph.AsUnmodifiableGraph;
 import org.jgrapht.graph.DirectedPseudograph;
 import org.jgrapht.graph.ParanoidGraph;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -103,6 +104,21 @@ public final class GraphWrapper {
         if (lastAddedScope != null) {
             graph.addEdge(lastAddedScope, scope, new ScopeEdge(lastAddedScope, scope, loop));
             graph.addEdge(scope, lastAddedScope, null);
+        }
+        lastAddedScope = scope;
+    }
+
+    /**
+     * Adds alternatives as individual edges to the Graph, from the last added scope to the passed one.
+     * @param scope New added scope.
+     * @param alternatives Alternatives to be added, must not be empty.
+     */
+    public void addAlternatives(@NotNull final Scope scope, @NotNull final Collection<Node> alternatives) {
+        assert (!alternatives.isEmpty());
+
+        graph.addVertex(scope);
+        for (Node alternative : alternatives) {
+            graph.addEdge(lastAddedScope, scope, new ScopeEdge(lastAddedScope, scope, alternative));
         }
         lastAddedScope = scope;
     }

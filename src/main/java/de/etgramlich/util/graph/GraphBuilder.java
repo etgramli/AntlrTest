@@ -14,6 +14,7 @@ import de.etgramlich.util.graph.type.node.SequenceNode;
 import org.jetbrains.annotations.NotNull;
 import org.jgrapht.Graph;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,6 +27,7 @@ public final class GraphBuilder {
 
     private int scopeNumber = 0;
     private Node currentNode = null;
+    private Node previousAlternativeNode = null;
 
     public GraphBuilder(@NotNull final Bnf bnf) {
         final List<BnfRule> startBnfRules = bnf.getBnfRules().stream().filter(BnfRule::isStartRule).collect(Collectors.toList());
@@ -50,23 +52,30 @@ public final class GraphBuilder {
      * @param nextScopeName Non-blank String containing the name of the next Scope in the graph.
      */
     private void addNode() {
+        addNode(currentNode);
+    }
+
+    private void addNode(final Node node) {
         final Scope currentScope = new Scope(getNextScopeName());
-        if (currentNode instanceof LoopNode) {
-            graphWrapper.addLoop(currentScope, currentNode);
-        } else if (currentNode instanceof SequenceNode) {
-            if (currentNode.isOptional())  graphWrapper.addOptional(currentScope, currentNode);  // Optional
-            else                           graphWrapper.addSequence(currentScope, currentNode);  // Sequence / one element
-        } else if (currentNode instanceof AlternativeNode) {
-            graphWrapper.addSequence(currentScope, currentNode);
+        if (node instanceof LoopNode) {
+            graphWrapper.addLoop(currentScope, node);
+        } else if (node instanceof SequenceNode) {
+            if (node.isOptional())  graphWrapper.addOptional(currentScope, node);  // Optional
+            else                    graphWrapper.addSequence(currentScope, node);  // Sequence / one element
+        } else if (node instanceof AlternativeNode) {
+            graphWrapper.addSequence(currentScope, node);
         }
     }
 
     private void processAlternatives(@NotNull final Alternatives alternatives) {
         assert (!alternatives.getSequences().isEmpty());
+
+        final List<Node> alternativeNodes = new ArrayList<>(alternatives.getSequences().size());
         for (Sequence sequence : alternatives.getSequences()) {
             processSequence(sequence);
-            // ToDo: Add new node, all with connection to previous one
+            alternativeNodes.add(new AlternativeNode(sequence.getName()));
         }
+        graphWrapper.addAlternatives(new Scope(getNextScopeName()), alternativeNodes);
     }
     private void processSequence(@NotNull final Sequence sequence) {
         assert (sequence.getElements().size() > 0);
