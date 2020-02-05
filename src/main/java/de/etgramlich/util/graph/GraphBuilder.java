@@ -13,6 +13,7 @@ import de.etgramlich.util.graph.type.node.SequenceNode;
 import org.jetbrains.annotations.NotNull;
 import org.jgrapht.Graph;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -67,6 +68,12 @@ public final class GraphBuilder {
     private void processAlternatives(@NotNull final Alternatives alternatives) {
         assert (!alternatives.getSequences().isEmpty());
 
+        final List<Node> alternativeNodes = new ArrayList<>(alternatives.getSequences().size());
+        for (Sequence sequence : alternatives.getSequences()) {
+            processSequence(sequence);
+            alternativeNodes.add(new AlternativeNode(sequence.getName()));
+        }
+        graphWrapper.addAlternatives(getNextScope(), alternativeNodes);
     }
     private void processSequence(@NotNull final Sequence sequence) {
         assert (sequence.getElements().size() > 0);
