@@ -20,15 +20,6 @@ public final class GraphWrapper {
     private Scope lastAddedScope;
 
     /**
-     * Creates a GraphWrapper with an empty directed pseudo graph.
-     */
-    public GraphWrapper() {
-        final Graph<Scope, ScopeEdge> tmpGraph = new DirectedPseudograph<>(null, null, false);
-        graph = new ParanoidGraph<>(tmpGraph);
-        lastAddedScope = null;
-    }
-
-    /**
      * Creates a GraphWrapper with a directed pseudo graph with one node with the given name.
      * @param startScopeName Name of the first scope.
      */

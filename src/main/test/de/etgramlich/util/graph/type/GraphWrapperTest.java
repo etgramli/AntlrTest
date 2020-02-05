@@ -45,6 +45,6 @@ class GraphWrapperTest {
 
     @Test
     void test_getEndScope_isGraphConsistent_emptyGraph_returnsTrue() {
-        assertTrue(new GraphWrapper().isGraphConsistent());
+        assertTrue(new GraphWrapper("Start-Scope").isGraphConsistent());
     }
 }
