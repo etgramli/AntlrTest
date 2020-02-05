@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 public final class GraphBuilder {
     private final GraphWrapper graphWrapper;
 
-    private int scopeNumber = 0;
     private Node currentNode = null;
 
     public GraphBuilder(@NotNull final Bnf bnf) {
@@ -54,14 +53,13 @@ public final class GraphBuilder {
     }
 
     private void addNode(final Node node) {
-        final Scope currentScope = getNextScope();
         if (node instanceof LoopNode) {
-            graphWrapper.addLoop(currentScope, node);
+            graphWrapper.addLoop(node);
         } else if (node instanceof SequenceNode) {
-            if (node.isOptional())  graphWrapper.addOptional(currentScope, node);  // Optional
-            else                    graphWrapper.addSequence(currentScope, node);  // Sequence / one element
+            if (node.isOptional())  graphWrapper.addOptional(node);  // Optional
+            else                    graphWrapper.addSequence(node);  // Sequence / one element
         } else if (node instanceof AlternativeNode) {
-            graphWrapper.addSequence(currentScope, node);
+            graphWrapper.addSequence(node);
         }
     }
 
@@ -73,13 +71,13 @@ public final class GraphBuilder {
             processSequence(sequence);
             alternativeNodes.add(new AlternativeNode(sequence.getName()));
         }
-        graphWrapper.addAlternatives(getNextScope(), alternativeNodes);
+        graphWrapper.addAlternatives(alternativeNodes);
     }
     private void processSequence(@NotNull final Sequence sequence) {
         assert (sequence.getElements().size() > 0);
         for (Element element : sequence.getElements()) {
             processElement(element);
-            graphWrapper.addSequence(getNextScope(), new SequenceNode(element.getName()));
+            graphWrapper.addSequence(new SequenceNode(element.getName()));
         }
     }
 
@@ -109,9 +107,5 @@ public final class GraphBuilder {
      */
     public Graph<Scope, ScopeEdge> getGraph() {
         return graphWrapper.getGraph();
-    }
-
-    private Scope getNextScope() {
-        return new Scope("Scope_" + scopeNumber++);
     }
 }

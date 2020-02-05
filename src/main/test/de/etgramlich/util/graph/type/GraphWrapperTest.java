@@ -6,42 +6,41 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class GraphWrapperTest {
-    private static final Scope FIRST_SCOPE = new Scope("Scope: First");
-    private static final Scope SECOND_SCOPE = new Scope("Scope: Second");
-    private static final Scope THIRD_SCOPE = new Scope("Third Scope");
-    private static final SequenceNode FIRST_SEQUENCENODE = new SequenceNode("First SequenceNode");
+    private static final String START_SCOPE_NAME = "Scope_Start";
+    private static final SequenceNode FIRST_SEQUENCE_NODE = new SequenceNode("First SequenceNode");
 
     @Test
     void test_getEndScope_getStartScope_addOneNodeWithOneScope() {
-        GraphWrapper wrapper = new GraphWrapper(FIRST_SCOPE.getName());
+        GraphWrapper wrapper = new GraphWrapper(START_SCOPE_NAME);
 
-        wrapper.addSequence(SECOND_SCOPE, FIRST_SEQUENCENODE);
+        wrapper.addSequence(FIRST_SEQUENCE_NODE);
+        final Scope endScope = wrapper.getLastAddedScope();
 
         assertTrue(wrapper.isGraphConsistent());
-        assertEquals(SECOND_SCOPE, wrapper.getEndScope());
-        assertEquals(FIRST_SCOPE, wrapper.getStartScope());
+        assertEquals(endScope, wrapper.getEndScope());
+        assertEquals(START_SCOPE_NAME, wrapper.getStartScope().getName());
     }
 
     @Test
     void test_getSuccessors_twoNodes_returnsSecond() {
-        GraphWrapper wrapper = new GraphWrapper(FIRST_SCOPE.getName());
+        GraphWrapper wrapper = new GraphWrapper(START_SCOPE_NAME);
 
-        wrapper.addSequence(SECOND_SCOPE, FIRST_SEQUENCENODE);
+        wrapper.addSequence(FIRST_SEQUENCE_NODE);
 
         assertTrue(wrapper.isGraphConsistent());
         final Scope firstNode = wrapper.getStartScope();
-        assertEquals(SECOND_SCOPE, wrapper.getSuccessors(firstNode).get(0));
+        assertEquals(wrapper.getEndScope(), wrapper.getSuccessors(firstNode).get(0));
     }
 
     @Test
     void test_getPredecessors_twoNodes_returnsSecond() {
-        GraphWrapper wrapper = new GraphWrapper(FIRST_SCOPE.getName());
+        GraphWrapper wrapper = new GraphWrapper(START_SCOPE_NAME);
 
-        wrapper.addSequence(SECOND_SCOPE, FIRST_SEQUENCENODE);
+        wrapper.addSequence(FIRST_SEQUENCE_NODE);
 
         assertTrue(wrapper.isGraphConsistent());
         final Scope endNode = wrapper.getEndScope();
-        assertEquals(FIRST_SCOPE, wrapper.getPredecessors(endNode).get(0));
+        assertEquals(wrapper.getStartScope(), wrapper.getPredecessors(endNode).get(0));
     }
 
     @Test

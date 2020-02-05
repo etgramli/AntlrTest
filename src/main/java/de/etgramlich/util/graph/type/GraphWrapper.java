@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 public final class GraphWrapper {
 
     private final Graph<Scope, ScopeEdge> graph;
+    private int scopeNumber = 0;
     private Scope lastAddedScope;
 
     /**
@@ -71,13 +72,14 @@ public final class GraphWrapper {
      * @param scope New vertex, must not be null.
      * @param node Node associated with the edge.
      */
-    public void addOptional(@NotNull final Scope scope, @NotNull final Node node) {
-        graph.addVertex(scope);
+    public void addOptional(final Node node) {
+        final Scope newScope = getNextScope();
+        graph.addVertex(newScope);
         if (lastAddedScope != null) {
-            graph.addEdge(lastAddedScope, scope, new ScopeEdge(lastAddedScope, scope, node));
-            graph.addEdge(lastAddedScope, scope, null);
+            graph.addEdge(lastAddedScope, newScope, new ScopeEdge(lastAddedScope, newScope, node));
+            graph.addEdge(lastAddedScope, newScope, null);
         }
-        lastAddedScope = scope;
+        lastAddedScope = newScope;
     }
 
     /**
@@ -85,12 +87,13 @@ public final class GraphWrapper {
      * @param scope Next scope to be added as edge.
      * @param node Node(s) to be associated with the edge.
      */
-    public void addSequence(@NotNull final Scope scope, @NotNull final Node node) {
-        graph.addVertex(scope);
+    public void addSequence(final Node node) {
+        final Scope newScope = getNextScope();
+        graph.addVertex(newScope);
         if (lastAddedScope != null) {
-            graph.addEdge(lastAddedScope, scope, new ScopeEdge(lastAddedScope, scope, node));
+            graph.addEdge(lastAddedScope, newScope, new ScopeEdge(lastAddedScope, newScope, node));
         }
-        lastAddedScope = scope;
+        lastAddedScope = newScope;
     }
 
     /**
@@ -99,13 +102,14 @@ public final class GraphWrapper {
      * @param scope Scope  to add as vertex.
      * @param loop Loop node to add to the forward edge.
      */
-    public void addLoop(@NotNull final Scope scope, @NotNull final Node loop) {
-        graph.addVertex(scope);
+    public void addLoop(final Node loop) {
+        final Scope newScope = getNextScope();
+        graph.addVertex(newScope);
         if (lastAddedScope != null) {
-            graph.addEdge(lastAddedScope, scope, new ScopeEdge(lastAddedScope, scope, loop));
-            graph.addEdge(scope, lastAddedScope, null);
+            graph.addEdge(lastAddedScope, newScope, new ScopeEdge(lastAddedScope, newScope, loop));
+            graph.addEdge(newScope, lastAddedScope, null);
         }
-        lastAddedScope = scope;
+        lastAddedScope = newScope;
     }
 
     /**
@@ -113,14 +117,15 @@ public final class GraphWrapper {
      * @param scope New added scope.
      * @param alternatives Alternatives to be added, must not be empty.
      */
-    public void addAlternatives(@NotNull final Scope scope, @NotNull final Collection<Node> alternatives) {
+    public void addAlternatives(final Collection<Node> alternatives) {
         assert (!alternatives.isEmpty());
 
-        graph.addVertex(scope);
+        final Scope newScope = getNextScope();
+        graph.addVertex(newScope);
         for (Node alternative : alternatives) {
-            graph.addEdge(lastAddedScope, scope, new ScopeEdge(lastAddedScope, scope, alternative));
+            graph.addEdge(lastAddedScope, newScope, new ScopeEdge(lastAddedScope, newScope, alternative));
         }
-        lastAddedScope = scope;
+        lastAddedScope = newScope;
     }
 
     /**
@@ -172,5 +177,13 @@ public final class GraphWrapper {
     public List<Node> getOutGoingNodes(final Scope scope) {
         Set<ScopeEdge> edges = graph.outgoingEdgesOf(scope);
         return edges.stream().flatMap(scopeEdge -> scopeEdge.getNodes().stream()).collect(Collectors.toList());
+    }
+
+    public Scope getLastAddedScope() {
+        return lastAddedScope;
+    }
+
+    private Scope getNextScope() {
+        return new Scope("Scope_" + scopeNumber++);
     }
 }
