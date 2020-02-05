@@ -10,7 +10,6 @@ import org.jgrapht.graph.ParanoidGraph;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public final class GraphWrapper {
@@ -66,10 +65,10 @@ public final class GraphWrapper {
     public void addOptional(final Node node) {
         final Scope newScope = getNextScope();
         graph.addVertex(newScope);
-        if (lastAddedScope != null) {
-            graph.addEdge(lastAddedScope, newScope, new ScopeEdge(lastAddedScope, newScope, node));
-            graph.addEdge(lastAddedScope, newScope, null);
-        }
+
+        graph.addEdge(lastAddedScope, newScope, new ScopeEdge(lastAddedScope, newScope, node));
+        graph.addEdge(lastAddedScope, newScope, null);
+
         lastAddedScope = newScope;
     }
 
@@ -81,9 +80,9 @@ public final class GraphWrapper {
     public void addSequence(final Node node) {
         final Scope newScope = getNextScope();
         graph.addVertex(newScope);
-        if (lastAddedScope != null) {
-            graph.addEdge(lastAddedScope, newScope, new ScopeEdge(lastAddedScope, newScope, node));
-        }
+
+        graph.addEdge(lastAddedScope, newScope, new ScopeEdge(lastAddedScope, newScope, node));
+
         lastAddedScope = newScope;
     }
 
@@ -96,10 +95,10 @@ public final class GraphWrapper {
     public void addLoop(final Node loop) {
         final Scope newScope = getNextScope();
         graph.addVertex(newScope);
-        if (lastAddedScope != null) {
-            graph.addEdge(lastAddedScope, newScope, new ScopeEdge(lastAddedScope, newScope, loop));
-            graph.addEdge(newScope, lastAddedScope, null);
-        }
+
+        graph.addEdge(lastAddedScope, newScope, new ScopeEdge(lastAddedScope, newScope, loop));
+        graph.addEdge(newScope, lastAddedScope, null);
+
         lastAddedScope = newScope;
     }
 
@@ -166,8 +165,9 @@ public final class GraphWrapper {
     }
 
     public List<Node> getOutGoingNodes(final Scope scope) {
-        Set<ScopeEdge> edges = graph.outgoingEdgesOf(scope);
-        return edges.stream().flatMap(scopeEdge -> scopeEdge.getNodes().stream()).collect(Collectors.toList());
+        return graph.outgoingEdgesOf(scope).stream()
+                .flatMap(scopeEdge -> scopeEdge.getNodes().stream())
+                .collect(Collectors.toList());
     }
 
     public Scope getLastAddedScope() {
