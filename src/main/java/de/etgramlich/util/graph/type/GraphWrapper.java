@@ -44,9 +44,17 @@ public final class GraphWrapper {
     }
 
     public boolean isGraphConsistent() {
+        // Empty graph is valid
         if (graph.edgeSet().isEmpty() && graph.vertexSet().isEmpty()) {
             return true;
         }
+        // All source and target scopes in edge must exist in graph
+        for (ScopeEdge edge : graph.edgeSet()) {
+            if (!graph.vertexSet().contains(edge.getSource()) || !graph.vertexSet().contains(edge.getTarget())) {
+                return false;
+            }
+        }
+        // Only one start and end scope are permitted
         try {
             getStartScope();
             getEndScope();
