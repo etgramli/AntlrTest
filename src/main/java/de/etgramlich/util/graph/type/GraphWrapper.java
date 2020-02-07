@@ -58,7 +58,7 @@ public final class GraphWrapper {
         try {
             getStartScope();
             getEndScope();
-        } catch (NullPointerException e) {
+        } catch (InvalidGraphException e) {
             return false;
         }
         return true;
@@ -152,7 +152,7 @@ public final class GraphWrapper {
         final List<Scope> scopesWithoutIngoingEdges =
                 graph.vertexSet().stream().filter(o -> graph.inDegreeOf(o) == 0).collect(Collectors.toList());
         if (scopesWithoutIngoingEdges.size() != 1) {
-            throw new NullPointerException(
+            throw new InvalidGraphException(
                     "There must be exactly one starting node! (found: " + scopesWithoutIngoingEdges.size() + ")");
         }
         return scopesWithoutIngoingEdges.get(0);
@@ -166,7 +166,7 @@ public final class GraphWrapper {
         final List<Scope> scopesWithoutOutgoingEdges =
                 graph.vertexSet().stream().filter(o -> graph.outDegreeOf(o) == 0).collect(Collectors.toList());
         if (scopesWithoutOutgoingEdges.size() != 1) {
-            throw new NullPointerException(
+            throw new InvalidGraphException(
                     "There must be exactly one end node! (found: " + scopesWithoutOutgoingEdges.size() + ")");
         }
         return scopesWithoutOutgoingEdges.get(0);
