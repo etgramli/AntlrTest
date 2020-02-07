@@ -1,12 +1,10 @@
 package de.etgramlich.util.graph;
 
 import de.etgramlich.util.StringUtil;
-import de.etgramlich.util.graph.type.GraphWrapper;
+import de.etgramlich.util.graph.type.BnfRuleGraph;
 import de.etgramlich.util.graph.type.Scope;
-import de.etgramlich.util.graph.type.ScopeEdge;
 import de.etgramlich.util.graph.type.node.Node;
 import org.apache.commons.lang3.StringUtils;
-import org.jgrapht.Graph;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupFile;
@@ -26,7 +24,7 @@ public final class InterfaceBuilder {
     private final String targetPackage;
     private final String packageDirectory;
 
-    private GraphWrapper graphWrapper;
+    private BnfRuleGraph graph;
     private final List<String> types = new ArrayList<>(JAVA_TYPES);
 
 
@@ -42,17 +40,17 @@ public final class InterfaceBuilder {
         this.packageDirectory = targetPackage.replaceAll("\\.", "/");
     }
 
-    public void saveInterfaces(final Graph<Scope, ScopeEdge> graph) {
-        graphWrapper = new GraphWrapper(graph);
+    public void saveInterfaces(final BnfRuleGraph graph) {
+        this.graph = graph;
 
-        Scope scope = graphWrapper.getStartScope();
-        List<Node> nodes = graphWrapper.getOutGoingNodes(scope);
+        Scope scope = graph.getStartScope();
+        List<Node> nodes = graph.getOutGoingNodes(scope);
 
-        while (graphWrapper.getEndScope() != scope) {
-            saveInterface(scope, nodes, graphWrapper.getSuccessors(scope).get(0));
+        while (graph.getEndScope() != scope) {
+            saveInterface(scope, nodes, graph.getSuccessors(scope).get(0));
 
-            scope = graphWrapper.getSuccessors(scope).get(0);
-            nodes = graphWrapper.getOutGoingNodes(scope);
+            scope = graph.getSuccessors(scope).get(0);
+            nodes = graph.getOutGoingNodes(scope);
         }
     }
 
@@ -72,7 +70,7 @@ public final class InterfaceBuilder {
      * @return List of Methods, not null, may be empty.
      */
     private List<Method> methodsFromScope(final Scope scope) {
-        final List<Node> outgoingNodes = graphWrapper.getOutGoingNodes(scope);
+        final List<Node> outgoingNodes = graph.getOutGoingNodes(scope);
 
         List<Method> methods = new ArrayList<>(outgoingNodes.size());
         // ToDo: Outgoing nodes and edges to Methods

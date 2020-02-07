@@ -1,19 +1,19 @@
 package de.etgramlich.util.graph.type;
 
 import de.etgramlich.util.graph.type.node.Node;
-import org.jetbrains.annotations.NotNull;
 import org.jgrapht.graph.DefaultEdge;
 
 import java.util.List;
 
 public final class ScopeEdge extends DefaultEdge {
-    private final Scope source, target;
+    private final Scope source;
+    private Scope target;
     private final List<Node> nodes;
 
-    public ScopeEdge(@NotNull final Scope source, @NotNull final Scope target, @NotNull final Node node) {
+    public ScopeEdge(final Scope source, final Scope target, final Node node) {
         this(source, target, List.of(node));
     }
-    public ScopeEdge(@NotNull final Scope source, @NotNull final Scope target, @NotNull final List<Node> nodes) {
+    public ScopeEdge(final Scope source, final Scope target, final List<Node> nodes) {
         if (nodes.isEmpty()) throw new IllegalArgumentException("List of nodes must not be null!");
         this.source = source;
         this.target = target;
@@ -28,6 +28,10 @@ public final class ScopeEdge extends DefaultEdge {
     @Override
     public Scope getTarget() {
         return target;
+    }
+
+    public void setTarget(final Scope target) {
+        this.target = target;
     }
 
     public List<Node> getNodes() {
