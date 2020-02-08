@@ -8,6 +8,7 @@ import de.etgramlich.parser.type.text.NonTerminal;
 import de.etgramlich.parser.type.Sequence;
 import de.etgramlich.util.graph.type.BnfRuleGraph;
 import de.etgramlich.util.graph.type.Scope;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -19,18 +20,50 @@ class GraphBuilderTest {
             new Alternatives(List.of(new Sequence(List.of(new NonTerminal("FirstRule"))))));
     private static final Keyword TEXT_FIRST  = new Keyword("Text First");
     private static final Keyword TEXT_SECOND = new Keyword("Text Second");
-    private static final NonTerminal ID_FIRST = new NonTerminal("ID First");
-    private static final NonTerminal ID_SECOND = new NonTerminal("ID Second");
+    private static final NonTerminal ID_0 = new NonTerminal("ID_0");
+    private static final NonTerminal ID_1 = new NonTerminal("ID_1");
+    private static final NonTerminal ID_2 = new NonTerminal("ID_2");
+    private static final NonTerminal ID_3 = new NonTerminal("ID_3");
 
+    private static final Bnf BNF_SEQUENCE = new Bnf(List.of(
+            START_RULE,
+            new BnfRule(new NonTerminal("Sequence"), new Alternatives(
+                    List.of(new Sequence(List.of(ID_0, ID_1)))))
+    ));
+    private static final Bnf BNF_ALTERNATIVES_ONE_NODE = new Bnf(List.of(
+            START_RULE,
+            new BnfRule(new NonTerminal("Alternative"),
+                    new Alternatives(List.of(
+                            new Sequence(List.of(ID_0)),
+                            new Sequence(List.of(ID_1)),
+                            new Sequence(List.of(ID_2)),
+                            new Sequence(List.of(ID_3))
+    )))));
 
-    private static final Bnf BNF_SEQUENCE;
     static {
-        Sequence sequence = new Sequence(List.of(ID_FIRST, ID_SECOND));
-        BNF_SEQUENCE = new Bnf(List.of(
-                START_RULE,
-                new BnfRule(new NonTerminal("Sequence"), new Alternatives(List.of(sequence)))
-        ));
-        // ToDo: build alternatives
+        // ToDo: build nested alternatives
+        // ToDo: loop
+    }
+
+    @Test
+    void graphBuilder_oneRule_alternativesEachOneNode() {
+        final GraphBuilder builder = new GraphBuilder(BNF_ALTERNATIVES_ONE_NODE);
+        final BnfRuleGraph graph = builder.getGraph();
+
+        assertTrue(graph.isConsistent());
+        // ToDo
+    }
+
+    @Test
+    @Disabled
+    void graphBuilder_oneRule_nestedAlternativesEachOneNode() {
+        // ToDo
+    }
+
+    @Test
+    @Disabled
+    void graphBuilder_oneRule_alternativesEachTwoNodes() {
+        // ToDo
     }
 
     @Test
@@ -49,9 +82,9 @@ class GraphBuilderTest {
         final Scope endScope = graph.getSuccessors(secondScope).get(0);
         assertEquals(endScope, graph.getEndScope());
 
-        assertEquals(ID_FIRST.getName(), graph.getOutGoingNodes(startScope).get(0).getName());
+        assertEquals(ID_0.getName(), graph.getOutGoingNodes(startScope).get(0).getName());
         assertNull(graph.getOutGoingNodes(startScope).get(0).getSuccessor());
-        assertEquals(ID_SECOND.getName(), graph.getOutGoingNodes(secondScope).get(0).getName());
+        assertEquals(ID_1.getName(), graph.getOutGoingNodes(secondScope).get(0).getName());
         assertNull(graph.getOutGoingNodes(secondScope).get(0).getSuccessor());
     }
 }

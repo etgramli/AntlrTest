@@ -28,7 +28,7 @@ public final class GraphBuilder {
      */
     private final Deque<Scope> beforeAlternativeStack = new ArrayDeque<>();
     /**
-     * Queue for last Scopes of alternatives. (add() and peek()/poll())
+     * Stack for last Scopes of alternatives. (add() and peek()/poll())
      */
     private final Deque<Scope> afterAlternativeStack = new ArrayDeque<>();
 
@@ -59,7 +59,7 @@ public final class GraphBuilder {
     private void processAlternatives(@NotNull final Alternatives alternatives) {
         assert (!alternatives.getSequences().isEmpty());
 
-        beforeAlternativeStack.push(getNextScope());
+        beforeAlternativeStack.push(lastAddedScope);
 
         for (Sequence sequence : alternatives.getSequences()) {
             processSequence(sequence);
@@ -77,9 +77,13 @@ public final class GraphBuilder {
         afterAlternativeStack.add(getNextScope());
         graph.addVertex(afterAlternativeStack.getFirst());
         for (ScopeEdge edge : danglingEdges) {
+            // Remove old Vertex and Edge
             Scope temp = edge.getTarget();
-            edge.setTarget(afterAlternativeStack.getFirst());
             graph.removeVertex(temp);
+            graph.removeEdge(edge);
+            // Re-add altered edge
+            edge.setTarget(afterAlternativeStack.getFirst());
+            graph.addEdge(edge.getSource(), afterAlternativeStack.getFirst(), edge);
         }
         afterAlternativeStack.removeFirst();
     }
