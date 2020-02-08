@@ -8,6 +8,7 @@ import de.etgramlich.parser.type.text.NonTerminal;
 import de.etgramlich.parser.type.Sequence;
 import de.etgramlich.util.graph.type.BnfRuleGraph;
 import de.etgramlich.util.graph.type.Scope;
+import de.etgramlich.util.graph.type.node.SequenceNode;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -18,8 +19,8 @@ import static org.junit.Assert.*;
 class GraphBuilderTest {
     private static final BnfRule START_RULE = new BnfRule(new NonTerminal("EntryPoint"),
             new Alternatives(List.of(new Sequence(List.of(new NonTerminal("FirstRule"))))));
-    private static final Keyword TEXT_FIRST  = new Keyword("Text First");
-    private static final Keyword TEXT_SECOND = new Keyword("Text Second");
+    private static final Keyword KEYWORD_0 = new Keyword("Keyword_0");
+    private static final Keyword KEYWORD_1 = new Keyword("Keyword_1");
     private static final NonTerminal ID_0 = new NonTerminal("ID_0");
     private static final NonTerminal ID_1 = new NonTerminal("ID_1");
     private static final NonTerminal ID_2 = new NonTerminal("ID_2");
@@ -60,6 +61,29 @@ class GraphBuilderTest {
         assertEquals(endScope, graph.getSuccessors(startScope).get(0));
         assertEquals(startScope, graph.getPredecessors(endScope).get(0));
         assertEquals(graph.getOutGoingNodes(startScope), graph.getInGoingNodes(endScope));
+
+
+        // Add new node to test addition
+        builder.addSequence(new SequenceNode("New-Sequence"));
+
+        assertTrue(graph.isConsistent());
+        assertEquals(3, graph.vertexSet().size());
+        assertEquals(5, graph.edgeSet().size());
+
+        assertEquals(4, graph.outDegreeOf(startScope));
+        assertEquals(4, graph.inDegreeOf(endScope));
+
+        assertEquals(endScope, graph.getSuccessors(startScope).get(0));
+        assertEquals(startScope, graph.getPredecessors(endScope).get(0));
+        assertEquals(graph.getOutGoingNodes(startScope), graph.getInGoingNodes(endScope));
+
+        final Scope newEndScope = graph.getEndScope();
+        assertEquals(startScope, graph.getStartScope());
+        assertNotEquals(newEndScope, endScope);
+        assertEquals(1, graph.inDegreeOf(newEndScope));
+        assertEquals(1, graph.outDegreeOf(endScope));
+        assertEquals(newEndScope, graph.getSuccessors(endScope).get(0));
+        assertEquals(graph.getOutGoingNodes(endScope), graph.getInGoingNodes(newEndScope));
     }
 
     @Test

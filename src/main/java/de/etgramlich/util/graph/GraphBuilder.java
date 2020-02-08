@@ -60,6 +60,7 @@ public final class GraphBuilder {
         assert (!alternatives.getSequences().isEmpty());
 
         beforeAlternativeStack.push(lastAddedScope);
+        afterAlternativeStack.add(getNextScope());
 
         for (Sequence sequence : alternatives.getSequences()) {
             processSequence(sequence);
@@ -71,21 +72,25 @@ public final class GraphBuilder {
         final Set<ScopeEdge> danglingEdges = graph.getDanglingNodeEdges();
         if (danglingEdges.size() == 1) {
             lastAddedScope = graph.getEndScope();
-            return;
+        } else {
+            final Scope targetScope = afterAlternativeStack.removeFirst();
+            graph.addVertex(targetScope);
+            mergeNodeTargets(targetScope, danglingEdges);
+            lastAddedScope = targetScope;
         }
+    }
 
-        afterAlternativeStack.add(getNextScope());
-        graph.addVertex(afterAlternativeStack.getFirst());
-        for (ScopeEdge edge : danglingEdges) {
+    private void mergeNodeTargets(final Scope newScope, final Collection<ScopeEdge> edges) {
+        for (ScopeEdge edge : edges) {
             // Remove old Vertex and Edge
             Scope temp = edge.getTarget();
             graph.removeVertex(temp);
             graph.removeEdge(edge);
+
             // Re-add altered edge
-            edge.setTarget(afterAlternativeStack.getFirst());
-            graph.addEdge(edge.getSource(), afterAlternativeStack.getFirst(), edge);
+            edge.setTarget(newScope);
+            graph.addEdge(edge.getSource(), newScope, edge);
         }
-        afterAlternativeStack.removeFirst();
     }
 
     private void processSequence(@NotNull final Sequence sequence) {
