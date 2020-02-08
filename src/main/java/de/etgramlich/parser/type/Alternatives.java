@@ -1,13 +1,12 @@
 package de.etgramlich.parser.type;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 public final class Alternatives implements BnfType {
     private final List<Sequence> sequences;
 
-    public Alternatives(final Collection<Sequence> sequences) {
+    public Alternatives(final List<Sequence> sequences) {
         if (sequences == null || sequences.isEmpty()) {
             throw new IllegalArgumentException("Sequences must be not null and not empty!");
         }

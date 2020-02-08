@@ -46,6 +46,11 @@ public final class GraphBuilder {
         ).collect(Collectors.toList());
         nonTerminalBnfRules.remove(startBnfRule);
 
+        // Add first scope
+        final Scope firstScope = getNextScope();
+        graph.addVertex(firstScope);
+        lastAddedScope = firstScope;
+        // Parse all rules
         for (BnfRule bnfRule : nonTerminalBnfRules) {
             processAlternatives(bnfRule.getRhs());
         }
