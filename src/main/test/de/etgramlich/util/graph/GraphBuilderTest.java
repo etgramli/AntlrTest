@@ -40,10 +40,8 @@ class GraphBuilderTest {
                             new Sequence(List.of(ID_3))
     )))));
 
-    static {
-        // ToDo: build nested alternatives
-        // ToDo: loop
-    }
+    // ToDo: build nested alternatives
+    // ToDo: loop
 
     @Test
     void graphBuilder_oneRule_alternativesEachOneNode() {
@@ -51,7 +49,17 @@ class GraphBuilderTest {
         final BnfRuleGraph graph = builder.getGraph();
 
         assertTrue(graph.isConsistent());
-        // ToDo
+        assertEquals(2, graph.vertexSet().size());
+        assertEquals(4, graph.edgeSet().size());
+
+        final Scope startScope = graph.getStartScope();
+        final Scope endScope = graph.getEndScope();
+        assertEquals(4, graph.outDegreeOf(startScope));
+        assertEquals(4, graph.inDegreeOf(endScope));
+
+        assertEquals(endScope, graph.getSuccessors(startScope).get(0));
+        assertEquals(startScope, graph.getPredecessors(endScope).get(0));
+        assertEquals(graph.getOutGoingNodes(startScope), graph.getInGoingNodes(endScope));
     }
 
     @Test

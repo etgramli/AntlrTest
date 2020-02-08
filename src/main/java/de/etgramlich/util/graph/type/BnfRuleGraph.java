@@ -72,6 +72,13 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
                 .collect(Collectors.toList());
     }
 
+    public List<Node> getInGoingNodes(final Scope scope) {
+        return edgeSet().stream()
+                .filter(scopeEdge -> scopeEdge.getTarget().equals(scope))
+                .flatMap(scopeEdge -> scopeEdge.getNodes().stream())
+                .collect(Collectors.toList());
+    }
+
     /**
      * Returns the (first) node with no ingoing edges.
      *
