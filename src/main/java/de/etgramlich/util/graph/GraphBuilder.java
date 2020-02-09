@@ -69,7 +69,7 @@ public final class GraphBuilder {
         beforeAlternativeStack.pop();
 
         // Replace scopes of dangling edges with only one (new) one to implement recursive alternatives
-        final Set<ScopeEdge> danglingEdges = graph.getDanglingNodeEdges();
+        final Set<ScopeEdge> danglingEdges = graph.getDanglingScopeEdges();
         if (danglingEdges.size() == 1) {
             lastAddedScope = graph.getEndScope();
         } else {

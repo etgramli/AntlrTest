@@ -5,6 +5,8 @@ import de.etgramlich.util.graph.type.node.Node;
 import org.jetbrains.annotations.NotNull;
 import org.jgrapht.graph.DirectedPseudograph;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -111,12 +113,44 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
         return scopesWithoutOutgoingEdges.get(0);
     }
 
-    public Set<ScopeEdge> getDanglingNodeEdges() {
+    /**
+     * Returns a Set containing the ScopeEdges of Nodes, that have no successor.
+     *
+     * @return Set of ScopeEdges, not null.
+     */
+    public Set<ScopeEdge> getDanglingScopeEdges() {
         final Set<Scope> scopesWithoutSuccessor = vertexSet().stream()
                 .filter(scope -> outDegreeOf(scope) == 0)
                 .collect(Collectors.toUnmodifiableSet());
         return scopesWithoutSuccessor.stream()
                 .flatMap(scope -> incomingEdgesOf(scope).stream())
                 .collect(Collectors.toSet());
+    }
+
+    /**
+     * Returns a Set containing the ScopeEdges of Nodes having no successor, but the Node must be successor of root.
+     * @param root A Node existing in the graph.
+     * @return Set of ScopeEdges, not null.
+     */
+    public Set<ScopeEdge> getDanglingScopeEdges(final Scope root) {
+        if (!vertexSet().contains(root)) {
+            return Collections.emptySet();
+        }
+
+        return getDanglingNodesOf(root).stream()
+                .flatMap(scope -> incomingEdgesOf(scope).stream())
+                .collect(Collectors.toSet());
+    }
+
+    private List<Scope> getDanglingNodesOf(final Scope scope) {
+        List<Scope> dangling = new ArrayList<>();
+        for (Scope successor : getSuccessors(scope)) {
+            if (outDegreeOf(successor) > 0) {
+                dangling.addAll(getDanglingNodesOf(successor));
+            } else {
+                dangling.add(successor);
+            }
+        }
+        return dangling;
     }
 }
