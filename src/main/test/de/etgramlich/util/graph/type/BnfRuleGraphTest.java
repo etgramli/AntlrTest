@@ -39,6 +39,21 @@ class BnfRuleGraphTest {
     }
 
     @Test
+    void length_emptyGraph_returnsZero() {
+        assertEquals(0, new BnfRuleGraph().length());
+    }
+
+    @Test
+    void length_sequenceGraph_returnsTwo() {
+        assertEquals(2, SEQUENCE_GRAPH.length());
+    }
+
+    @Test
+    void length_diamondGraph_returnsTwo() {
+        assertEquals(2, DIAMOND_GRAPH.length());
+    }
+
+    @Test
     void isConsistent_emptyGraph_returnsTrue() {
         BnfRuleGraph graph = new BnfRuleGraph();
 

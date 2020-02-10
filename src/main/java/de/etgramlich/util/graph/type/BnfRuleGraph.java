@@ -3,6 +3,7 @@ package de.etgramlich.util.graph.type;
 import de.etgramlich.util.exception.InvalidGraphException;
 import de.etgramlich.util.graph.type.node.Node;
 import org.jetbrains.annotations.NotNull;
+import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DirectedPseudograph;
 
 import java.util.ArrayList;
@@ -22,6 +23,17 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
         super(vertexSupplier, edgeSupplier, weighted);
     }
 
+
+    public int length() {
+        if (isEmpty()) {
+            return 0;
+        }
+        return DijkstraShortestPath.findPathBetween(this, getStartScope(), getEndScope()).getLength();
+    }
+
+    private boolean isEmpty() {
+        return edgeSet().isEmpty() && vertexSet().isEmpty();
+    }
 
     public boolean isConsistent() {
         // Empty graph is valid
