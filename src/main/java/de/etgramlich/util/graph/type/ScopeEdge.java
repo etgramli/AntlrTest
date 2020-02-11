@@ -3,6 +3,7 @@ package de.etgramlich.util.graph.type;
 import de.etgramlich.util.graph.type.node.Node;
 import org.jgrapht.graph.DefaultEdge;
 
+import java.util.Collections;
 import java.util.List;
 
 public final class ScopeEdge extends DefaultEdge {
@@ -10,11 +11,13 @@ public final class ScopeEdge extends DefaultEdge {
     private Scope target;
     private final List<Node> nodes;
 
+    public ScopeEdge(final Scope source, final Scope target) {
+        this(source, target, Collections.emptyList());
+    }
     public ScopeEdge(final Scope source, final Scope target, final Node node) {
         this(source, target, List.of(node));
     }
     public ScopeEdge(final Scope source, final Scope target, final List<Node> nodes) {
-        if (nodes.isEmpty()) throw new IllegalArgumentException("List of nodes must not be null!");
         this.source = source;
         this.target = target;
         this.nodes = List.copyOf(nodes);

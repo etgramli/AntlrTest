@@ -123,13 +123,13 @@ public final class GraphBuilder {
             AbstractRepetition repetition = (AbstractRepetition) element;
 
             if (repetition instanceof Optional) {
-                openingOptionalStack.push(lastAddedScope);
+                final Scope beginOfOptional = lastAddedScope;
                 processAlternatives(repetition.getAlternatives());
-                graph.addEdge(openingOptionalStack.pop(), lastAddedScope, null);
+                graph.addEdge(beginOfOptional, lastAddedScope, new ScopeEdge(beginOfOptional, lastAddedScope));
             } else if (repetition instanceof ZeroOrMore) {
-                openingLoopStack.push(lastAddedScope);
+                final Scope beginOfRepetition = lastAddedScope;
                 processAlternatives(repetition.getAlternatives());
-                graph.addEdge(lastAddedScope, openingLoopStack.pop(), null);
+                graph.addEdge(lastAddedScope, beginOfRepetition, new ScopeEdge(lastAddedScope, beginOfRepetition));
             } else if (repetition instanceof Precedence) {
                 processAlternatives(repetition.getAlternatives());
             } else {
@@ -141,7 +141,7 @@ public final class GraphBuilder {
     }
 
     public BnfRuleGraph getGraph() {
-        return graph;
+        return (BnfRuleGraph) graph.clone();
     }
 
     /**
