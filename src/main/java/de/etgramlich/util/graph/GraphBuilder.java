@@ -26,14 +26,22 @@ public final class GraphBuilder {
     /**
      * Stack for beginning Scopes for alternatives.
      */
-    private final Deque<Scope> beforeAlternativeStack = new ArrayDeque<>();
+    private final Deque<Scope> openingAlternativeStack = new ArrayDeque<>();
+
     /**
      * Stack for last Scopes of alternatives. (add() and peek()/poll())
      */
-    private final Deque<Scope> afterAlternativeStack = new ArrayDeque<>();
+    private final Deque<Scope> closingAlternativeStack = new ArrayDeque<>();
 
-    private final Deque<Scope> optionalStack = new ArrayDeque<>();
-    private final Deque<Scope> loopStack = new ArrayDeque<>();
+    /**
+     * Stack saving the opening scopes of the optional elements.
+     */
+    private final Deque<Scope> openingOptionalStack = new ArrayDeque<>();
+
+    /**
+     * Stack saving the opening scopes of loops.
+     */
+    private final Deque<Scope> openingLoopStack = new ArrayDeque<>();
 
     public GraphBuilder(@NotNull final Bnf bnf) {
         final List<BnfRule> startBnfRules = bnf.getBnfRules().stream().filter(BnfRule::isStartRule).collect(Collectors.toList());
@@ -59,21 +67,21 @@ public final class GraphBuilder {
     private void processAlternatives(@NotNull final Alternatives alternatives) {
         assert (!alternatives.getSequences().isEmpty());
 
-        beforeAlternativeStack.push(lastAddedScope);
-        afterAlternativeStack.add(getNextScope());
+        openingAlternativeStack.push(lastAddedScope);
+        closingAlternativeStack.add(getNextScope());
 
         for (Sequence sequence : alternatives.getSequences()) {
             processSequence(sequence);
-            lastAddedScope = beforeAlternativeStack.peek();
+            lastAddedScope = openingAlternativeStack.peek();
         }
-        beforeAlternativeStack.pop();
+        openingAlternativeStack.pop();
 
         // Replace scopes of dangling edges with only one (new) one to implement recursive alternatives
         final Set<ScopeEdge> danglingEdges = graph.getDanglingScopeEdges();
         if (danglingEdges.size() == 1) {
             lastAddedScope = graph.getEndScope();
         } else {
-            final Scope targetScope = afterAlternativeStack.removeFirst();
+            final Scope targetScope = closingAlternativeStack.removeFirst();
             graph.addVertex(targetScope);
             mergeNodeTargets(targetScope, danglingEdges);
             lastAddedScope = targetScope;
@@ -108,9 +116,9 @@ public final class GraphBuilder {
      */
     private void processElement(@NotNull final Element element) {
         if (element instanceof TextElement) {
-            // ToDo: Add element
-            addSequence(new SequenceNode(element.getName()));
+            addNodeInSequence(new SequenceNode(element.getName()));
         } else if (element instanceof AbstractRepetition) {
+            // ToDo: handle optional and loop
             AbstractRepetition repetition = (AbstractRepetition) element;
             processAlternatives(repetition.getAlternatives());
         } else {
@@ -126,38 +134,24 @@ public final class GraphBuilder {
      * Adds a Scope as vertex to the graph, and associates the node with the forward directed edge and also creates
      * also a second edge with null as Node, indicating that the node in the other edge can be omitted.
      *
-     * @param scope New vertex, must not be null.
      * @param node  Node associated with the edge.
      */
     public void addOptional(final Node node) {
         final Scope newScope = getNextScope();
         graph.addVertex(newScope);
 
-        graph.addEdge(lastAddedScope, newScope, new ScopeEdge(lastAddedScope, newScope, node));
-        graph.addEdge(lastAddedScope, newScope, null);
+        graph.addEdge(lastAddedScope, newScope, new ScopeEdge(lastAddedScope, newScope, node)); // Forward edge
+        // ToDo: add edge to the scope after that
 
         lastAddedScope = newScope;
     }
 
     /**
-     * Adds sequence to the Graph, as an Edge from beforeAlternative to afterAlternative, so that multiple Nodes
-     * can be added in parallel as Alternatives.
+     * Adds a node in sequence to the graph following the last added scope and followed by a newly created scope.
      *
-     * @param node              Node to be added.
-     * @param beforeAlternative Scope before the Node.
-     * @param afterAlternative  Scope after the Node.
-     */
-    public void addSequence(final Node node, final Scope beforeAlternative, final Scope afterAlternative) {
-        // ToDo
-    }
-
-    /**
-     * Adds a sequence of nodes (may be only one) to the graph.
-     *
-     * @param scope Next scope to be added as edge.
      * @param node  Node(s) to be associated with the edge.
      */
-    public void addSequence(final Node node) {
+    public void addNodeInSequence(final Node node) {
         final Scope newScope = getNextScope();
         graph.addVertex(newScope);
 
@@ -170,33 +164,15 @@ public final class GraphBuilder {
      * Adds a Scope as vertex to the graph and associates the Node with the forward edge and also creates an Edge with
      * null as Node backwards.
      *
-     * @param scope Scope  to add as vertex.
      * @param loop  Loop node to add to the forward edge.
      */
     public void addLoop(final Node loop) {
         final Scope newScope = getNextScope();
         graph.addVertex(newScope);
 
-        graph.addEdge(lastAddedScope, newScope, new ScopeEdge(lastAddedScope, newScope, loop));
-        graph.addEdge(newScope, lastAddedScope, null);
+        graph.addEdge(lastAddedScope, newScope, new ScopeEdge(lastAddedScope, newScope, loop)); // Forward edge
+        graph.addEdge(newScope, lastAddedScope, new ScopeEdge(newScope, lastAddedScope, loop)); // Backward edge
 
-        lastAddedScope = newScope;
-    }
-
-    /**
-     * Adds alternatives as individual edges to the Graph, from the last added scope to the passed one.
-     *
-     * @param scope        New added scope.
-     * @param alternatives Alternatives to be added, must not be empty.
-     */
-    public void addAlternatives(final Collection<Node> alternatives) {
-        assert (!alternatives.isEmpty());
-
-        final Scope newScope = getNextScope();
-        graph.addVertex(newScope);
-        for (Node alternative : alternatives) {
-            graph.addEdge(lastAddedScope, newScope, new ScopeEdge(lastAddedScope, newScope, alternative));
-        }
         lastAddedScope = newScope;
     }
 
