@@ -4,14 +4,19 @@ import de.etgramlich.parser.type.Alternatives;
 import de.etgramlich.parser.type.Bnf;
 import de.etgramlich.parser.type.BnfRule;
 import de.etgramlich.parser.type.repetition.Precedence;
+import de.etgramlich.parser.type.repetition.ZeroOrMore;
 import de.etgramlich.parser.type.text.NonTerminal;
 import de.etgramlich.parser.type.Sequence;
 import de.etgramlich.util.graph.type.BnfRuleGraph;
 import de.etgramlich.util.graph.type.Scope;
+import de.etgramlich.util.graph.type.ScopeEdge;
 import de.etgramlich.util.graph.type.node.SequenceNode;
+import org.jgrapht.alg.cycle.CycleDetector;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.Assert.*;
 
@@ -27,9 +32,57 @@ class GraphBuilderTest {
     private static final NonTerminal ID_6 = new NonTerminal("ID_6");
     private static final NonTerminal ID_7 = new NonTerminal("ID_7");
 
-    // ToDo: loop + nested loop
-    private static final Bnf BNF_LOOP_ONE_NODE = new Bnf(List.of());
-    private static final Bnf BNF_LOOP_NESTED = new Bnf(List.of());
+    @Test
+    void graphBuilder_oneRule_loopInSequence() {
+        final Bnf alternativesOneNodeEach = new Bnf(List.of(
+                START_RULE,
+                new BnfRule(new NonTerminal("Loop"),
+                        new Alternatives(List.of(
+                                new Sequence(List.of(
+                                        ID_0,
+                                        new ZeroOrMore(new Alternatives(List.of(
+                                                new Sequence(List.of(ID_1))))),
+                                        ID_2))
+                        )))));
+        final GraphBuilder builder = new GraphBuilder(alternativesOneNodeEach);
+        final BnfRuleGraph graph = builder.getGraph();
+
+        assertTrue(graph.isConsistent());
+        assertEquals(4, graph.vertexSet().size());
+        assertEquals(4, graph.edgeSet().size());
+
+        assertEquals(1, graph.getSuccessors(graph.getStartScope()).size());
+        final Scope secondScope = graph.getSuccessors(graph.getStartScope()).get(0);
+        assertEquals(2, graph.inDegreeOf(secondScope));
+        assertEquals(1, graph.outDegreeOf(secondScope));
+
+        // Detect cycle
+        final CycleDetector<Scope, ScopeEdge> cycleDetector = new CycleDetector<>(graph);
+        assertTrue(cycleDetector.detectCycles());
+
+        assertEquals(1, graph.getPredecessors(graph.getEndScope()).size());
+        final Scope secondLast = graph.getPredecessors(graph.getEndScope()).get(0);
+
+        assertEquals(Set.of(secondScope, secondLast), cycleDetector.findCycles());
+    }
+
+    @Test
+    @Disabled
+    void graphBuilder_oneRule_nestedLoopInSequence() {
+        // ToDo
+    }
+
+    @Test
+    @Disabled
+    void graphBuilder_oneRule_optionalInSequence() {
+        // ToDo
+    }
+
+    @Test
+    @Disabled
+    void graphBuilder_oneRule_nestedOptionalInSequence() {
+        // ToDo
+    }
 
     @Test
     void graphBuilder_oneRule_alternativesInSequence() {
@@ -66,7 +119,7 @@ class GraphBuilderTest {
                                 new Sequence(List.of(ID_3))
                         )))));
         final GraphBuilder builder = new GraphBuilder(alternativesOneNodeEach);
-        final BnfRuleGraph graph = builder.getGraph();
+        BnfRuleGraph graph = builder.getGraph();
 
         assertTrue(graph.isConsistent());
         assertEquals(2, graph.vertexSet().size());
@@ -83,7 +136,8 @@ class GraphBuilderTest {
 
 
         // Add new node to test addition
-        builder.addSequence(new SequenceNode("New-Sequence"));
+        builder.addNodeInSequence(new SequenceNode("New-Sequence"));
+        graph = builder.getGraph();
 
         assertTrue(graph.isConsistent());
         assertEquals(3, graph.vertexSet().size());

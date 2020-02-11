@@ -35,16 +35,6 @@ public final class GraphBuilder {
      */
     private final Deque<Scope> closingAlternativeStack = new ArrayDeque<>();
 
-    /**
-     * Stack saving the opening scopes of the optional elements.
-     */
-    private final Deque<Scope> openingOptionalStack = new ArrayDeque<>();
-
-    /**
-     * Stack saving the opening scopes of loops.
-     */
-    private final Deque<Scope> openingLoopStack = new ArrayDeque<>();
-
     public GraphBuilder(final Bnf bnf) {
         final List<BnfRule> startBnfRules = bnf.getBnfRules().stream().filter(BnfRule::isStartRule).collect(Collectors.toList());
         if (startBnfRules.size() != 1) {
