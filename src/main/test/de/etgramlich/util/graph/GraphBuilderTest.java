@@ -32,6 +32,29 @@ class GraphBuilderTest {
     private static final Bnf BNF_LOOP_NESTED = new Bnf(List.of());
 
     @Test
+    void graphBuilder_oneRule_alternativesInSequence() {
+        final Bnf alternativesOneNodeEach = new Bnf(List.of(
+                START_RULE,
+                new BnfRule(new NonTerminal("Alternative"),
+                        new Alternatives(List.of(
+                                new Sequence(List.of(
+                                        ID_0,
+                                        new Precedence(new Alternatives(List.of(
+                                                new Sequence(List.of(ID_1)),
+                                                new Sequence(List.of(ID_2))))),
+                                        ID_3))
+                        )))));
+        final GraphBuilder builder = new GraphBuilder(alternativesOneNodeEach);
+        final BnfRuleGraph graph = builder.getGraph();
+
+        assertTrue(graph.isConsistent());
+        assertEquals(4, graph.edgeSet().size());
+        assertEquals(4, graph.vertexSet().size());
+        assertEquals(1, graph.getPredecessors(graph.getEndScope()).size());
+        assertEquals(1, graph.getSuccessors(graph.getStartScope()).size());
+    }
+
+    @Test
     void graphBuilder_oneRule_alternativesEachOneNode() {
         final Bnf alternativesOneNodeEach = new Bnf(List.of(
                 START_RULE,
@@ -42,7 +65,6 @@ class GraphBuilderTest {
                                 new Sequence(List.of(ID_2)),
                                 new Sequence(List.of(ID_3))
                         )))));
-
         final GraphBuilder builder = new GraphBuilder(alternativesOneNodeEach);
         final BnfRuleGraph graph = builder.getGraph();
 
