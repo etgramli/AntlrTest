@@ -2,6 +2,9 @@ package de.etgramlich.util.graph;
 
 import de.etgramlich.parser.type.*;
 import de.etgramlich.parser.type.repetition.AbstractRepetition;
+import de.etgramlich.parser.type.repetition.Optional;
+import de.etgramlich.parser.type.repetition.Precedence;
+import de.etgramlich.parser.type.repetition.ZeroOrMore;
 import de.etgramlich.parser.type.text.TextElement;
 import de.etgramlich.util.exception.UnrecognizedElementException;
 import de.etgramlich.util.graph.type.BnfRuleGraph;
@@ -9,7 +12,6 @@ import de.etgramlich.util.graph.type.Scope;
 import de.etgramlich.util.graph.type.ScopeEdge;
 import de.etgramlich.util.graph.type.node.Node;
 import de.etgramlich.util.graph.type.node.SequenceNode;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -43,7 +45,7 @@ public final class GraphBuilder {
      */
     private final Deque<Scope> openingLoopStack = new ArrayDeque<>();
 
-    public GraphBuilder(@NotNull final Bnf bnf) {
+    public GraphBuilder(final Bnf bnf) {
         final List<BnfRule> startBnfRules = bnf.getBnfRules().stream().filter(BnfRule::isStartRule).collect(Collectors.toList());
         if (startBnfRules.size() != 1) {
             throw new IllegalArgumentException("Rule-list must have exactly one Start rule");
@@ -64,7 +66,7 @@ public final class GraphBuilder {
         }
     }
 
-    private void processAlternatives(@NotNull final Alternatives alternatives) {
+    private void processAlternatives(final Alternatives alternatives) {
         assert (!alternatives.getSequences().isEmpty());
 
         openingAlternativeStack.push(lastAddedScope);
@@ -101,7 +103,7 @@ public final class GraphBuilder {
         }
     }
 
-    private void processSequence(@NotNull final Sequence sequence) {
+    private void processSequence(final Sequence sequence) {
         assert (sequence.getElements().size() > 0);
 
         for (Element element : sequence.getElements()) {
@@ -114,13 +116,25 @@ public final class GraphBuilder {
      *
      * @param element Element of EBNF grammar to be added, must not be null.
      */
-    private void processElement(@NotNull final Element element) {
+    private void processElement(final Element element) {
         if (element instanceof TextElement) {
             addNodeInSequence(new SequenceNode(element.getName()));
         } else if (element instanceof AbstractRepetition) {
-            // ToDo: handle optional and loop
             AbstractRepetition repetition = (AbstractRepetition) element;
-            processAlternatives(repetition.getAlternatives());
+
+            if (repetition instanceof Optional) {
+                openingOptionalStack.push(lastAddedScope);
+                processAlternatives(repetition.getAlternatives());
+                graph.addEdge(openingOptionalStack.pop(), lastAddedScope, null);
+            } else if (repetition instanceof ZeroOrMore) {
+                openingLoopStack.push(lastAddedScope);
+                processAlternatives(repetition.getAlternatives());
+                graph.addEdge(lastAddedScope, openingLoopStack.pop(), null);
+            } else if (repetition instanceof Precedence) {
+                processAlternatives(repetition.getAlternatives());
+            } else {
+                throw new UnrecognizedElementException("Element is unrecognized subclass of AbstractRepetition: " + element.toString());
+            }
         } else {
             throw new UnrecognizedElementException("Element not recognized: " + element.toString());
         }
@@ -128,22 +142,6 @@ public final class GraphBuilder {
 
     public BnfRuleGraph getGraph() {
         return graph;
-    }
-
-    /**
-     * Adds a Scope as vertex to the graph, and associates the node with the forward directed edge and also creates
-     * also a second edge with null as Node, indicating that the node in the other edge can be omitted.
-     *
-     * @param node  Node associated with the edge.
-     */
-    public void addOptional(final Node node) {
-        final Scope newScope = getNextScope();
-        graph.addVertex(newScope);
-
-        graph.addEdge(lastAddedScope, newScope, new ScopeEdge(lastAddedScope, newScope, node)); // Forward edge
-        // ToDo: add edge to the scope after that
-
-        lastAddedScope = newScope;
     }
 
     /**
@@ -156,22 +154,6 @@ public final class GraphBuilder {
         graph.addVertex(newScope);
 
         graph.addEdge(lastAddedScope, newScope, new ScopeEdge(lastAddedScope, newScope, node));
-
-        lastAddedScope = newScope;
-    }
-
-    /**
-     * Adds a Scope as vertex to the graph and associates the Node with the forward edge and also creates an Edge with
-     * null as Node backwards.
-     *
-     * @param loop  Loop node to add to the forward edge.
-     */
-    public void addLoop(final Node loop) {
-        final Scope newScope = getNextScope();
-        graph.addVertex(newScope);
-
-        graph.addEdge(lastAddedScope, newScope, new ScopeEdge(lastAddedScope, newScope, loop)); // Forward edge
-        graph.addEdge(newScope, lastAddedScope, new ScopeEdge(newScope, lastAddedScope, loop)); // Backward edge
 
         lastAddedScope = newScope;
     }
