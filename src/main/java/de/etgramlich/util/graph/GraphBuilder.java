@@ -44,6 +44,7 @@ public final class GraphBuilder {
         for (BnfRule bnfRule : nonTerminalBnfRules) {
             processAlternatives(bnfRule.getRhs());
         }
+        // ToDo: add isGraphConsistent() check when done
     }
 
     private void processAlternatives(final Alternatives alternatives) {

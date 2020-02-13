@@ -42,7 +42,12 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
         }
         // All source and target scopes in edge must exist in graph
         for (ScopeEdge edge : edgeSet()) {
-            if (!vertexSet().contains(edge.getSource()) || !vertexSet().contains(edge.getTarget())) {
+            if (!vertexSet().contains(edge.getSource())) {
+                System.err.println("Source Scope not in graph: " + edge.getSource().getName());
+                return false;
+            }
+            if (!vertexSet().contains(edge.getTarget())) {
+                System.err.println("Target Scope not in graph: " + edge.getTarget().getName());
                 return false;
             }
         }
