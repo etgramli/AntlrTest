@@ -25,16 +25,6 @@ public final class GraphBuilder {
     private int scopeNumber = 0;
     private Scope lastAddedScope;
 
-    /**
-     * Stack for beginning Scopes for alternatives.
-     */
-    private final Deque<Scope> openingAlternativeStack = new ArrayDeque<>();
-
-    /**
-     * Stack for last Scopes of alternatives. (add() and peek()/poll())
-     */
-    private final Deque<Scope> closingAlternativeStack = new ArrayDeque<>();
-
     public GraphBuilder(final Bnf bnf) {
         final List<BnfRule> startBnfRules = bnf.getBnfRules().stream().filter(BnfRule::isStartRule).collect(Collectors.toList());
         if (startBnfRules.size() != 1) {
@@ -59,25 +49,37 @@ public final class GraphBuilder {
     private void processAlternatives(final Alternatives alternatives) {
         assert (!alternatives.getSequences().isEmpty());
 
-        openingAlternativeStack.push(lastAddedScope);
-        closingAlternativeStack.add(getNextScope());
+        final Scope openingAlternativeScope = lastAddedScope;
+        final Scope closingAlternativeScope = getNextScope();
+        final List<Scope> lastScopes = new ArrayList<>();
 
         for (Sequence sequence : alternatives.getSequences()) {
             processSequence(sequence);
-            lastAddedScope = openingAlternativeStack.peek();
+            lastScopes.add(lastAddedScope);
+            lastAddedScope = openingAlternativeScope;
         }
-        openingAlternativeStack.pop();
 
         // Replace scopes of dangling edges with only one (new) one to implement recursive alternatives
         final Set<ScopeEdge> danglingEdges = graph.getDanglingScopeEdges();
         if (danglingEdges.size() == 1) {
             lastAddedScope = graph.getEndScope();
         } else {
-            final Scope targetScope = closingAlternativeStack.removeFirst();
-            graph.addVertex(targetScope);
-            mergeNodeTargets(targetScope, danglingEdges);
-            lastAddedScope = targetScope;
+            graph.addVertex(closingAlternativeScope);
+            mergeNodes(closingAlternativeScope, lastScopes);
+            lastAddedScope = closingAlternativeScope;
         }
+    }
+
+    private void mergeNodes(final Scope newScope, final Collection<Scope> scopes) {
+        final Set<ScopeEdge> ingoingEdges = new HashSet<>();
+        final Set<ScopeEdge> outgoingEdges = new HashSet<>();
+        for (Scope scope : scopes) {
+            ingoingEdges.addAll(graph.incomingEdgesOf(scope));
+            outgoingEdges.addAll(graph.outgoingEdgesOf(scope));
+        }
+
+        mergeNodeTargets(newScope, ingoingEdges);
+        mergeNodeSources(newScope, outgoingEdges);
     }
 
     private void mergeNodeTargets(final Scope newScope, final Collection<ScopeEdge> edges) {
@@ -90,6 +92,19 @@ public final class GraphBuilder {
             // Re-add altered edge
             edge.setTarget(newScope);
             graph.addEdge(edge.getSource(), newScope, edge);
+        }
+    }
+
+    private void mergeNodeSources(final Scope newScope, final Collection<ScopeEdge> edges) {
+        for (ScopeEdge edge : edges) {
+            // Remove old Vertex and Edge
+            Scope temp = edge.getSource();
+            graph.removeVertex(temp);
+            graph.removeEdge(edge);
+
+            // Re-add altered edge
+            edge.setSource(newScope);
+            graph.addEdge(newScope, edge.getTarget(), edge);
         }
     }
 
@@ -111,15 +126,14 @@ public final class GraphBuilder {
             addNodeInSequence(new SequenceNode(element.getName()));
         } else if (element instanceof AbstractRepetition) {
             AbstractRepetition repetition = (AbstractRepetition) element;
+            final Scope beforeOptionalLoop = lastAddedScope;
 
             if (repetition instanceof Optional) {
-                final Scope beginOfOptional = lastAddedScope;
                 processAlternatives(repetition.getAlternatives());
-                graph.addEdge(beginOfOptional, lastAddedScope, new ScopeEdge(beginOfOptional, lastAddedScope));
+                graph.addEdge(beforeOptionalLoop, lastAddedScope, new ScopeEdge(beforeOptionalLoop, lastAddedScope));
             } else if (repetition instanceof ZeroOrMore) {
-                final Scope beginOfRepetition = lastAddedScope;
                 processAlternatives(repetition.getAlternatives());
-                graph.addEdge(lastAddedScope, beginOfRepetition, new ScopeEdge(lastAddedScope, beginOfRepetition));
+                graph.addEdge(lastAddedScope, beforeOptionalLoop, new ScopeEdge(lastAddedScope, beforeOptionalLoop));
             } else if (repetition instanceof Precedence) {
                 processAlternatives(repetition.getAlternatives());
             } else {

@@ -28,6 +28,10 @@ public final class ScopeEdge extends DefaultEdge {
         return source;
     }
 
+    public void setSource(final Scope target) {
+        this.target = target;
+    }
+
     @Override
     public Scope getTarget() {
         return target;
