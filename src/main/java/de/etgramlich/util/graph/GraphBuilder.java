@@ -54,10 +54,12 @@ public final class GraphBuilder {
         final Scope closingAlternativeScope = getNextScope();
         final List<Scope> lastScopes = new ArrayList<>();
 
-        for (Sequence sequence : alternatives.getSequences()) {
-            processSequence(sequence);
+        for (int i = 0; i < alternatives.getSequences().size(); ++i) {
+            processSequence(alternatives.getSequences().get(i));
             lastScopes.add(lastAddedScope);
-            lastAddedScope = openingAlternativeScope;
+            if (i != alternatives.getSequences().size() - 1) {
+                lastAddedScope = openingAlternativeScope;
+            }
         }
 
         // Replace scopes of dangling edges with only one (new) one to implement recursive alternatives
@@ -79,12 +81,7 @@ public final class GraphBuilder {
             outgoingEdges.addAll(graph.outgoingEdgesOf(scope));
         }
 
-        mergeNodeTargets(newScope, ingoingEdges);
-        mergeNodeSources(newScope, outgoingEdges);
-    }
-
-    private void mergeNodeTargets(final Scope newScope, final Collection<ScopeEdge> edges) {
-        for (ScopeEdge edge : edges) {
+        for (ScopeEdge edge : ingoingEdges) {
             // Remove old Vertex and Edge
             Scope temp = edge.getTarget();
             graph.removeVertex(temp);
@@ -94,10 +91,8 @@ public final class GraphBuilder {
             edge.setTarget(newScope);
             graph.addEdge(edge.getSource(), newScope, edge);
         }
-    }
 
-    private void mergeNodeSources(final Scope newScope, final Collection<ScopeEdge> edges) {
-        for (ScopeEdge edge : edges) {
+        for (ScopeEdge edge : outgoingEdges) {
             // Remove old Vertex and Edge
             Scope temp = edge.getSource();
             graph.removeVertex(temp);
