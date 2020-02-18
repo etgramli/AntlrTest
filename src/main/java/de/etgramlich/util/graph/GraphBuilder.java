@@ -6,6 +6,7 @@ import de.etgramlich.parser.type.repetition.Optional;
 import de.etgramlich.parser.type.repetition.Precedence;
 import de.etgramlich.parser.type.repetition.ZeroOrMore;
 import de.etgramlich.parser.type.text.TextElement;
+import de.etgramlich.util.exception.InvalidGraphException;
 import de.etgramlich.util.exception.UnrecognizedElementException;
 import de.etgramlich.util.graph.type.BnfRuleGraph;
 import de.etgramlich.util.graph.type.Scope;
@@ -44,7 +45,10 @@ public final class GraphBuilder {
         for (BnfRule bnfRule : nonTerminalBnfRules) {
             processAlternatives(bnfRule.getRhs());
         }
-        // ToDo: add isGraphConsistent() check when done
+
+        if (!graph.isConsistent()) {
+            throw new InvalidGraphException("Graph is not consistent after build!");
+        }
     }
 
     private void processAlternatives(final Alternatives alternatives) {
