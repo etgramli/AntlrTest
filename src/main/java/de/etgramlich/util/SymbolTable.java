@@ -2,10 +2,8 @@ package de.etgramlich.util;
 
 import de.etgramlich.parser.type.BnfType;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.*;
+import javax.lang.model.SourceVersion;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -15,27 +13,17 @@ public final class SymbolTable {
     private static final Map<String, BnfType> symbolTable = new ConcurrentHashMap<>();
     private static final Map<String, Boolean> rules = new ConcurrentHashMap<>();
 
-    private static final String HOST_LANG_KEYWORD_FILENAME = "src/main/resources/keywords-java.txt";
-    private static final Set<String> keywords;
-    static {
-        List<String> readKeywords = Collections.emptyList();
-        try {
-            readKeywords = Files.readAllLines(Path.of(HOST_LANG_KEYWORD_FILENAME));
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            keywords = Collections.unmodifiableSet(Set.copyOf(readKeywords));
-        }
+    private SymbolTable() {
     }
-
-    private SymbolTable() {}
 
     public static boolean containsRule(final String ruleName) {
         return rules.containsKey(ruleName);
     }
+
     public static void addRule(final String name, final boolean isTerminal) {
         rules.put(name, isTerminal);
     }
+
     public static boolean isTerminal(final String rule) {
         return rules.get(rule);
     }
@@ -62,6 +50,6 @@ public final class SymbolTable {
     }
 
     public static boolean isKeyword(final String id) {
-        return keywords.contains(id);
+        return SourceVersion.isKeyword(id);
     }
 }
