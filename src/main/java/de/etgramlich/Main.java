@@ -6,6 +6,8 @@ import de.etgramlich.parser.listener.BnfListener;
 import de.etgramlich.parser.type.Bnf;
 import de.etgramlich.util.StringUtil;
 import de.etgramlich.util.graph.GraphBuilder;
+import de.etgramlich.util.graph.InterfaceBuilder;
+import de.etgramlich.util.graph.type.BnfRuleGraph;
 import de.etgramlich.util.graph.type.Scope;
 import de.etgramlich.util.graph.type.ScopeEdge;
 import org.antlr.v4.runtime.CharStreams;
@@ -71,7 +73,7 @@ public final class Main {
 
         // Convert tree of types to graph of Scopes and Nodes
         GraphBuilder gb = new GraphBuilder(bnf);
-        Graph<Scope, ScopeEdge> graph = gb.getGraph();
+        BnfRuleGraph graph = gb.getGraph();
 
         // Render graph
         try {
@@ -79,6 +81,9 @@ public final class Main {
         } catch (ExportException e) {
             e.printStackTrace();
         }
+
+        InterfaceBuilder builder = new InterfaceBuilder(targetDirectory, targetPackage);
+        builder.saveInterfaces(graph);
     }
 
     private static String prepareGrammar(final String filepath) throws IOException {

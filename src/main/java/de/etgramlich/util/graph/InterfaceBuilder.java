@@ -3,6 +3,7 @@ package de.etgramlich.util.graph;
 import de.etgramlich.util.StringUtil;
 import de.etgramlich.util.graph.type.BnfRuleGraph;
 import de.etgramlich.util.graph.type.Scope;
+import de.etgramlich.util.graph.type.ScopeEdge;
 import de.etgramlich.util.graph.type.node.Node;
 import org.apache.commons.lang3.StringUtils;
 import org.stringtemplate.v4.ST;
@@ -11,7 +12,15 @@ import org.stringtemplate.v4.STGroupFile;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.Deque;
+import java.util.ArrayDeque;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.stream.Collectors;
 
 public final class InterfaceBuilder {
     private static final List<String> JAVA_TYPES = List.of("char", "int", "long", "float", "double", "String");
@@ -25,7 +34,6 @@ public final class InterfaceBuilder {
     private final String packageDirectory;
 
     private BnfRuleGraph graph;
-    private final List<String> types = new ArrayList<>(JAVA_TYPES);
 
 
     public InterfaceBuilder(final String targetDirectory, final String targetPackage) {
@@ -42,75 +50,148 @@ public final class InterfaceBuilder {
 
     public void saveInterfaces(final BnfRuleGraph graph) {
         this.graph = graph;
+        final Set<Interface> interfaces = new HashSet<>();
 
-        Scope scope = graph.getStartScope();
-        List<Node> nodes = graph.getOutGoingNodes(scope);
+        Deque<Scope> toVisitNext = new ArrayDeque<>(graph.vertexSet().size());
+        toVisitNext.add(graph.getEndScope());
 
-        while (graph.getEndScope() != scope) {
-            saveInterface(scope, nodes, graph.getSuccessors(scope).get(0));
+        Scope currentScope = toVisitNext.getFirst();
+        Interface currentInterface;
+        while (graph.getStartScope() != currentScope) {
+            currentInterface = fromScope(currentScope);
+            if (!interfaces.containsAll(currentInterface.parents)) {
+                throw new NullPointerException("Not all parent interfaces found!");
+            }
+            saveInterface(currentInterface);
+            interfaces.add(currentInterface);
 
-            scope = graph.getSuccessors(scope).get(0);
-            nodes = graph.getOutGoingNodes(scope);
+            toVisitNext.addAll(graph.getPredecessors(currentScope));
+            currentScope = toVisitNext.getFirst();
         }
     }
 
-    /**
-     * Saves an interface for the given Scope, Nodes and following Scope.
-     * @param scope Current scope (of the Interface to save).
-     * @param nodes Nodes corresponding to the Scope.
-     * @param nextScope The following Scope (for return type of the current Node).
-     */
-    public void saveInterface(final Scope scope, final Collection<Node> nodes, final Scope nextScope) {
-        // ToDo
+    private Interface fromScope(final Scope scope) {
+        final Set<String> parents = getParents(scope);
+        final List<Method> methods = getMethods(scope);
+        return new Interface(scope.getName(), parents, methods);
+    }
+
+    private Set<String> getParents(final Scope scope) {
+        final Set<ScopeEdge> incomingBackwardEdges = graph.incomingEdgesOf(scope).stream()
+                .filter(edge -> graph.isBackwardEdge(edge))
+                .collect(Collectors.toUnmodifiableSet());
+        return incomingBackwardEdges.stream()
+                .map(edge -> edge.getSource().getName())
+                .collect(Collectors.toUnmodifiableSet());
     }
 
     /**
      * Converts a scope to Methods to be in the respective Interface.
+     *
      * @param scope Scope to be converted to interface, to query its Methods.
      * @return List of Methods, not null, may be empty.
      */
-    private List<Method> methodsFromScope(final Scope scope) {
+    private List<Method> getMethods(final Scope scope) {
         final List<Node> outgoingNodes = graph.getOutGoingNodes(scope);
+        final List<Method> methods = new ArrayList<>(outgoingNodes.size());
 
-        List<Method> methods = new ArrayList<>(outgoingNodes.size());
-        // ToDo: Outgoing nodes and edges to Methods
+        String methodName;
+        String returnType;
+        List<Argument> arguments;
         for (Node node : outgoingNodes) {
-            //graphWrapper.ge
+            methodName = node.getName();
+            returnType = node.getSuccessor().getName();
+            arguments = getArguments(node);
+
+            methods.add(new Method(returnType, methodName, arguments));
         }
 
         return methods;
     }
 
+    private List<Argument> getArguments(final Node scope) {
+        // ToDo
+        return Collections.emptyList();
+    }
+
     /**
      * Saves a Java Interface with the given name and Methods.
-     * @param name Name of the interface, must not be blank.
-     * @param methods List of Methods of the Interface.
+     *
+     * @param interfaceName Name of the interface, must not be blank.
+     * @param methods       List of Methods of the Interface.
      */
-    private void saveInterface(final String name, final Collection<Method> methods) {
-        if (StringUtils.isBlank(name)) {
+    private void saveInterface(final Interface iface) {
+        if (StringUtils.isBlank(iface.getName())) {
             throw new IllegalArgumentException("Interface name must not be blank!");
         }
-        if (!StringUtil.startsWithUpperCase(name)) {
+        if (!StringUtil.startsWithUpperCase(iface.getName())) {
             throw new IllegalArgumentException("Interface name must start with an upper case letter!");
         }
 
         final ST st = stgroup.getInstanceOf(INTERFACE_NAME);
         st.add("package", targetPackage);
-        st.add("interfaceName", name);
+        st.add("interfaceName", iface.getName());
+
+        // ToDo add parent interfaces
 
         // Add return type and method name to String List to add to StringTemplate
-        final List<String> methodList = new ArrayList<>(methods.size() * 2);
-        for (Method method : methods) {
+        final List<String> methodList = new ArrayList<>(iface.getMethods().size() * 2);
+        for (Method method : iface.getMethods()) {
             methodList.add(method.getReturnType());
             methodList.add(method.getName());
         }
         st.add("methods", methodList);
 
-        final String filePath = targetDirectory + packageDirectory + name + DEFAULT_FILE_ENDING;
+        final String filePath = targetDirectory + packageDirectory + iface.getName() + DEFAULT_FILE_ENDING;
         try (PrintWriter out = new PrintWriter(filePath)) {
             out.write(st.render());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+        }
+    }
+
+
+    private static class Interface {
+        private final String name;
+        private final Set<String> parents;
+        private final Set<Method> methods;
+
+        public Interface(final String name, final Collection<String> parents, final Collection<Method> methods) {
+            this.name = name;
+            this.parents = Set.copyOf(parents);
+            this.methods = Set.copyOf(methods);
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public Collection<Method> getMethods() {
+            return Set.copyOf(methods);
+        }
+
+        public Set<String> getParents() {
+            return Set.copyOf(parents);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            Interface that = (Interface) o;
+
+            if (!name.equals(that.name)) return false;
+            if (!parents.equals(that.parents)) return false;
+            return methods.equals(that.methods);
+        }
+
+        @Override
+        public int hashCode() {
+            int result = name.hashCode();
+            result = 31 * result + parents.hashCode();
+            result = 31 * result + methods.hashCode();
+            return result;
         }
     }
 
@@ -124,20 +205,40 @@ public final class InterfaceBuilder {
             this.name = name;
             this.arguments = List.copyOf(arguments);
         }
-        public Method(final String returnType, final String name) {
-            this(returnType, name, Collections.emptyList());
-        }
 
         public String getReturnType() {
             return returnType;
         }
+
         public String getName() {
             return name;
         }
+
         public List<Argument> getArguments() {
             return arguments;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            Method method = (Method) o;
+
+            if (!returnType.equals(method.returnType)) return false;
+            if (!name.equals(method.name)) return false;
+            return arguments.equals(method.arguments);
+        }
+
+        @Override
+        public int hashCode() {
+            int result = returnType.hashCode();
+            result = 31 * result + name.hashCode();
+            result = 31 * result + arguments.hashCode();
+            return result;
+        }
     }
+
     private static class Argument {
         private final String type;
         private final String name;
@@ -146,11 +247,31 @@ public final class InterfaceBuilder {
             this.type = type;
             this.name = name;
         }
+
         public String getType() {
             return type;
         }
+
         public String getName() {
             return name;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            Argument argument = (Argument) o;
+
+            if (!type.equals(argument.type)) return false;
+            return name.equals(argument.name);
+        }
+
+        @Override
+        public int hashCode() {
+            int result = type.hashCode();
+            result = 31 * result + name.hashCode();
+            return result;
         }
     }
 }
