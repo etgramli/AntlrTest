@@ -120,7 +120,14 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
      * @return A scope, if no scope found a NPE is thrown.
      */
     public Scope getEndScope() {
-        final List<Scope> scopesWithoutOutgoingEdges = vertexSet().stream()
+        // Remove backward edges in own view
+        final BnfRuleGraph noBackEdges = (BnfRuleGraph) this.clone();
+        final Set<ScopeEdge> backwardEdges = noBackEdges.edgeSet().stream()
+                .filter(this::isBackwardEdge)
+                .collect(Collectors.toUnmodifiableSet());
+        backwardEdges.forEach(noBackEdges::removeEdge);
+
+        final List<Scope> scopesWithoutOutgoingEdges = noBackEdges.vertexSet().stream()
                 .filter(scope -> outDegreeOf(scope) == 0)
                 .collect(Collectors.toList());
         if (scopesWithoutOutgoingEdges.size() != 1) {
@@ -169,5 +176,27 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
             }
         }
         return dangling;
+    }
+
+    /**
+     * Returns true if the target node is closer to the end node than to the start node compared to the source node.
+     * @param edge Edge to be determined.
+     * @return True if target node closer to end as source node.
+     */
+    public boolean isForwardEdge(final ScopeEdge edge) {
+        final int lengthSource = DijkstraShortestPath.findPathBetween(this, getStartScope(), edge.getSource()).getLength();
+        final int lengthTarget = DijkstraShortestPath.findPathBetween(this, getStartScope(), edge.getTarget()).getLength();
+        return lengthTarget > lengthSource;
+    }
+
+    /**
+     * Determines if the target node is closer to the start node than to the end node compared to the source node.
+     * @param edge Edge to be determined.
+     * @return True if the target node is closer to the start node than the source, else false.
+     */
+    public boolean isBackwardEdge(final ScopeEdge edge) {
+        final int lengthSource = DijkstraShortestPath.findPathBetween(this, getStartScope(), edge.getSource()).getLength();
+        final int lengthTarget = DijkstraShortestPath.findPathBetween(this, getStartScope(), edge.getTarget()).getLength();
+        return lengthTarget < lengthSource;
     }
 }

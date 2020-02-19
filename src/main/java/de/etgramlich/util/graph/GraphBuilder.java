@@ -6,6 +6,7 @@ import de.etgramlich.parser.type.repetition.Optional;
 import de.etgramlich.parser.type.repetition.Precedence;
 import de.etgramlich.parser.type.repetition.ZeroOrMore;
 import de.etgramlich.parser.type.text.TextElement;
+import de.etgramlich.util.exception.InvalidGraphException;
 import de.etgramlich.util.exception.UnrecognizedElementException;
 import de.etgramlich.util.graph.type.BnfRuleGraph;
 import de.etgramlich.util.graph.type.Scope;
@@ -44,7 +45,10 @@ public final class GraphBuilder {
         for (BnfRule bnfRule : nonTerminalBnfRules) {
             processAlternatives(bnfRule.getRhs());
         }
-        // ToDo: add isGraphConsistent() check when done
+
+        if (!graph.isConsistent()) {
+            throw new InvalidGraphException("Graph is not consistent after build!");
+        }
     }
 
     private void processAlternatives(final Alternatives alternatives) {
@@ -54,10 +58,12 @@ public final class GraphBuilder {
         final Scope closingAlternativeScope = getNextScope();
         final List<Scope> lastScopes = new ArrayList<>();
 
-        for (Sequence sequence : alternatives.getSequences()) {
-            processSequence(sequence);
+        for (int i = 0; i < alternatives.getSequences().size(); ++i) {
+            processSequence(alternatives.getSequences().get(i));
             lastScopes.add(lastAddedScope);
-            lastAddedScope = openingAlternativeScope;
+            if (i != alternatives.getSequences().size() - 1) {
+                lastAddedScope = openingAlternativeScope;
+            }
         }
 
         // Replace scopes of dangling edges with only one (new) one to implement recursive alternatives
@@ -79,12 +85,7 @@ public final class GraphBuilder {
             outgoingEdges.addAll(graph.outgoingEdgesOf(scope));
         }
 
-        mergeNodeTargets(newScope, ingoingEdges);
-        mergeNodeSources(newScope, outgoingEdges);
-    }
-
-    private void mergeNodeTargets(final Scope newScope, final Collection<ScopeEdge> edges) {
-        for (ScopeEdge edge : edges) {
+        for (ScopeEdge edge : ingoingEdges) {
             // Remove old Vertex and Edge
             Scope temp = edge.getTarget();
             graph.removeVertex(temp);
@@ -94,10 +95,8 @@ public final class GraphBuilder {
             edge.setTarget(newScope);
             graph.addEdge(edge.getSource(), newScope, edge);
         }
-    }
 
-    private void mergeNodeSources(final Scope newScope, final Collection<ScopeEdge> edges) {
-        for (ScopeEdge edge : edges) {
+        for (ScopeEdge edge : outgoingEdges) {
             // Remove old Vertex and Edge
             Scope temp = edge.getSource();
             graph.removeVertex(temp);
