@@ -23,7 +23,6 @@ import java.util.Collections;
 import java.util.stream.Collectors;
 
 public final class InterfaceBuilder {
-    private static final List<String> JAVA_TYPES = List.of("char", "int", "long", "float", "double", "String");
     private static final String INTERFACE_FILENAME = "src/main/resources/ebnf.stg";
     private static final String INTERFACE_NAME = "templateInterface";
     private static final String DEFAULT_FILE_ENDING = ".java";

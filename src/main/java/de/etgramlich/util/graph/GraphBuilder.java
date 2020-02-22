@@ -8,9 +8,7 @@ import de.etgramlich.parser.type.repetition.ZeroOrMore;
 import de.etgramlich.parser.type.text.TextElement;
 import de.etgramlich.util.exception.InvalidGraphException;
 import de.etgramlich.util.exception.UnrecognizedElementException;
-import de.etgramlich.util.graph.type.BnfRuleGraph;
-import de.etgramlich.util.graph.type.Scope;
-import de.etgramlich.util.graph.type.ScopeEdge;
+import de.etgramlich.util.graph.type.*;
 import de.etgramlich.util.graph.type.node.Node;
 import de.etgramlich.util.graph.type.node.SequenceNode;
 
@@ -27,14 +25,16 @@ public final class GraphBuilder {
     private Scope lastAddedScope;
 
     public GraphBuilder(final Bnf bnf) {
-        final List<BnfRule> startBnfRules = bnf.getBnfRules().stream().filter(BnfRule::isStartRule).collect(Collectors.toList());
+        final List<BnfRule> startBnfRules = bnf.getBnfRules().stream()
+                .filter(BnfRule::isStartRule)
+                .collect(Collectors.toList());
         if (startBnfRules.size() != 1) {
             throw new IllegalArgumentException("Rule-list must have exactly one Start rule");
         }
         final BnfRule startBnfRule = startBnfRules.get(0);
-        final List<BnfRule> nonTerminalBnfRules = bnf.getBnfRules().stream().filter(
-                bnfRule -> !bnfRule.isTerminal() && bnfRule.getNumberOfElements() > 1
-        ).collect(Collectors.toList());
+        final List<BnfRule> nonTerminalBnfRules = bnf.getBnfRules().stream()
+                .filter(bnfRule -> !bnfRule.isTerminal() && bnfRule.getNumberOfElements() > 1)
+                .collect(Collectors.toList());
         nonTerminalBnfRules.remove(startBnfRule);
 
         // Add first scope
@@ -130,10 +130,10 @@ public final class GraphBuilder {
 
             if (repetition instanceof Optional) {
                 processAlternatives(repetition.getAlternatives());
-                graph.addEdge(beforeOptionalLoop, lastAddedScope, new ScopeEdge(beforeOptionalLoop, lastAddedScope));
+                graph.addEdge(beforeOptionalLoop, lastAddedScope, new OptionalEdge(beforeOptionalLoop, lastAddedScope));
             } else if (repetition instanceof ZeroOrMore) {
                 processAlternatives(repetition.getAlternatives());
-                graph.addEdge(lastAddedScope, beforeOptionalLoop, new ScopeEdge(lastAddedScope, beforeOptionalLoop));
+                graph.addEdge(lastAddedScope, beforeOptionalLoop, new RepetitionEdge(lastAddedScope, beforeOptionalLoop));
             } else if (repetition instanceof Precedence) {
                 processAlternatives(repetition.getAlternatives());
             } else {

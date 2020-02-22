@@ -6,7 +6,7 @@ import org.jgrapht.graph.DefaultEdge;
 import java.util.Collections;
 import java.util.List;
 
-public final class ScopeEdge extends DefaultEdge {
+public class ScopeEdge extends DefaultEdge {
     private final Scope source;
     private Scope target;
     private final List<Node> nodes;
