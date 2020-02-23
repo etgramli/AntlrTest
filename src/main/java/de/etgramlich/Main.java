@@ -101,7 +101,7 @@ public final class Main {
         final ComponentNameProvider<Scope> vertexProvider = scope -> "S_" + scope.getName();
         final ComponentNameProvider<Scope> vertexIdProvider = scope -> "S_id_" + scope.getName();
         final ComponentNameProvider<ScopeEdge> edgeProvider =
-                scopeEdge -> "E_" + (scopeEdge instanceof NodeEdge ? ((NodeEdge) scopeEdge).getNodes().get(0).getName() + "(" + ((NodeEdge) scopeEdge).getTotalNumberOfNodes() + ")" : scopeEdge.getClass().getName());
+                scopeEdge -> "E_" + (scopeEdge instanceof NodeEdge ? ((NodeEdge) scopeEdge).getNode().getName() : scopeEdge.getClass().getName());
         final GraphExporter<Scope, ScopeEdge> exporter =
                 new DOTExporter<>(vertexIdProvider, vertexProvider, edgeProvider);
         final Writer writer = new StringWriter();

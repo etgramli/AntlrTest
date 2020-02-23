@@ -90,7 +90,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
     public List<Node> getOutGoingNodes(final Scope scope) {
         return outgoingEdgesOf(scope).stream()
                 .filter(scopeEdge -> scopeEdge instanceof NodeEdge)
-                .flatMap(nodeEdge -> ((NodeEdge) nodeEdge).getNodes().stream())
+                .map(nodeEdge -> ((NodeEdge) nodeEdge).getNode())
                 .collect(Collectors.toList());
     }
 
@@ -98,7 +98,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
         return edgeSet().stream()
                 .filter(scopeEdge -> scopeEdge.getTarget().equals(scope))
                 .filter(scopeEdge -> scopeEdge instanceof NodeEdge)
-                .flatMap(nodeEdge -> ((NodeEdge) nodeEdge).getNodes().stream())
+                .map(nodeEdge -> ((NodeEdge) nodeEdge).getNode())
                 .collect(Collectors.toList());
     }
 
