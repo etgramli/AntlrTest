@@ -1,26 +1,14 @@
 package de.etgramlich.util.graph.type;
 
-import de.etgramlich.util.graph.type.node.Node;
 import org.jgrapht.graph.DefaultEdge;
 
-import java.util.Collections;
-import java.util.List;
-
-public class ScopeEdge extends DefaultEdge {
+public abstract class ScopeEdge extends DefaultEdge {
     private Scope source;
     private Scope target;
-    private final List<Node> nodes;
 
-    public ScopeEdge(final Scope source, final Scope target) {
-        this(source, target, Collections.emptyList());
-    }
-    public ScopeEdge(final Scope source, final Scope target, final Node node) {
-        this(source, target, List.of(node));
-    }
-    public ScopeEdge(final Scope source, final Scope target, final List<Node> nodes) {
+    protected ScopeEdge(final Scope source, final Scope target) {
         this.source = source;
         this.target = target;
-        this.nodes = List.copyOf(nodes);
     }
 
     @Override
@@ -29,6 +17,9 @@ public class ScopeEdge extends DefaultEdge {
     }
 
     public void setSource(final Scope source) {
+        if (source == null) {
+            throw new IllegalArgumentException("Source scope must not be null!");
+        }
         this.source = source;
     }
 
@@ -38,50 +29,9 @@ public class ScopeEdge extends DefaultEdge {
     }
 
     public void setTarget(final Scope target) {
-        this.target = target;
-    }
-
-    public List<Node> getNodes() {
-        return nodes;
-    }
-
-    public boolean isSequence() {
-        return nodes.size() > 1;
-    }
-
-    public int getTotalNumberOfNodes() {
-        int counter = nodes.size();
-        for (Node node : nodes) {
-            counter += node.getTotalAmountOfChildNodes();
+        if (target == null) {
+            throw new IllegalArgumentException("Target scope must not be null!");
         }
-        return counter;
-    }
-
-    /**
-     * Returns true if there are no nodes associated with this edge. May be empty if this edge is used for a loop or optional element.
-     * @return True if at least one node is associated.
-     */
-    public boolean isEmpty() {
-        return nodes.isEmpty();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        ScopeEdge scopeEdge = (ScopeEdge) o;
-
-        if (!source.equals(scopeEdge.source)) return false;
-        if (!target.equals(scopeEdge.target)) return false;
-        return nodes.equals(scopeEdge.nodes);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = source.hashCode();
-        result = 31 * result + target.hashCode();
-        result = 31 * result + nodes.hashCode();
-        return result;
+        this.target = target;
     }
 }

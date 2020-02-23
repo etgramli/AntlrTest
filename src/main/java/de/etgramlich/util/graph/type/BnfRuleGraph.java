@@ -40,21 +40,15 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
         if (edgeSet().isEmpty() && vertexSet().isEmpty()) {
             return true;
         }
-        // All source and target scopes in edge must exist in graph
         for (ScopeEdge edge : edgeSet()) {
-            if (!vertexSet().contains(edge.getSource())) {
-                System.err.println("Source Scope not in graph: " + edge.getSource().getName());
-                System.err.println("Edge: " + edge.getClass());
+            if (!vertexSet().contains(edge.getSource()) || !vertexSet().contains(edge.getTarget())) {
                 return false;
             }
-            if (!vertexSet().contains(edge.getTarget())) {
-                System.err.println("Target Scope not in graph: " + edge.getTarget().getName());
-                System.err.println("Edge: " + edge.getClass());
-                return false;
-            }
+            // There must exist a parallel connection
             if (edge instanceof OptionalEdge && !connectedByNodes(edge.getSource(), edge.getTarget())) {
                 return false;
             }
+            // There must exist a parallel connection in reversed direction
             if (edge instanceof RepetitionEdge && !connectedByNodes(edge.getTarget(), edge.getSource())) {
                 return false;
             }
@@ -95,14 +89,16 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
 
     public List<Node> getOutGoingNodes(final Scope scope) {
         return outgoingEdgesOf(scope).stream()
-                .flatMap(scopeEdge -> scopeEdge.getNodes().stream())
+                .filter(scopeEdge -> scopeEdge instanceof NodeEdge)
+                .flatMap(nodeEdge -> ((NodeEdge) nodeEdge).getNodes().stream())
                 .collect(Collectors.toList());
     }
 
     public List<Node> getInGoingNodes(final Scope scope) {
         return edgeSet().stream()
                 .filter(scopeEdge -> scopeEdge.getTarget().equals(scope))
-                .flatMap(scopeEdge -> scopeEdge.getNodes().stream())
+                .filter(scopeEdge -> scopeEdge instanceof NodeEdge)
+                .flatMap(nodeEdge -> ((NodeEdge) nodeEdge).getNodes().stream())
                 .collect(Collectors.toList());
     }
 

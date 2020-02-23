@@ -147,7 +147,7 @@ public final class GraphBuilder {
         final Scope newScope = getNextScope();
 
         graph.addVertex(newScope);
-        graph.addEdge(lastAddedScope, newScope, new ScopeEdge(lastAddedScope, newScope, node));
+        graph.addEdge(lastAddedScope, newScope, new NodeEdge(lastAddedScope, newScope, node));
         lastAddedScope = newScope;
     }
 

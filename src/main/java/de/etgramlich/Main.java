@@ -8,6 +8,7 @@ import de.etgramlich.util.StringUtil;
 import de.etgramlich.util.graph.GraphBuilder;
 import de.etgramlich.util.graph.InterfaceBuilder;
 import de.etgramlich.util.graph.type.BnfRuleGraph;
+import de.etgramlich.util.graph.type.NodeEdge;
 import de.etgramlich.util.graph.type.Scope;
 import de.etgramlich.util.graph.type.ScopeEdge;
 import org.antlr.v4.runtime.CharStreams;
@@ -100,7 +101,7 @@ public final class Main {
         final ComponentNameProvider<Scope> vertexProvider = scope -> "S_" + scope.getName();
         final ComponentNameProvider<Scope> vertexIdProvider = scope -> "S_id_" + scope.getName();
         final ComponentNameProvider<ScopeEdge> edgeProvider =
-                scopeEdge -> "E_" + scopeEdge.getNodes().get(0).getName() + "(" + scopeEdge.getTotalNumberOfNodes() + ")";
+                scopeEdge -> "E_" + (scopeEdge instanceof NodeEdge ? ((NodeEdge) scopeEdge).getNodes().get(0).getName() + "(" + ((NodeEdge) scopeEdge).getTotalNumberOfNodes() + ")" : scopeEdge.getClass().getName());
         final GraphExporter<Scope, ScopeEdge> exporter =
                 new DOTExporter<>(vertexIdProvider, vertexProvider, edgeProvider);
         final Writer writer = new StringWriter();
