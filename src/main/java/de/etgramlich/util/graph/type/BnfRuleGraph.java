@@ -44,19 +44,19 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
         for (ScopeEdge edge : edgeSet()) {
             if (!vertexSet().contains(edge.getSource())) {
                 System.err.println("Source Scope not in graph: " + edge.getSource().getName());
+                System.err.println("Edge: " + edge.getClass());
                 return false;
             }
             if (!vertexSet().contains(edge.getTarget())) {
                 System.err.println("Target Scope not in graph: " + edge.getTarget().getName());
+                System.err.println("Edge: " + edge.getClass());
                 return false;
             }
-            if (edge instanceof RepetitionEdge || edge instanceof OptionalEdge) {
-                if (edge instanceof OptionalEdge && !connectedByNodes(edge.getSource(), edge.getTarget())) {
-                    return false;
-                }
-                if (edge instanceof RepetitionEdge && !connectedByNodes(edge.getTarget(), edge.getSource())) {
-                    return false;
-                }
+            if (edge instanceof OptionalEdge && !connectedByNodes(edge.getSource(), edge.getTarget())) {
+                return false;
+            }
+            if (edge instanceof RepetitionEdge && !connectedByNodes(edge.getTarget(), edge.getSource())) {
+                return false;
             }
         }
         // Only one start and end scope are permitted

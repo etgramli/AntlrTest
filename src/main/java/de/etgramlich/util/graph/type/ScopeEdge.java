@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class ScopeEdge extends DefaultEdge {
-    private final Scope source;
+    private Scope source;
     private Scope target;
     private final List<Node> nodes;
 
@@ -28,8 +28,8 @@ public class ScopeEdge extends DefaultEdge {
         return source;
     }
 
-    public void setSource(final Scope target) {
-        this.target = target;
+    public void setSource(final Scope source) {
+        this.source = source;
     }
 
     @Override

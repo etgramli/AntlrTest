@@ -67,15 +67,13 @@ public final class GraphBuilder {
         }
 
         // Replace scopes of dangling edges with only one (new) one to implement recursive alternatives
-        final Set<ScopeEdge> danglingEdges = graph.getDanglingScopeEdges();
-        if (danglingEdges.size() == 1) {
-            lastAddedScope = graph.getEndScope();
-        } else {
+        if (lastScopes.size() > 1) {
             graph.addVertex(closingAlternativeScope);
             mergeNodes(closingAlternativeScope, lastScopes);
             lastAddedScope = closingAlternativeScope;
         }
     }
+
 
     private void mergeNodes(final Scope newScope, final Collection<Scope> scopes) {
         final Set<ScopeEdge> ingoingEdges = new HashSet<>();
@@ -84,25 +82,17 @@ public final class GraphBuilder {
             ingoingEdges.addAll(graph.incomingEdgesOf(scope));
             outgoingEdges.addAll(graph.outgoingEdgesOf(scope));
         }
+        // Remove vertices and touching edges
+        graph.removeAllVertices(scopes);
 
+        // Remove old target vertex and edge, re-add edge with updated vertex
         for (ScopeEdge edge : ingoingEdges) {
-            // Remove old Vertex and Edge
-            Scope temp = edge.getTarget();
-            graph.removeVertex(temp);
-            graph.removeEdge(edge);
-
-            // Re-add altered edge
             edge.setTarget(newScope);
             graph.addEdge(edge.getSource(), newScope, edge);
         }
 
+        // Remove old source vertex and edge, re-add edge with updated vertex
         for (ScopeEdge edge : outgoingEdges) {
-            // Remove old Vertex and Edge
-            Scope temp = edge.getSource();
-            graph.removeVertex(temp);
-            graph.removeEdge(edge);
-
-            // Re-add altered edge
             edge.setSource(newScope);
             graph.addEdge(newScope, edge.getTarget(), edge);
         }
@@ -155,10 +145,9 @@ public final class GraphBuilder {
      */
     public void addNodeInSequence(final Node node) {
         final Scope newScope = getNextScope();
+
         graph.addVertex(newScope);
-
         graph.addEdge(lastAddedScope, newScope, new ScopeEdge(lastAddedScope, newScope, node));
-
         lastAddedScope = newScope;
     }
 

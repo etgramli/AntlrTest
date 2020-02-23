@@ -13,7 +13,6 @@ import de.etgramlich.util.graph.type.Scope;
 import de.etgramlich.util.graph.type.ScopeEdge;
 import de.etgramlich.util.graph.type.node.SequenceNode;
 import org.jgrapht.alg.cycle.CycleDetector;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -34,7 +33,7 @@ class GraphBuilderTest {
     private static final NonTerminal ID_6 = new NonTerminal("ID_6");
     private static final NonTerminal ID_7 = new NonTerminal("ID_7");
 
-    @Test@Disabled
+    @Test
     void graphBuilder_oneRule_loopInAlternative() {
         final Bnf alternativesOneNodeEach = new Bnf(List.of(
                 START_RULE,
