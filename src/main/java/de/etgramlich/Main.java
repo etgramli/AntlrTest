@@ -16,16 +16,13 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.apache.commons.cli.*;
 import org.apache.commons.lang3.StringUtils;
 import org.jgrapht.Graph;
-import org.jgrapht.io.ComponentNameProvider;
-import org.jgrapht.io.DOTExporter;
-import org.jgrapht.io.GraphExporter;
+import org.jgrapht.nio.dot.DOTExporter;
 
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import org.jgrapht.io.ExportException;
 import java.util.List;
 
 public final class Main {
@@ -76,15 +73,14 @@ public final class Main {
         GraphBuilder gb = new GraphBuilder(bnf);
         BnfRuleGraph graph = gb.getGraph();
 
-        // Render graph
+        renderHrefGraph(graph);
+
         try {
-            renderHrefGraph(graph);
-        } catch (ExportException e) {
+            InterfaceBuilder builder = new InterfaceBuilder(targetDirectory, targetPackage);
+            builder.saveInterfaces(graph);
+        } catch (IOException e) {
             e.printStackTrace();
         }
-
-        InterfaceBuilder builder = new InterfaceBuilder(targetDirectory, targetPackage);
-        builder.saveInterfaces(graph);
     }
 
     private static String prepareGrammar(final String filepath) throws IOException {
@@ -97,13 +93,10 @@ public final class Main {
         return String.join("\n", noDuplicateRules);
     }
 
-    private static void renderHrefGraph(Graph<Scope, ScopeEdge> hrefGraph) throws ExportException {
-        final ComponentNameProvider<Scope> vertexProvider = scope -> "S_" + scope.getName();
-        final ComponentNameProvider<Scope> vertexIdProvider = scope -> "S_id_" + scope.getName();
-        final ComponentNameProvider<ScopeEdge> edgeProvider =
-                scopeEdge -> "E_" + (scopeEdge instanceof NodeEdge ? ((NodeEdge) scopeEdge).getNode().getName() : scopeEdge.getClass().getName());
-        final GraphExporter<Scope, ScopeEdge> exporter =
-                new DOTExporter<>(vertexIdProvider, vertexProvider, edgeProvider);
+    private static void renderHrefGraph(Graph<Scope, ScopeEdge> hrefGraph) {
+        final DOTExporter<Scope, ScopeEdge> exporter = new DOTExporter<>(Scope::getName);
+        exporter.setEdgeIdProvider(scopeEdge -> "E_" + (scopeEdge instanceof NodeEdge ? ((NodeEdge) scopeEdge).getNode().getName() : scopeEdge.getClass().getName()));
+
         final Writer writer = new StringWriter();
         exporter.exportGraph(hrefGraph, writer);
         System.out.println(writer.toString());

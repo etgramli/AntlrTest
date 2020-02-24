@@ -10,8 +10,13 @@ import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupFile;
 
-import java.io.*;
+import java.io.OutputStreamWriter;
+import java.io.FileOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -35,7 +40,7 @@ public final class InterfaceBuilder {
     private BnfRuleGraph graph;
 
 
-    public InterfaceBuilder(final String targetDirectory, final String targetPackage) {
+    public InterfaceBuilder(final String targetDirectory, final String targetPackage) throws IOException {
         if (StringUtils.isBlank(targetPackage)) {
             throw new IllegalArgumentException("Target package must not be blank!");
         }
@@ -45,6 +50,8 @@ public final class InterfaceBuilder {
         this.targetDirectory = targetDirectory;
         this.targetPackage = targetPackage;
         this.packageDirectory = targetPackage.replaceAll("\\.", "/");
+
+        Files.createDirectories(Paths.get(targetDirectory + '/' + packageDirectory));
     }
 
     public void saveInterfaces(final BnfRuleGraph graph) {
@@ -141,7 +148,7 @@ public final class InterfaceBuilder {
         }
         st.add("methods", methodList);
 
-        final String filePath = targetDirectory + packageDirectory + iface.getName() + DEFAULT_FILE_ENDING;
+        final String filePath = targetDirectory + '/' + packageDirectory + iface.getName() + DEFAULT_FILE_ENDING;
         try (OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(filePath), StandardCharsets.UTF_8)) {
             out.write(st.render());
         } catch (FileNotFoundException e) {
