@@ -99,7 +99,7 @@ public final class InterfaceBuilder {
         List<Argument> arguments;
         for (Node node : outgoingNodes) {
             methodName = node.getName();
-            returnType = node.getSuccessor().getName();
+            returnType = StringUtils.EMPTY; // ToDo
             arguments = getArguments(node);
 
             methods.add(new Method(returnType, methodName, arguments));

@@ -1,8 +1,5 @@
 package de.etgramlich.util;
 
-import de.etgramlich.util.graph.type.node.Node;
-import de.etgramlich.util.graph.type.node.SequenceNode;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -22,25 +19,6 @@ public final class CollectionUtil {
      */
     @SafeVarargs
     public static <T> List<T> toList(T... items) {
-        final List<T> itemsList = items != null ? Arrays.asList(items) : Collections.emptyList();
-        return new ArrayList<>(itemsList);
-    }
-
-    /**
-     * Converts a sequence of SequenceNodes (basically a linked list) to an unmodifiable List.
-     * @param node A SequenceNode, must not be null.
-     * @return A non-empty, unmodifiable List of SequenceNodes.
-     */
-    public static List<Node> toList(final SequenceNode node) {
-        List<Node> nodeList = new ArrayList<>();
-        nodeList.add(node);
-
-        Node currentNode = node;
-        while (currentNode.getSuccessor() != null) {
-            currentNode = currentNode.getSuccessor();
-            nodeList.add(currentNode);
-        }
-
-        return Collections.unmodifiableList(nodeList);
+        return new ArrayList<>(items != null ? Arrays.asList(items) : Collections.emptyList());
     }
 }

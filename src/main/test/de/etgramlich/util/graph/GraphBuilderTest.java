@@ -467,8 +467,6 @@ class GraphBuilderTest {
         assertEquals(endScope, graph.getEndScope());
 
         assertEquals(ID_0.getName(), graph.getOutGoingNodes(startScope).get(0).getName());
-        assertNull(graph.getOutGoingNodes(startScope).get(0).getSuccessor());
         assertEquals(ID_1.getName(), graph.getOutGoingNodes(secondScope).get(0).getName());
-        assertNull(graph.getOutGoingNodes(secondScope).get(0).getSuccessor());
     }
 }
