@@ -3,7 +3,6 @@ package de.etgramlich.util.graph;
 import de.etgramlich.parser.type.*;
 import de.etgramlich.parser.type.repetition.AbstractRepetition;
 import de.etgramlich.parser.type.repetition.Optional;
-import de.etgramlich.parser.type.repetition.Precedence;
 import de.etgramlich.parser.type.repetition.ZeroOrMore;
 import de.etgramlich.parser.type.text.TextElement;
 import de.etgramlich.util.exception.InvalidGraphException;
@@ -116,18 +115,15 @@ public final class GraphBuilder {
             addNodeInSequence(new SequenceNode(element.getName()));
         } else if (element instanceof AbstractRepetition) {
             AbstractRepetition repetition = (AbstractRepetition) element;
-            final Scope beforeOptionalLoop = lastAddedScope;
 
-            if (repetition instanceof Optional) {
-                processAlternatives(repetition.getAlternatives());
+            final Scope beforeOptionalLoop = lastAddedScope;
+            processAlternatives(repetition.getAlternatives());
+
+            if (repetition instanceof Optional || repetition instanceof ZeroOrMore) {
                 graph.addEdge(beforeOptionalLoop, lastAddedScope, new OptionalEdge(beforeOptionalLoop, lastAddedScope));
-            } else if (repetition instanceof ZeroOrMore) {
-                processAlternatives(repetition.getAlternatives());
-                graph.addEdge(lastAddedScope, beforeOptionalLoop, new RepetitionEdge(lastAddedScope, beforeOptionalLoop));
-            } else if (repetition instanceof Precedence) {
-                processAlternatives(repetition.getAlternatives());
-            } else {
-                throw new UnrecognizedElementException("Element is unrecognized subclass of AbstractRepetition: " + element.toString());
+                if (repetition instanceof ZeroOrMore) {
+                    graph.addEdge(lastAddedScope, beforeOptionalLoop, new RepetitionEdge(lastAddedScope, beforeOptionalLoop));
+                }
             }
         } else {
             throw new UnrecognizedElementException("Element not recognized: " + element.toString());
