@@ -82,6 +82,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
      */
     public List<Scope> getPredecessors(final Scope scope) {
         return incomingEdgesOf(scope).stream()
+                .filter(edge -> edge instanceof NodeEdge)
                 .map(ScopeEdge::getSource)
                 .collect(Collectors.toList());
     }

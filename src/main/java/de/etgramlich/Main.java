@@ -16,6 +16,8 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.apache.commons.cli.*;
 import org.apache.commons.lang3.StringUtils;
 import org.jgrapht.Graph;
+import org.jgrapht.nio.AttributeType;
+import org.jgrapht.nio.DefaultAttribute;
 import org.jgrapht.nio.dot.DOTExporter;
 
 import java.io.IOException;
@@ -24,6 +26,7 @@ import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
 
 public final class Main {
     private static final Options options = new Options();
@@ -96,6 +99,8 @@ public final class Main {
     private static void renderHrefGraph(Graph<Scope, ScopeEdge> hrefGraph) {
         final DOTExporter<Scope, ScopeEdge> exporter = new DOTExporter<>(Scope::getName);
         exporter.setEdgeIdProvider(scopeEdge -> "E_" + (scopeEdge instanceof NodeEdge ? ((NodeEdge) scopeEdge).getNode().getName() : scopeEdge.getClass().getName()));
+
+        exporter.setEdgeAttributeProvider(edge -> Map.of("name", new DefaultAttribute<>((edge instanceof NodeEdge ? ((NodeEdge) edge).getNode().getName() : edge.getClass().getName()), AttributeType.STRING)));
 
         final Writer writer = new StringWriter();
         exporter.exportGraph(hrefGraph, writer);

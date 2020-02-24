@@ -214,7 +214,7 @@ class GraphBuilderTest {
 
         assertEquals(2, graph.getSuccessors(secondScope).size());
         final Scope thirdScope = graph.getSuccessors(secondScope).get(0);
-        assertEquals(2, graph.getPredecessors(secondLastScope).size());
+        assertEquals(1, graph.getPredecessors(secondLastScope).size());
         final Scope thirdLastScope = graph.getPredecessors(secondLastScope).get(0);
 
         final CycleDetector<Scope, ScopeEdge> cycleDetector = new CycleDetector<>(graph);

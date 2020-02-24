@@ -62,9 +62,8 @@ public final class InterfaceBuilder {
         toVisitNext.add(graph.getEndScope());
 
         Scope currentScope = toVisitNext.getFirst();
-        Interface currentInterface;
         while (graph.getStartScope() != currentScope) {
-            currentInterface = fromScope(currentScope);
+            Interface currentInterface = fromScope(currentScope);
             if (!interfaces.containsAll(currentInterface.parents)) {
                 throw new NullPointerException("Not all parent interfaces found!");
             }
@@ -72,14 +71,12 @@ public final class InterfaceBuilder {
             interfaces.add(currentInterface.getName());
 
             toVisitNext.addAll(graph.getPredecessors(currentScope));
-            currentScope = toVisitNext.getFirst();
+            currentScope = toVisitNext.removeFirst();
         }
     }
 
     private Interface fromScope(final Scope scope) {
-        final Set<String> parents = getParents(scope);
-        final List<Method> methods = getMethods(scope);
-        return new Interface(scope.getName(), parents, methods);
+        return new Interface(scope.getName(), getParents(scope), getMethods(scope));
     }
 
     private Set<String> getParents(final Scope scope) {
@@ -137,8 +134,7 @@ public final class InterfaceBuilder {
         final ST st = stgroup.getInstanceOf(INTERFACE_NAME);
         st.add("package", targetPackage);
         st.add("interfaceName", iface.getName());
-
-        // ToDo add parent interfaces
+        st.add("parents", List.copyOf(iface.getParents()));
 
         // Add return type and method name to String List to add to StringTemplate
         final List<String> methodList = new ArrayList<>(iface.getMethods().size() * 2);
