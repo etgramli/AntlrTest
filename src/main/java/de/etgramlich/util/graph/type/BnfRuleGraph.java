@@ -108,8 +108,9 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
      * @return A scope, if no scope found a NPE is thrown.
      */
     public Scope getStartScope() {
-        final List<Scope> scopesWithoutIngoingEdges = copyWithoutBackwardEdges().vertexSet().stream()
-                .filter(o -> inDegreeOf(o) == 0)
+        BnfRuleGraph noBackEdgeGraph = copyWithoutBackwardEdges();
+        final List<Scope> scopesWithoutIngoingEdges = noBackEdgeGraph.vertexSet().stream()
+                .filter(o -> noBackEdgeGraph.inDegreeOf(o) == 0)
                 .collect(Collectors.toList());
         if (scopesWithoutIngoingEdges.size() != 1) {
             throw new InvalidGraphException(
@@ -124,8 +125,9 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
      * @return A scope, if no scope found a NPE is thrown.
      */
     public Scope getEndScope() {
-        final List<Scope> scopesWithoutOutgoingEdges = copyWithoutBackwardEdges().vertexSet().stream()
-                .filter(scope -> outDegreeOf(scope) == 0)
+        BnfRuleGraph noBackEdgeGraph = copyWithoutBackwardEdges();
+        final List<Scope> scopesWithoutOutgoingEdges = noBackEdgeGraph.vertexSet().stream()
+                .filter(scope -> noBackEdgeGraph.outDegreeOf(scope) == 0)
                 .collect(Collectors.toList());
         if (scopesWithoutOutgoingEdges.size() != 1) {
             throw new InvalidGraphException(

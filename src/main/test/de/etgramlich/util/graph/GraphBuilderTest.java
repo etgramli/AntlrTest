@@ -6,12 +6,14 @@ import de.etgramlich.parser.type.BnfRule;
 import de.etgramlich.parser.type.repetition.Optional;
 import de.etgramlich.parser.type.repetition.Precedence;
 import de.etgramlich.parser.type.repetition.ZeroOrMore;
+import de.etgramlich.parser.type.text.Keyword;
 import de.etgramlich.parser.type.text.NonTerminal;
 import de.etgramlich.parser.type.Sequence;
 import de.etgramlich.util.graph.type.BnfRuleGraph;
 import de.etgramlich.util.graph.type.Scope;
 import de.etgramlich.util.graph.type.ScopeEdge;
 import de.etgramlich.util.graph.type.node.SequenceNode;
+import org.antlr.v4.runtime.tree.TerminalNode;
 import org.jgrapht.alg.cycle.CycleDetector;
 import org.junit.jupiter.api.Test;
 
@@ -32,6 +34,33 @@ class GraphBuilderTest {
     private static final NonTerminal ID_5 = new NonTerminal("ID_5");
     private static final NonTerminal ID_6 = new NonTerminal("ID_6");
     private static final NonTerminal ID_7 = new NonTerminal("ID_7");
+
+    @Test
+    void graphBuilder_oneRule_joi() {
+        final Bnf alternativesOneNodeEach = new Bnf(List.of(
+                START_RULE,
+                new BnfRule(new NonTerminal("component"),
+                        new Alternatives(List.of(
+                                new Sequence(List.of(
+                                        new Precedence(new Alternatives(List.of(
+                                                new Sequence(List.of(new Keyword("component"))),
+                                                new Sequence(List.of(new Keyword("singleton")))))),
+                                        new NonTerminal("componentName"),
+                                        new NonTerminal("componentInterface"),
+                                        new ZeroOrMore(new Alternatives(List.of(new Sequence(List.of(new NonTerminal("componentInterface")))))),
+                                        new NonTerminal("componentMethod"),
+                                        new ZeroOrMore(new Alternatives(List.of(new Sequence(List.of(new NonTerminal("componentMethod")))))),
+                                        new ZeroOrMore(new Alternatives(List.of(new Sequence(List.of(new NonTerminal("componentField"))))))
+                                ))
+                        )))));
+        final GraphBuilder builder = new GraphBuilder(alternativesOneNodeEach);
+        final BnfRuleGraph graph = builder.getGraph();
+
+        assertTrue(graph.isConsistent());
+        assertEquals(7, graph.length());
+        assertEquals(8, graph.vertexSet().size());
+        assertEquals(11, graph.edgeSet().size());
+    }
 
     @Test
     void graphBuilder_oneRule_loopInAlternative() {
