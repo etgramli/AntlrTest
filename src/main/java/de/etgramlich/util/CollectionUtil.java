@@ -2,7 +2,6 @@ package de.etgramlich.util;
 
 import de.etgramlich.util.graph.type.node.Node;
 import de.etgramlich.util.graph.type.node.SequenceNode;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,7 +31,7 @@ public final class CollectionUtil {
      * @param node A SequenceNode, must not be null.
      * @return A non-empty, unmodifiable List of SequenceNodes.
      */
-    public static List<Node> toList(@NotNull final SequenceNode node) {
+    public static List<Node> toList(final SequenceNode node) {
         List<Node> nodeList = new ArrayList<>();
         nodeList.add(node);
 

@@ -5,7 +5,6 @@ import de.etgramlich.parser.gen.bnf.BnfParser;
 import de.etgramlich.parser.type.text.Keyword;
 import de.etgramlich.parser.type.text.NonTerminal;
 import de.etgramlich.parser.type.text.Type;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Listener that queries the IDs (ruleid and id) and text rules of the ANTLR4 BNF grammar.
@@ -29,7 +28,7 @@ public final class NonTerminalListener extends BnfBaseListener {
     }
 
     @Override
-    public void enterKeyword(@NotNull BnfParser.KeywordContext ctx) {
+    public void enterKeyword(BnfParser.KeywordContext ctx) {
         keyword = new Keyword(ctx.getText().trim());
     }
 
@@ -39,7 +38,7 @@ public final class NonTerminalListener extends BnfBaseListener {
     }
 
     @Override
-    public void enterType(@NotNull BnfParser.TypeContext ctx) {
+    public void enterType(BnfParser.TypeContext ctx) {
         type = new Type(ctx.getText().trim());
     }
 
@@ -49,12 +48,11 @@ public final class NonTerminalListener extends BnfBaseListener {
     }
 
     @Override
-    public void enterNt(@NotNull BnfParser.NtContext ctx) {
+    public void enterNt(BnfParser.NtContext ctx) {
         id = new NonTerminal(stripLTGT(ctx.getText()));
     }
 
-    @NotNull
-    public static String stripLTGT(@NotNull final String string) {
+    public static String stripLTGT(final String string) {
         final String trimmed = string.trim();
         final String noLTGT = trimmed.substring(1, trimmed.length()-1);
         return noLTGT.trim();

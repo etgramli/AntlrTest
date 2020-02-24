@@ -2,7 +2,6 @@ package de.etgramlich.util.graph.type;
 
 import de.etgramlich.util.exception.InvalidGraphException;
 import de.etgramlich.util.graph.type.node.Node;
-import org.jetbrains.annotations.NotNull;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DirectedPseudograph;
 
@@ -81,7 +80,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
      * @param scope Scope to search its predecessors.
      * @return List of nodes.
      */
-    public List<Scope> getPredecessors(@NotNull final Scope scope) {
+    public List<Scope> getPredecessors(final Scope scope) {
         return incomingEdgesOf(scope).stream()
                 .map(ScopeEdge::getSource)
                 .collect(Collectors.toList());

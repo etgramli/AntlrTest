@@ -1,11 +1,9 @@
 package de.etgramlich.util.graph.type;
 
-import org.jetbrains.annotations.NotNull;
-
 public final class Scope {
     private final String name;
 
-    public Scope(@NotNull final String name) {
+    public Scope(final String name) {
         this.name = name;
     }
 

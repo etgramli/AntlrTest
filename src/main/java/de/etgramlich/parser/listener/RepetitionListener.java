@@ -6,7 +6,6 @@ import de.etgramlich.parser.type.repetition.AbstractRepetition;
 import de.etgramlich.parser.type.repetition.Optional;
 import de.etgramlich.parser.type.repetition.Precedence;
 import de.etgramlich.parser.type.repetition.ZeroOrMore;
-import org.jetbrains.annotations.NotNull;
 
 public final class RepetitionListener extends BnfBaseListener {
     private AbstractRepetition repetition;
@@ -16,7 +15,7 @@ public final class RepetitionListener extends BnfBaseListener {
     }
 
     @Override
-    public void enterZeroormore(@NotNull BnfParser.ZeroormoreContext ctx) {
+    public void enterZeroormore(BnfParser.ZeroormoreContext ctx) {
         AlternativeListener listener = new AlternativeListener();
         listener.enterAlternatives(ctx.alternatives());
         repetition = new ZeroOrMore(listener.getAlternatives());
@@ -28,7 +27,7 @@ public final class RepetitionListener extends BnfBaseListener {
     }
 
     @Override
-    public void enterOptional(@NotNull BnfParser.OptionalContext ctx) {
+    public void enterOptional(BnfParser.OptionalContext ctx) {
         AlternativeListener listener = new AlternativeListener();
         listener.enterAlternatives(ctx.alternatives());
         repetition = new Optional(listener.getAlternatives());

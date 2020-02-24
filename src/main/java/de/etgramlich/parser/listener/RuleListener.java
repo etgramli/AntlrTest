@@ -6,13 +6,12 @@ import de.etgramlich.parser.type.Alternatives;
 import de.etgramlich.parser.type.BnfRule;
 import de.etgramlich.parser.type.text.NonTerminal;
 import de.etgramlich.util.SymbolTable;
-import org.jetbrains.annotations.NotNull;
 
 public final class RuleListener extends BnfBaseListener {
     private BnfRule bnfRule;
 
     @Override
-    public void enterBnfrule(@NotNull BnfParser.BnfruleContext ctx) {
+    public void enterBnfrule(BnfParser.BnfruleContext ctx) {
         // LHS
         NonTerminalListener idListener = new NonTerminalListener();
         idListener.enterNt(ctx.lhs().nt());

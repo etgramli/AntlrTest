@@ -10,8 +10,8 @@ import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupFile;
 
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -49,7 +49,7 @@ public final class InterfaceBuilder {
 
     public void saveInterfaces(final BnfRuleGraph graph) {
         this.graph = graph;
-        final Set<Interface> interfaces = new HashSet<>();
+        final Set<String> interfaces = new HashSet<>();
 
         Deque<Scope> toVisitNext = new ArrayDeque<>(graph.vertexSet().size());
         toVisitNext.add(graph.getEndScope());
@@ -62,7 +62,7 @@ public final class InterfaceBuilder {
                 throw new NullPointerException("Not all parent interfaces found!");
             }
             saveInterface(currentInterface);
-            interfaces.add(currentInterface);
+            interfaces.add(currentInterface.getName());
 
             toVisitNext.addAll(graph.getPredecessors(currentScope));
             currentScope = toVisitNext.getFirst();
@@ -142,9 +142,13 @@ public final class InterfaceBuilder {
         st.add("methods", methodList);
 
         final String filePath = targetDirectory + packageDirectory + iface.getName() + DEFAULT_FILE_ENDING;
-        try (PrintWriter out = new PrintWriter(filePath)) {
+        try (OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(filePath), StandardCharsets.UTF_8)) {
             out.write(st.render());
         } catch (FileNotFoundException e) {
+            System.err.println("File not found!");
+            e.printStackTrace();
+        } catch (IOException e) {
+            System.err.println("Could not write file!");
             e.printStackTrace();
         }
     }

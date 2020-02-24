@@ -5,7 +5,6 @@ import de.etgramlich.parser.gen.bnf.BnfParser;
 import de.etgramlich.parser.type.Alternatives;
 import de.etgramlich.parser.type.Element;
 import de.etgramlich.parser.type.Sequence;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +18,7 @@ public final class AlternativeListener extends BnfBaseListener {
     }
 
     @Override
-    public void enterAlternatives(@NotNull BnfParser.AlternativesContext ctx) {
+    public void enterAlternatives(BnfParser.AlternativesContext ctx) {
         for (BnfParser.SequenceContext context : ctx.sequence()) {
             enterSequence(context);
             alternatives.add(sequence);
@@ -27,7 +26,7 @@ public final class AlternativeListener extends BnfBaseListener {
     }
 
     @Override
-    public void enterSequence(@NotNull BnfParser.SequenceContext ctx) {
+    public void enterSequence(BnfParser.SequenceContext ctx) {
         List<Element> elements = new ArrayList<>(ctx.getChildCount());
         ElementListener listener = new ElementListener();
 
@@ -39,7 +38,7 @@ public final class AlternativeListener extends BnfBaseListener {
     }
 
     @Override
-    public void exitSequence(@NotNull BnfParser.SequenceContext ctx) {
+    public void exitSequence(BnfParser.SequenceContext ctx) {
         super.exitSequence(ctx);
     }
 

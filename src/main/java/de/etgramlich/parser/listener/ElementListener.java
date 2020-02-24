@@ -3,7 +3,6 @@ package de.etgramlich.parser.listener;
 import de.etgramlich.parser.gen.bnf.BnfBaseListener;
 import de.etgramlich.parser.gen.bnf.BnfParser;
 import de.etgramlich.parser.type.Element;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Parses an element of ANTL4's bnf grammar.
@@ -13,7 +12,7 @@ public final class ElementListener extends BnfBaseListener {
     private Element element;
 
     @Override
-    public void enterElement(@NotNull BnfParser.ElementContext ctx)  {
+    public void enterElement(BnfParser.ElementContext ctx)  {
         if (ctx.nt() != null || ctx.keyword() != null || ctx.type() != null) {
             NonTerminalListener listener = new NonTerminalListener();
             if (ctx.nt() != null) {

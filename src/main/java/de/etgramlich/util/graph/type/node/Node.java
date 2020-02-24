@@ -1,7 +1,6 @@
 package de.etgramlich.util.graph.type.node;
 
 import de.etgramlich.util.StringUtil;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -33,7 +32,8 @@ public abstract class Node {
         return successor;
     }
 
-    public void setSuccessor(@NotNull final Node successor) {
+    // ToDo remove maybe
+    public void setSuccessor(final Node successor) {
         this.successor = successor;
     }
 
