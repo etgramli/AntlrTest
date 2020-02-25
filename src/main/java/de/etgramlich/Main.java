@@ -24,9 +24,9 @@ import org.jgrapht.nio.DefaultAttribute;
 import org.jgrapht.nio.dot.DOTExporter;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
@@ -78,21 +78,18 @@ public final class Main {
             return;
         }
 
-        // Create Lexer and Parser
-        BnfParser parser = new BnfParser(new CommonTokenStream(new BnfLexer(CharStreams.fromString(grammar))));
+        final BnfParser parser = new BnfParser(new CommonTokenStream(new BnfLexer(CharStreams.fromString(grammar))));
 
         // Parse given Grammar and get tree of types
-        BnfListener listener = new BnfListener();
+        final BnfListener listener = new BnfListener();
         listener.enterBnf(parser.bnf());
-        Bnf bnf = listener.getBnf();
+        final Bnf bnf = listener.getBnf();
 
-        // Convert tree of types to graph of Scopes and Nodes
-        GraphBuilder gb = new GraphBuilder(bnf);
-        BnfRuleGraph graph = gb.getGraph();
-
-        renderHrefGraph(graph);
+        final BnfRuleGraph graph = new GraphBuilder(bnf).getGraph();
 
         try {
+            renderBnfRuleGraph(graph, targetDirectory + File.separator + "graph.gv");
+
             InterfaceBuilder builder = new InterfaceBuilder(targetDirectory, targetPackage);
             builder.saveInterfaces(graph);
         } catch (IOException e) {
@@ -110,7 +107,8 @@ public final class Main {
         return String.join(System.lineSeparator(), noDuplicateRules);
     }
 
-    private static void renderHrefGraph(final Graph<Scope, ScopeEdge> hrefGraph) {
+    private static void renderBnfRuleGraph(final Graph<Scope, ScopeEdge> bnfRuleGraph, final String path)
+            throws IOException {
         final DOTExporter<Scope, ScopeEdge> exporter = new DOTExporter<>(Scope::getName);
         exporter.setEdgeIdProvider(
                 scopeEdge -> "E_" + (scopeEdge instanceof NodeEdge ? ((NodeEdge) scopeEdge).getNode().getName()
@@ -120,8 +118,8 @@ public final class Main {
                         (edge instanceof NodeEdge ? ((NodeEdge) edge).getNode().getName()
                                                   : edge.getClass().getName()), AttributeType.STRING)));
 
-        final Writer writer = new StringWriter();
-        exporter.exportGraph(hrefGraph, writer);
-        System.out.println(writer.toString());
+        try (FileWriter fileWriter = new FileWriter(path, StandardCharsets.UTF_8)) {
+            exporter.exportGraph(bnfRuleGraph, fileWriter);
+        }
     }
 }
