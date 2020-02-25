@@ -121,13 +121,11 @@ public final class GraphBuilder {
 
         // Remove old target vertex and edge, re-add edge with updated vertex
         for (ScopeEdge edge : ingoingEdges) {
-            edge.setTarget(newScope);
             graph.addEdge(edge.getSource(), newScope, edge);
         }
 
         // Remove old source vertex and edge, re-add edge with updated vertex
         for (ScopeEdge edge : outgoingEdges) {
-            edge.setSource(newScope);
             graph.addEdge(newScope, edge.getTarget(), edge);
         }
     }
@@ -155,9 +153,9 @@ public final class GraphBuilder {
             processAlternatives(repetition.getAlternatives());
 
             if (repetition instanceof Optional || repetition instanceof ZeroOrMore) {
-                graph.addEdge(beforeOptionalLoop, lastAddedScope, new OptionalEdge(beforeOptionalLoop, lastAddedScope));
+                graph.addEdge(beforeOptionalLoop, lastAddedScope, new OptionalEdge());
                 if (repetition instanceof ZeroOrMore) {
-                    graph.addEdge(lastAddedScope, beforeOptionalLoop, new RepetitionEdge(lastAddedScope, beforeOptionalLoop));
+                    graph.addEdge(lastAddedScope, beforeOptionalLoop, new RepetitionEdge());
                 }
             }
         } else {
@@ -182,7 +180,7 @@ public final class GraphBuilder {
         final Scope newScope = getNextScope();
 
         graph.addVertex(newScope);
-        graph.addEdge(lastAddedScope, newScope, new NodeEdge(lastAddedScope, newScope, node));
+        graph.addEdge(lastAddedScope, newScope, new NodeEdge(node));
         lastAddedScope = newScope;
     }
 

@@ -8,12 +8,9 @@ public final class NodeEdge extends ScopeEdge {
 
     /**
      * Creates a node edge from source to target containing the given node.
-     * @param source Scope, must not be null.
-     * @param target Scope, must not be null.
      * @param node Node, must not be null.
      */
-    public NodeEdge(final Scope source, final Scope target, final Node node) {
-        super(source, target);
+    public NodeEdge(final Node node) {
         if (node == null) {
             throw new IllegalArgumentException("Node must not be null!");
         }
