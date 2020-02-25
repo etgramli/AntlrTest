@@ -2,7 +2,9 @@ package de.etgramlich.graph.type;
 
 import org.apache.commons.lang3.StringUtils;
 
-public final class Node {
+import java.io.Serializable;
+
+public final class Node implements Serializable {
     /**
      * Identifier of the node.
      */
