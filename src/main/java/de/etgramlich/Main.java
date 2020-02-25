@@ -13,13 +13,17 @@ import de.etgramlich.graph.type.Scope;
 import de.etgramlich.graph.type.ScopeEdge;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.apache.commons.cli.*;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.ParseException;
 import org.apache.commons.lang3.StringUtils;
 import org.jgrapht.Graph;
 import org.jgrapht.nio.AttributeType;
 import org.jgrapht.nio.DefaultAttribute;
 import org.jgrapht.nio.dot.DOTExporter;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -29,19 +33,29 @@ import java.util.List;
 import java.util.Map;
 
 public final class Main {
-    private static final Options options = new Options();
+    private Main() { }
+
+    /**
+     * Stores command line options.
+     */
+    private static final Options OPTIONS = new Options();
     static {
-        options.addOption("t", true, "Target directory for generated sources");
-        options.addOption("p", true, "Target package");
-        options.addOption("g", true, "Grammar file path");
+        OPTIONS.addOption("t", true, "Target directory for generated sources");
+        OPTIONS.addOption("p", true, "Target package");
+        OPTIONS.addOption("g", true, "Grammar file path");
     }
 
+    /**
+     * Reads grammar from file and outputs java interfaces in the corresponding package directory in the provided
+     * target directory.
+     * @param args Command line arguments to be parsed. Should not be empty.
+     */
     public static void main(final String[] args) {
         final String grammar;
-        String targetDirectory = "./";
+        String targetDirectory = "." + File.separator;
         String targetPackage = StringUtils.EMPTY;
         try {
-            CommandLine cmd = new DefaultParser().parse(options, args);
+            CommandLine cmd = new DefaultParser().parse(OPTIONS, args);
             if (cmd.hasOption("t")) {
                 targetDirectory = cmd.getOptionValue("t");
             }
@@ -93,14 +107,18 @@ public final class Main {
         );
         final List<String> allRules = grammar.subList(beginIndex + 1, grammar.size());
         final List<String> noDuplicateRules = StringUtil.removeDuplicates(StringUtil.stripBlankLines(allRules));
-        return String.join("\n", noDuplicateRules);
+        return String.join(System.lineSeparator(), noDuplicateRules);
     }
 
-    private static void renderHrefGraph(Graph<Scope, ScopeEdge> hrefGraph) {
+    private static void renderHrefGraph(final Graph<Scope, ScopeEdge> hrefGraph) {
         final DOTExporter<Scope, ScopeEdge> exporter = new DOTExporter<>(Scope::getName);
-        exporter.setEdgeIdProvider(scopeEdge -> "E_" + (scopeEdge instanceof NodeEdge ? ((NodeEdge) scopeEdge).getNode().getName() : scopeEdge.getClass().getName()));
-
-        exporter.setEdgeAttributeProvider(edge -> Map.of("name", new DefaultAttribute<>((edge instanceof NodeEdge ? ((NodeEdge) edge).getNode().getName() : edge.getClass().getName()), AttributeType.STRING)));
+        exporter.setEdgeIdProvider(
+                scopeEdge -> "E_" + (scopeEdge instanceof NodeEdge ? ((NodeEdge) scopeEdge).getNode().getName()
+                                                                    : scopeEdge.getClass().getName()));
+        exporter.setEdgeAttributeProvider(
+                edge -> Map.of("name", new DefaultAttribute<>(
+                        (edge instanceof NodeEdge ? ((NodeEdge) edge).getNode().getName()
+                                                  : edge.getClass().getName()), AttributeType.STRING)));
 
         final Writer writer = new StringWriter();
         exporter.exportGraph(hrefGraph, writer);

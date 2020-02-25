@@ -1,6 +1,7 @@
 package de.etgramlich.graph.type;
 
 import de.etgramlich.util.exception.InvalidGraphException;
+import org.jgrapht.GraphPath;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DirectedPseudograph;
 
@@ -66,11 +67,11 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
                 return false;
             }
             // There must exist a parallel connection
-            if (edge instanceof OptionalEdge && !connectedByNodes(edge.getSource(), edge.getTarget())) {
+            if (edge instanceof OptionalEdge && notConnectedByNodeEdges(edge.getSource(), edge.getTarget())) {
                 return false;
             }
             // There must exist a parallel connection in reversed direction
-            if (edge instanceof RepetitionEdge && !connectedByNodes(edge.getTarget(), edge.getSource())) {
+            if (edge instanceof RepetitionEdge && notConnectedByNodeEdges(edge.getTarget(), edge.getSource())) {
                 return false;
             }
         }
@@ -215,8 +216,10 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
      * @return True if target node closer to end as source node.
      */
     public boolean isForwardEdge(final ScopeEdge edge) {
-        final int lengthSource = DijkstraShortestPath.findPathBetween(this, getStartScope(), edge.getSource()).getLength();
-        final int lengthTarget = DijkstraShortestPath.findPathBetween(this, getStartScope(), edge.getTarget()).getLength();
+        final int lengthSource =
+                DijkstraShortestPath.findPathBetween(this, getStartScope(), edge.getSource()).getLength();
+        final int lengthTarget =
+                DijkstraShortestPath.findPathBetween(this, getStartScope(), edge.getTarget()).getLength();
         return lengthTarget > lengthSource;
     }
 
@@ -226,8 +229,10 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
      * @return True if the target node is closer to the start node than the source, else false.
      */
     public boolean isBackwardEdge(final ScopeEdge edge) {
-        final int lengthSource = DijkstraShortestPath.findPathBetween(this, getStartScope(), edge.getSource()).getLength();
-        final int lengthTarget = DijkstraShortestPath.findPathBetween(this, getStartScope(), edge.getTarget()).getLength();
+        final int lengthSource =
+                DijkstraShortestPath.findPathBetween(this, getStartScope(), edge.getSource()).getLength();
+        final int lengthTarget =
+                DijkstraShortestPath.findPathBetween(this, getStartScope(), edge.getTarget()).getLength();
         return lengthTarget < lengthSource;
     }
 
@@ -240,10 +245,9 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
         return noBackEdges;
     }
 
-    private boolean connectedByNodes(final Scope start, final Scope end) {
-        if (start == end) {
-            return true;
-        }
-        return DijkstraShortestPath.findPathBetween(copyWithoutBackwardEdges(), start, end).getLength() != 0;
+    private boolean notConnectedByNodeEdges(final Scope start, final Scope end) {
+        final GraphPath<Scope, ScopeEdge> shortestPath =
+                DijkstraShortestPath.findPathBetween(copyWithoutBackwardEdges(), start, end);
+        return shortestPath == null;
     }
 }
