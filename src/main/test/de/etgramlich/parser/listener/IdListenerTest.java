@@ -1,4 +1,4 @@
-package de.etgramlich.parser.listener.bnf;
+package de.etgramlich.parser.listener;
 
 import de.etgramlich.parser.gen.bnf.BnfParser;
 import de.etgramlich.parser.listener.NonTerminalListener;
