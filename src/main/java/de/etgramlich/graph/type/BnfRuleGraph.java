@@ -123,6 +123,18 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
     }
 
     /**
+     * Returns the outgoing NodeEdges of the provided scope.
+     * @param scope Scope, must not be null and exist in the graph.
+     * @return Set of NodeEdges, may be empty.
+     */
+    public Set<NodeEdge> outGoingNodeEdges(final Scope scope) {
+        return outgoingEdgesOf(scope).stream()
+                .filter(scopeEdge -> scopeEdge instanceof NodeEdge)
+                .map(scopeEdge -> ((NodeEdge) scopeEdge))
+                .collect(Collectors.toUnmodifiableSet());
+    }
+
+    /**
      * Returns a list of ingoing nodes that are connected by a NodeEdge to the given scope.
      * @param scope Scope, must not be null.
      * @return List of Nodes.

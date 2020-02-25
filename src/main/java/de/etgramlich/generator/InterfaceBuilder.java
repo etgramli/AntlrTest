@@ -5,6 +5,7 @@ import de.etgramlich.graph.type.BnfRuleGraph;
 import de.etgramlich.graph.type.Scope;
 import de.etgramlich.graph.type.ScopeEdge;
 import de.etgramlich.graph.type.Node;
+import de.etgramlich.graph.type.NodeEdge;
 import org.apache.commons.lang3.StringUtils;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
@@ -34,6 +35,9 @@ public final class InterfaceBuilder {
     private static final String INTERFACE_FILENAME =
             "src" + File.separator + "main" + File.separator + "resources" + File.separator + "ebnf.stg";
 
+    /**
+     * Name of the interface template.
+     */
     private static final String INTERFACE_NAME = "templateInterface";
 
     /**
@@ -96,6 +100,7 @@ public final class InterfaceBuilder {
         this.graph = graph;
         final Set<String> interfaces = new HashSet<>();
 
+        final Set<Scope> alreadyVisited = new HashSet<>(graph.vertexSet().size());
         Deque<Scope> toVisitNext = new ArrayDeque<>(graph.vertexSet().size());
         toVisitNext.add(graph.getEndScope());
 
@@ -105,10 +110,13 @@ public final class InterfaceBuilder {
             if (!interfaces.containsAll(currentInterface.getParents())) {
                 throw new NullPointerException("Not all parent interfaces found!");
             }
-            saveInterface(currentInterface);
+            saveInterface(currentInterface.getName(), renderInterface(currentInterface));
             interfaces.add(currentInterface.getName());
+            alreadyVisited.add(currentScope);
 
-            toVisitNext.addAll(graph.getPredecessors(currentScope));
+            toVisitNext.addAll(graph.getPredecessors(currentScope).stream()
+                    .filter(scope -> !alreadyVisited.contains(scope))
+                    .collect(Collectors.toUnmodifiableSet()));
             currentScope = toVisitNext.removeFirst();
         }
     }
@@ -133,16 +141,16 @@ public final class InterfaceBuilder {
      * @return List of Methods, not null, may be empty.
      */
     private List<Method> getMethods(final Scope scope) {
-        final List<Node> outgoingNodes = graph.getOutGoingNodes(scope);
+        final Set<NodeEdge> outgoingNodes = graph.outGoingNodeEdges(scope);
         final List<Method> methods = new ArrayList<>(outgoingNodes.size());
 
         String methodName;
         String returnType;
         List<Argument> arguments;
-        for (Node node : outgoingNodes) {
-            methodName = node.getName();
-            returnType = StringUtils.EMPTY; // ToDo
-            arguments = getArguments(node);
+        for (NodeEdge edge : outgoingNodes) {
+            methodName = edge.getNode().getName();
+            returnType = edge.getTarget().getName();
+            arguments = getArguments(edge.getNode());
 
             methods.add(new Method(returnType, methodName, arguments));
         }
@@ -159,8 +167,9 @@ public final class InterfaceBuilder {
      * Saves a Java Interface with the given name and Methods.
      *
      * @param iface Interface to be saved, must not be null.
+     * @return Interface representation as String.
      */
-    private void saveInterface(final Interface iface) {
+    private String renderInterface(final Interface iface) {
         if (StringUtils.isBlank(iface.getName())) {
             throw new IllegalArgumentException("Interface name must not be blank!");
         }
@@ -181,9 +190,14 @@ public final class InterfaceBuilder {
         }
         st.add("methods", methodList);
 
-        String filePath = targetDirectory + File.separator + packageDirectory + iface.getName() + DEFAULT_FILE_ENDING;
-        try (OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(filePath), StandardCharsets.UTF_8)) {
-            out.write(st.render());
+        return st.render();
+    }
+
+    private void saveInterface(final String interfaceName, final String javaInterface) {
+        final String fullPath =
+                targetDirectory + File.separator + packageDirectory + File.separator + interfaceName + DEFAULT_FILE_ENDING;
+        try (OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(fullPath), StandardCharsets.UTF_8)) {
+            out.write(javaInterface);
         } catch (FileNotFoundException e) {
             System.err.println("File not found!");
             e.printStackTrace();
