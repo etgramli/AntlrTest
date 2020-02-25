@@ -9,10 +9,21 @@ import de.etgramlich.parser.type.Element;
  * Currently only allows text and id options.
  */
 public final class ElementListener extends BnfBaseListener {
+    /**
+     * BNF element.
+     */
     private Element element;
 
+    /**
+     * Queries the parsed bnf element. Must be called after enterElement()!
+     * @return New Element object after call to enterElement(), else null.
+     */
+    public Element getElement() {
+        return element;
+    }
+
     @Override
-    public void enterElement(BnfParser.ElementContext ctx)  {
+    public void enterElement(final BnfParser.ElementContext ctx)  {
         if (ctx.nt() != null || ctx.keyword() != null || ctx.type() != null) {
             NonTerminalListener listener = new NonTerminalListener();
             if (ctx.nt() != null) {
@@ -43,11 +54,7 @@ public final class ElementListener extends BnfBaseListener {
     }
 
     @Override
-    public void exitElement(BnfParser.ElementContext ctx) {
+    public void exitElement(final BnfParser.ElementContext ctx) {
         super.exitElement(ctx);
-    }
-
-    public Element getElement() {
-        return element;
     }
 }

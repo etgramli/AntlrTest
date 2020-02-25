@@ -10,15 +10,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class AlternativeListener extends BnfBaseListener {
+    /**
+     * Current (ebnf) sequence being processed.
+     */
     private Sequence sequence;
+
+    /**
+     * List of Sequence of that the resulting Alternatives is composed.
+     */
     private final List<Sequence> alternatives = new ArrayList<>();
 
+    /**
+     * Returns a newly created Alternatives of parsed sequences. Must be called after enterAlternatives()!
+     * @return New Alternatives object.
+     */
     public Alternatives getAlternatives() {
         return new Alternatives(alternatives);
     }
 
     @Override
-    public void enterAlternatives(BnfParser.AlternativesContext ctx) {
+    public void enterAlternatives(final BnfParser.AlternativesContext ctx) {
         for (BnfParser.SequenceContext context : ctx.sequence()) {
             enterSequence(context);
             alternatives.add(sequence);
@@ -26,7 +37,7 @@ public final class AlternativeListener extends BnfBaseListener {
     }
 
     @Override
-    public void enterSequence(BnfParser.SequenceContext ctx) {
+    public void enterSequence(final BnfParser.SequenceContext ctx) {
         List<Element> elements = new ArrayList<>(ctx.getChildCount());
         ElementListener listener = new ElementListener();
 
@@ -38,12 +49,12 @@ public final class AlternativeListener extends BnfBaseListener {
     }
 
     @Override
-    public void exitSequence(BnfParser.SequenceContext ctx) {
+    public void exitSequence(final BnfParser.SequenceContext ctx) {
         super.exitSequence(ctx);
     }
 
     @Override
-    public void exitAlternatives(BnfParser.AlternativesContext ctx) {
+    public void exitAlternatives(final BnfParser.AlternativesContext ctx) {
         super.exitAlternatives(ctx);
     }
 }

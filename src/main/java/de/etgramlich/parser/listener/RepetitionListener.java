@@ -8,40 +8,52 @@ import de.etgramlich.parser.type.repetition.Precedence;
 import de.etgramlich.parser.type.repetition.ZeroOrMore;
 
 public final class RepetitionListener extends BnfBaseListener {
+    /**
+     * Bnf repetition element.
+     */
     private AbstractRepetition repetition;
 
+    /**
+     * Queries the repetition element. Must be called after enterZeroOrMore(), enterOptional() or enterPrecedence()!
+     * @return A subtype object of AbstractRepetition after call, else null.
+     */
     public AbstractRepetition getRepetition() {
         return repetition;
     }
 
     @Override
-    public void enterZeroormore(BnfParser.ZeroormoreContext ctx) {
+    public void enterZeroormore(final BnfParser.ZeroormoreContext ctx) {
         AlternativeListener listener = new AlternativeListener();
         listener.enterAlternatives(ctx.alternatives());
         repetition = new ZeroOrMore(listener.getAlternatives());
     }
 
     @Override
-    public void exitZeroormore(BnfParser.ZeroormoreContext ctx) {
+    public void exitZeroormore(final BnfParser.ZeroormoreContext ctx) {
         super.exitZeroormore(ctx);
     }
 
     @Override
-    public void enterOptional(BnfParser.OptionalContext ctx) {
+    public void enterOptional(final BnfParser.OptionalContext ctx) {
         AlternativeListener listener = new AlternativeListener();
         listener.enterAlternatives(ctx.alternatives());
         repetition = new Optional(listener.getAlternatives());
     }
 
     @Override
-    public void exitOptional(BnfParser.OptionalContext ctx) {
+    public void exitOptional(final BnfParser.OptionalContext ctx) {
         super.exitOptional(ctx);
     }
 
     @Override
-    public void enterPrecedence(BnfParser.PrecedenceContext ctx) {
+    public void enterPrecedence(final BnfParser.PrecedenceContext ctx) {
         AlternativeListener listener = new AlternativeListener();
         listener.enterAlternatives(ctx.alternatives());
         repetition = new Precedence(listener.getAlternatives());
+    }
+
+    @Override
+    public void exitPrecedence(final BnfParser.PrecedenceContext ctx) {
+        super.exitPrecedence(ctx);
     }
 }

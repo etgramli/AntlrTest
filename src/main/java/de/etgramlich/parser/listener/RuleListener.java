@@ -8,16 +8,25 @@ import de.etgramlich.parser.type.text.NonTerminal;
 import de.etgramlich.util.SymbolTable;
 
 public final class RuleListener extends BnfBaseListener {
+    /**
+     * Bnf rule element.
+     */
     private BnfRule bnfRule;
 
+    /**
+     * Returns the parse BNF rule element. Must be called after enterBnfRule()!
+     * @return BnfRule object after calling enterBnfRule, else null.
+     */
+    public BnfRule getBnfRule() {
+        return bnfRule;
+    }
+
     @Override
-    public void enterBnfrule(BnfParser.BnfruleContext ctx) {
-        // LHS
+    public void enterBnfrule(final BnfParser.BnfruleContext ctx) {
         NonTerminalListener idListener = new NonTerminalListener();
         idListener.enterNt(ctx.lhs().nt());
         NonTerminal lhs = idListener.getNonTerminal();
 
-        // RHS
         AlternativeListener alternativesListener = new AlternativeListener();
         alternativesListener.enterAlternatives(ctx.rhs().alternatives());
         Alternatives rhs = alternativesListener.getAlternatives();
@@ -30,11 +39,7 @@ public final class RuleListener extends BnfBaseListener {
     }
 
     @Override
-    public void exitBnfrule(BnfParser.BnfruleContext ctx) {
+    public void exitBnfrule(final BnfParser.BnfruleContext ctx) {
         super.exitBnfrule(ctx);
-    }
-
-    public BnfRule getBnfRule() {
-        return bnfRule;
     }
 }
