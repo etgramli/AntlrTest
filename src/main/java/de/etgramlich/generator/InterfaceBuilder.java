@@ -1,4 +1,4 @@
-package de.etgramlich.graph;
+package de.etgramlich.generator;
 
 import de.etgramlich.util.StringUtil;
 import de.etgramlich.graph.type.BnfRuleGraph;
@@ -10,10 +10,11 @@ import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.FileOutputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -23,23 +24,54 @@ import java.util.List;
 import java.util.Set;
 import java.util.Deque;
 import java.util.ArrayDeque;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
 public final class InterfaceBuilder {
-    private static final String INTERFACE_FILENAME = "src/main/resources/ebnf.stg";
+    /**
+     * File path to the interface template.
+     */
+    private static final String INTERFACE_FILENAME =
+            "src" + File.separator + "main" + File.separator + "resources" + File.separator + "ebnf.stg";
+
     private static final String INTERFACE_NAME = "templateInterface";
+
+    /**
+     * Java source code file ending.
+     */
     private static final String DEFAULT_FILE_ENDING = ".java";
+
+    /**
+     * Loaded template file to be reused.
+     */
     private static final STGroup ST_GROUP = new STGroupFile(INTERFACE_FILENAME);
 
+    /**
+     * Target directory for all packages and interfaces.
+     */
     private final String targetDirectory;
+
+    /**
+     * Package to be used in interfaces.
+     */
     private final String targetPackage;
+
+    /**
+     * Directory corresponding to the target package.
+     */
     private final String packageDirectory;
 
+    /**
+     * Graph to build interfaces from. Private methods need reference.
+     */
     private BnfRuleGraph graph;
 
-
+    /**
+     * Creates InterfaceBuilder with target (root) directory and package of the interfaces.
+     * @param targetDirectory Target directory to contain all interfaces.
+     * @param targetPackage Package of the interfaces (a subfolder will be created in target directory).
+     * @throws IOException Throws exception if the target directory can not be created.
+     */
     public InterfaceBuilder(final String targetDirectory, final String targetPackage) throws IOException {
         if (StringUtils.isBlank(targetPackage)) {
             throw new IllegalArgumentException("Target package must not be blank!");
@@ -49,12 +81,18 @@ public final class InterfaceBuilder {
         }
         this.targetDirectory = targetDirectory;
         this.targetPackage = targetPackage;
-        this.packageDirectory = targetPackage.replaceAll("\\.", "/");
+        this.packageDirectory = targetPackage.replaceAll("\\.", File.separator);
 
-        Files.createDirectories(Paths.get(targetDirectory + '/' + packageDirectory));
+        Files.createDirectories(Paths.get(targetDirectory + File.separator + packageDirectory));
     }
 
+    /**
+     * Save all interfaces for the scopes in the graph.
+     * @param graph BnfRuleGraph, must not be null and consistent.
+     */
     public void saveInterfaces(final BnfRuleGraph graph) {
+        assert (graph.isConsistent());
+
         this.graph = graph;
         final Set<String> interfaces = new HashSet<>();
 
@@ -64,7 +102,7 @@ public final class InterfaceBuilder {
         Scope currentScope = toVisitNext.getFirst();
         while (graph.getStartScope() != currentScope) {
             Interface currentInterface = fromScope(currentScope);
-            if (!interfaces.containsAll(currentInterface.parents)) {
+            if (!interfaces.containsAll(currentInterface.getParents())) {
                 throw new NullPointerException("Not all parent interfaces found!");
             }
             saveInterface(currentInterface);
@@ -120,8 +158,7 @@ public final class InterfaceBuilder {
     /**
      * Saves a Java Interface with the given name and Methods.
      *
-     * @param interfaceName Name of the interface, must not be blank.
-     * @param methods       List of Methods of the Interface.
+     * @param iface Interface to be saved, must not be null.
      */
     private void saveInterface(final Interface iface) {
         if (StringUtils.isBlank(iface.getName())) {
@@ -144,7 +181,7 @@ public final class InterfaceBuilder {
         }
         st.add("methods", methodList);
 
-        final String filePath = targetDirectory + '/' + packageDirectory + iface.getName() + DEFAULT_FILE_ENDING;
+        String filePath = targetDirectory + File.separator + packageDirectory + iface.getName() + DEFAULT_FILE_ENDING;
         try (OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(filePath), StandardCharsets.UTF_8)) {
             out.write(st.render());
         } catch (FileNotFoundException e) {
@@ -153,131 +190,6 @@ public final class InterfaceBuilder {
         } catch (IOException e) {
             System.err.println("Could not write file!");
             e.printStackTrace();
-        }
-    }
-
-
-    private static class Interface {
-        private final String name;
-        private final Set<String> parents;
-        private final Set<Method> methods;
-
-        public Interface(final String name, final Collection<String> parents, final Collection<Method> methods) {
-            this.name = name;
-            this.parents = Set.copyOf(parents);
-            this.methods = Set.copyOf(methods);
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public Collection<Method> getMethods() {
-            return Set.copyOf(methods);
-        }
-
-        public Set<String> getParents() {
-            return Set.copyOf(parents);
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            Interface that = (Interface) o;
-
-            if (!name.equals(that.name)) return false;
-            if (!parents.equals(that.parents)) return false;
-            return methods.equals(that.methods);
-        }
-
-        @Override
-        public int hashCode() {
-            int result = name.hashCode();
-            result = 31 * result + parents.hashCode();
-            result = 31 * result + methods.hashCode();
-            return result;
-        }
-    }
-
-    private static class Method {
-        private final String returnType;
-        private final String name;
-        private final List<Argument> arguments;
-
-        public Method(final String returnType, final String name, final List<Argument> arguments) {
-            this.returnType = returnType;
-            this.name = name;
-            this.arguments = List.copyOf(arguments);
-        }
-
-        public String getReturnType() {
-            return returnType;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public List<Argument> getArguments() {
-            return arguments;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            Method method = (Method) o;
-
-            if (!returnType.equals(method.returnType)) return false;
-            if (!name.equals(method.name)) return false;
-            return arguments.equals(method.arguments);
-        }
-
-        @Override
-        public int hashCode() {
-            int result = returnType.hashCode();
-            result = 31 * result + name.hashCode();
-            result = 31 * result + arguments.hashCode();
-            return result;
-        }
-    }
-
-    private static class Argument {
-        private final String type;
-        private final String name;
-
-        public Argument(final String type, final String name) {
-            this.type = type;
-            this.name = name;
-        }
-
-        public String getType() {
-            return type;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            Argument argument = (Argument) o;
-
-            if (!type.equals(argument.type)) return false;
-            return name.equals(argument.name);
-        }
-
-        @Override
-        public int hashCode() {
-            int result = type.hashCode();
-            result = 31 * result + name.hashCode();
-            return result;
         }
     }
 }

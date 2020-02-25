@@ -6,7 +6,7 @@ import de.etgramlich.parser.listener.BnfListener;
 import de.etgramlich.parser.type.Bnf;
 import de.etgramlich.util.StringUtil;
 import de.etgramlich.graph.GraphBuilder;
-import de.etgramlich.graph.InterfaceBuilder;
+import de.etgramlich.generator.InterfaceBuilder;
 import de.etgramlich.graph.type.BnfRuleGraph;
 import de.etgramlich.graph.type.NodeEdge;
 import de.etgramlich.graph.type.Scope;
