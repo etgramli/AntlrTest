@@ -5,7 +5,6 @@ import de.etgramlich.graph.type.BnfRuleGraph;
 import de.etgramlich.graph.type.Scope;
 import de.etgramlich.graph.type.ScopeEdge;
 import de.etgramlich.graph.type.Node;
-import de.etgramlich.graph.type.NodeEdge;
 import org.apache.commons.lang3.StringUtils;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
@@ -51,11 +50,6 @@ public final class InterfaceBuilder {
     private static final STGroup ST_GROUP = new STGroupFile(INTERFACE_FILENAME);
 
     /**
-     * Target directory for all packages and interfaces.
-     */
-    private final String targetDirectory;
-
-    /**
      * Package to be used in interfaces.
      */
     private final String targetPackage;
@@ -83,11 +77,9 @@ public final class InterfaceBuilder {
         if (StringUtils.isBlank(targetDirectory)) {
             throw new IllegalArgumentException("Target directory must no be blank!");
         }
-        this.targetDirectory = targetDirectory;
         this.targetPackage = targetPackage;
-        this.packageDirectory = targetPackage.replaceAll("\\.", File.separator);
-
-        Files.createDirectories(Paths.get(targetDirectory + File.separator + packageDirectory));
+        packageDirectory = targetDirectory + File.separator + targetPackage.replaceAll("\\.", File.separator);
+        Files.createDirectories(Paths.get(packageDirectory));
     }
 
     /**
@@ -126,10 +118,8 @@ public final class InterfaceBuilder {
     }
 
     private Set<String> getParents(final Scope scope) {
-        final Set<ScopeEdge> incomingBackwardEdges = graph.incomingEdgesOf(scope).stream()
+        return graph.incomingEdgesOf(scope).stream()
                 .filter(edge -> graph.isBackwardEdge(edge))
-                .collect(Collectors.toUnmodifiableSet());
-        return incomingBackwardEdges.stream()
                 .map(edge -> edge.getSource().getName())
                 .collect(Collectors.toUnmodifiableSet());
     }
@@ -140,22 +130,10 @@ public final class InterfaceBuilder {
      * @param scope Scope to be converted to interface, to query its Methods.
      * @return List of Methods, not null, may be empty.
      */
-    private List<Method> getMethods(final Scope scope) {
-        final Set<NodeEdge> outgoingNodes = graph.outGoingNodeEdges(scope);
-        final List<Method> methods = new ArrayList<>(outgoingNodes.size());
-
-        String methodName;
-        String returnType;
-        List<Argument> arguments;
-        for (NodeEdge edge : outgoingNodes) {
-            methodName = edge.getNode().getName();
-            returnType = edge.getTarget().getName();
-            arguments = getArguments(edge.getNode());
-
-            methods.add(new Method(returnType, methodName, arguments));
-        }
-
-        return methods;
+    private Set<Method> getMethods(final Scope scope) {
+        return graph.outGoingNodeEdges(scope).stream().map(
+                edge -> new Method(edge.getTarget().getName(), edge.getNode().getName(), getArguments(edge.getNode()))
+        ).collect(Collectors.toUnmodifiableSet());
     }
 
     private List<Argument> getArguments(final Node scope) {
@@ -166,25 +144,25 @@ public final class InterfaceBuilder {
     /**
      * Saves a Java Interface with the given name and Methods.
      *
-     * @param iface Interface to be saved, must not be null.
+     * @param anInterface Interface to be saved, must not be null.
      * @return Interface representation as String.
      */
-    private String renderInterface(final Interface iface) {
-        if (StringUtils.isBlank(iface.getName())) {
+    private String renderInterface(final Interface anInterface) {
+        if (StringUtils.isBlank(anInterface.getName())) {
             throw new IllegalArgumentException("Interface name must not be blank!");
         }
-        if (!StringUtil.startsWithUpperCase(iface.getName())) {
+        if (!StringUtil.startsWithUpperCase(anInterface.getName())) {
             throw new IllegalArgumentException("Interface name must start with an upper case letter!");
         }
 
         final ST st = ST_GROUP.getInstanceOf(INTERFACE_NAME);
         st.add("package", targetPackage);
-        st.add("interfaceName", iface.getName());
-        st.add("parents", List.copyOf(iface.getParents()));
+        st.add("interfaceName", anInterface.getName());
+        st.add("parents", List.copyOf(anInterface.getParents()));
 
         // Add return type and method name to String List to add to StringTemplate
-        final List<String> methodList = new ArrayList<>(iface.getMethods().size() * 2);
-        for (Method method : iface.getMethods()) {
+        final List<String> methodList = new ArrayList<>(anInterface.getMethods().size() * 2);
+        for (Method method : anInterface.getMethods()) {
             methodList.add(method.getReturnType());
             methodList.add(method.getName());
         }
@@ -194,8 +172,7 @@ public final class InterfaceBuilder {
     }
 
     private void saveInterface(final String interfaceName, final String javaInterface) {
-        final String fullPath =
-                targetDirectory + File.separator + packageDirectory + File.separator + interfaceName + DEFAULT_FILE_ENDING;
+        final String fullPath = packageDirectory + File.separator + interfaceName + DEFAULT_FILE_ENDING;
         try (OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(fullPath), StandardCharsets.UTF_8)) {
             out.write(javaInterface);
         } catch (FileNotFoundException e) {
