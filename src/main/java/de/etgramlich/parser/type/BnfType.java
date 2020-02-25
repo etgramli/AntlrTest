@@ -2,6 +2,9 @@ package de.etgramlich.parser.type;
 
 import java.util.List;
 
+/**
+ * Super type for all BNF elements.
+ */
 public interface BnfType {
     /**
      * Returns the name of the bnf element, determined by an id, text or a containing element.

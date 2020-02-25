@@ -2,6 +2,9 @@ package de.etgramlich.generator;
 
 import org.apache.commons.lang3.StringUtils;
 
+/**
+ * Represents a argument of a method. Used in an intermediate step before writing interfaces to files.
+ */
 public final class Argument {
     /**
      * Type of the argument.

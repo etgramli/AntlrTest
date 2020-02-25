@@ -2,6 +2,9 @@ package de.etgramlich.parser.type.repetition;
 
 import de.etgramlich.parser.type.Alternatives;
 
+/**
+ * Represents a zero-or-more-repetition from BNF as Java type.
+ */
 public final class ZeroOrMore extends AbstractRepetition {
     /**
      * Creates a new loop from alternatives.

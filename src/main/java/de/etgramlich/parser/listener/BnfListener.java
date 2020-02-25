@@ -8,6 +8,13 @@ import de.etgramlich.parser.type.Bnf;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Parses an entire BNF (file) / multiple rules and returns a Bnf object.
+ * Call sequence:
+ * 1. new BnfListener
+ * 2. enterBnf()
+ * 3. getBnf()
+ */
 public final class BnfListener extends BnfBaseListener {
     /**
      * Contains the bnf with all rules.

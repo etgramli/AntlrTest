@@ -1,5 +1,8 @@
 package de.etgramlich.parser.type.text;
 
+/**
+ * Representing a keyword in BNF as Java type.
+ */
 public final class Keyword extends TextElement {
     /**
      * Creates new Keyword from String.

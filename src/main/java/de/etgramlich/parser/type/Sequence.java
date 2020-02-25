@@ -3,6 +3,9 @@ package de.etgramlich.parser.type;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Represents a sequence of elements from BNF as Java type.
+ */
 public final class Sequence implements BnfType {
     /**
      * Elements of the BNF sequence.

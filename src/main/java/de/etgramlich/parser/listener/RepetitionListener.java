@@ -7,6 +7,13 @@ import de.etgramlich.parser.type.repetition.Optional;
 import de.etgramlich.parser.type.repetition.Precedence;
 import de.etgramlich.parser.type.repetition.ZeroOrMore;
 
+/**
+ * Parses a Repetition, optional element or a precedence of EBNF.
+ * Call sequence:
+ * 1. new RepetitionListener()
+ * 2. enterZeroOrMore() or enterOptional() or enterPrecedence()
+ * 3. getRepetition()
+ */
 public final class RepetitionListener extends BnfBaseListener {
     /**
      * Bnf repetition element.

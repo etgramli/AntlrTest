@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
+/**
+ * Represents a BNF rule as Java type.
+ */
 public final class BnfRule implements BnfType {
     /**
      * Left hand side of the rule, it is an identifier / non-terminal.

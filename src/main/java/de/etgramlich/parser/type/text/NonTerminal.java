@@ -1,5 +1,8 @@
 package de.etgramlich.parser.type.text;
 
+/**
+ * Represents a non terminal from BNF as Java type.
+ */
 public final class NonTerminal extends TextElement {
     /**
      * Creates mew NonTerminal from String.

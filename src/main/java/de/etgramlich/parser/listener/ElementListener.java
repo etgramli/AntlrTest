@@ -6,7 +6,10 @@ import de.etgramlich.parser.type.Element;
 
 /**
  * Parses an element of ANTL4's bnf grammar.
- * Currently only allows text and id options.
+ * Call sequence:
+ * 1. new ElementListener()
+ * 2. enterElement()
+ * 3. getElement()
  */
 public final class ElementListener extends BnfBaseListener {
     /**

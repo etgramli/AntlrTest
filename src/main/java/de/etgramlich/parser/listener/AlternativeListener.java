@@ -9,6 +9,13 @@ import de.etgramlich.parser.type.Sequence;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Parses a list of sequences of EBNF to one alternatives object.
+ * The call sequence is:
+ * 1. new AlternativeListener()
+ * 2. enterAlternatives()
+ * 3. getAlternatives()
+ */
 public final class AlternativeListener extends BnfBaseListener {
     /**
      * Current (ebnf) sequence being processed.

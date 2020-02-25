@@ -3,7 +3,6 @@ package de.etgramlich.generator;
 import de.etgramlich.util.StringUtil;
 import de.etgramlich.graph.type.BnfRuleGraph;
 import de.etgramlich.graph.type.Scope;
-import de.etgramlich.graph.type.ScopeEdge;
 import de.etgramlich.graph.type.Node;
 import org.apache.commons.lang3.StringUtils;
 import org.stringtemplate.v4.ST;
@@ -27,6 +26,9 @@ import java.util.ArrayDeque;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
+/**
+ * Creates Java interfaces from a BnfRuleGraph and saves them to files.
+ */
 public final class InterfaceBuilder {
     /**
      * File path to the interface template.

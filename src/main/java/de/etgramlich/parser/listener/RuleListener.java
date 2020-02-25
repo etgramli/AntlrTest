@@ -8,6 +8,13 @@ import de.etgramlich.parser.type.text.NonTerminal;
 import de.etgramlich.parser.type.text.TextElement;
 import de.etgramlich.util.SymbolTable;
 
+/**
+ * Parses a rule of EBNF.
+ * Call sequence:
+ * 1. new RuleListener()
+ * 2. enterBnfRule()
+ * 3. getBnfRule()
+ */
 public final class RuleListener extends BnfBaseListener {
     /**
      * Bnf rule element.

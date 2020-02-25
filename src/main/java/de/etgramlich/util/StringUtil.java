@@ -9,6 +9,9 @@ import java.util.Collections;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+/**
+ * Contains additional methods to operate on Strings, that are not present in the Apache Commons library.
+ */
 public final class StringUtil extends StringUtils {
     private StringUtil() { }
 

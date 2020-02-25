@@ -3,6 +3,9 @@ package de.etgramlich.parser.type;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Represents a list of sequence as alternative from BNF as Java type.
+ */
 public final class Alternatives implements BnfType {
     /**
      * List of sequence contained in this alternatives.

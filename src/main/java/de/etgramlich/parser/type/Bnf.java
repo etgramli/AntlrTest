@@ -6,6 +6,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Represents a a whole BNF (list of rules) as Java type.
+ */
 public final class Bnf implements BnfType {
     /**
      * List of rules of that EBNF grammar.

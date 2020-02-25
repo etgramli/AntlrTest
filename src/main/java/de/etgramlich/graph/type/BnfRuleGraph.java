@@ -12,6 +12,9 @@ import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+/**
+ * Builds a graph according to the rules of a EBNF (has to care about optional elements and repetitions).
+ */
 public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
 
     /**

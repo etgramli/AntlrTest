@@ -7,6 +7,9 @@ import de.etgramlich.util.StringUtil;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Represents a text element from BNF as Java type.
+ */
 public abstract class TextElement implements Element, BnfType {
     /**
      * Text from the BNF element.

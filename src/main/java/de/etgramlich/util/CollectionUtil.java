@@ -5,6 +5,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Contains misc functions for Collections.
+ */
 public final class CollectionUtil {
     private CollectionUtil() { }
 

@@ -8,6 +8,9 @@ import de.etgramlich.util.StringUtil;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Represents an element containing alternatives from BNF as Java type.
+ */
 public abstract class AbstractRepetition implements Element, BnfType {
     /**
      * Alternatives BNF element representing this AbstractRepetition.

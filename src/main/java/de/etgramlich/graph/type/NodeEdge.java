@@ -1,5 +1,8 @@
 package de.etgramlich.graph.type;
 
+/**
+ * An edge containing a node bearing the information to create an Interface from.
+ */
 public final class NodeEdge extends ScopeEdge {
     /**
      * Node containing information about the BNF element represented by the node.

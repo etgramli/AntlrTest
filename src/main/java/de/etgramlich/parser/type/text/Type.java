@@ -1,5 +1,8 @@
 package de.etgramlich.parser.type.text;
 
+/**
+ * Represents a type from BNF as Java type.
+ */
 public final class Type extends TextElement {
     /**
      * Creates new Type from String.

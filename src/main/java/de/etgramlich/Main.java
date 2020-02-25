@@ -32,6 +32,9 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Main program that converts a EBNF grammar to Java interfaces.
+ */
 public final class Main {
     private Main() { }
 

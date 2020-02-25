@@ -5,6 +5,9 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Represents a method. Used in an intermediate step before writing interfaces to files.
+ */
 public final class Method {
     /**
      * Return type of the Method.

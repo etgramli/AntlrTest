@@ -7,6 +7,13 @@ import de.etgramlich.parser.type.text.NonTerminal;
 import de.etgramlich.parser.type.text.TextElement;
 import de.etgramlich.parser.type.text.Type;
 
+/**
+ * Parses a text element of BNF.
+ * Call sequence:
+ * 1. new NonTerminalListener()
+ * 2. enterKeyword() or enterType() or enterNt()
+ * 3. getTextElement()
+ */
 public final class NonTerminalListener extends BnfBaseListener {
     /**
      * TextElement bnf element.

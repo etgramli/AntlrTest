@@ -6,6 +6,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 
+/**
+ * Represents an interface. Used in an intermediate step before writing interfaces to files.
+ */
 public final class Interface {
     /**
      * Name of the interface.

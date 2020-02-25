@@ -4,6 +4,9 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 
+/**
+ * A node contained in an NodeEdge to hold information from the EBNF grammar.
+ */
 public final class Node implements Serializable {
     /**
      * Identifier of the node.

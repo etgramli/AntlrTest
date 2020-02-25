@@ -2,6 +2,9 @@ package de.etgramlich.graph.type;
 
 import org.apache.commons.lang3.StringUtils;
 
+/**
+ * Scope representing a node in the graph. Each node has usually a numbered name.
+ */
 public final class Scope {
 
     /**
