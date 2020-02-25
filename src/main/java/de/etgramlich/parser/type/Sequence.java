@@ -4,8 +4,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public final class Sequence implements BnfType {
+    /**
+     * Elements of the BNF sequence.
+     */
     private final List<Element> elements;
 
+    /**
+     * Creates a new Sequence with a copy of the provided list.
+     * @param elements List of elements, must not be null and not empty.
+     */
     public Sequence(final List<Element> elements) {
         if (elements == null || elements.isEmpty()) {
             throw new IllegalArgumentException("Element list must be not null and not empty!");
@@ -13,6 +20,10 @@ public final class Sequence implements BnfType {
         this.elements = List.copyOf(elements);
     }
 
+    /**
+     * Returns the immutable list of elements.
+     * @return List of elements, not null and not empty.
+     */
     public List<Element> getElements() {
         return elements;
     }
@@ -29,15 +40,13 @@ public final class Sequence implements BnfType {
 
     @Override
     public int getNumberOfElements() {
-        int counter = 0;
-        for (Element element : elements) {
-            counter += element.getNumberOfElements();
-        }
-        return counter;
+        return elements.stream().mapToInt(BnfType::getNumberOfElements).sum();
     }
 
     @Override
     public List<String> getNonTerminalDependants() {
-        return elements.stream().flatMap(element -> element.getNonTerminalDependants().stream()).collect(Collectors.toList());
+        return elements.stream()
+                .flatMap(element -> element.getNonTerminalDependants().stream())
+                .collect(Collectors.toList());
     }
 }

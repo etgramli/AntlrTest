@@ -17,6 +17,10 @@ public interface BnfType {
         return false;
     }
 
+    /**
+     * Returns the number of elements of this BNF type.
+     * @return Non-negative integer.
+     */
     int getNumberOfElements();
 
     /**
