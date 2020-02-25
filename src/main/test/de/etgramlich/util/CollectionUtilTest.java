@@ -1,7 +1,5 @@
 package de.etgramlich.util;
 
-import de.etgramlich.util.graph.type.node.Node;
-import de.etgramlich.util.graph.type.node.SequenceNode;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

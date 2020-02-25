@@ -10,43 +10,42 @@ import java.util.concurrent.ConcurrentHashMap;
  * Singleton class to store symbols of the parsed EBNF grammar.
  */
 public final class SymbolTable {
-    private static final Map<String, BnfType> symbolTable = new ConcurrentHashMap<>();
-    private static final Map<String, Boolean> rules = new ConcurrentHashMap<>();
+    private static final Map<String, BnfType> SYMBOL_TABLE = new ConcurrentHashMap<>();
+    private static final Map<String, Boolean> RULES = new ConcurrentHashMap<>();
 
-    private SymbolTable() {
-    }
+    private SymbolTable() { }
 
     public static boolean containsRule(final String ruleName) {
-        return rules.containsKey(ruleName);
+        return RULES.containsKey(ruleName);
     }
 
     public static void addRule(final String name, final boolean isTerminal) {
-        rules.put(name, isTerminal);
+        RULES.put(name, isTerminal);
     }
 
     public static boolean isTerminal(final String rule) {
-        return rules.get(rule);
+        return RULES.get(rule);
     }
 
     public static boolean contains(final String symbol) {
-        return symbolTable.containsKey(symbol);
+        return SYMBOL_TABLE.containsKey(symbol);
     }
 
     public static boolean add(final String symbol, final BnfType type) {
         if (contains(symbol))
             return false;
         else {
-            symbolTable.put(symbol, type);
+            SYMBOL_TABLE.put(symbol, type);
             return true;
         }
     }
 
     public static BnfType getType(final String symbol) {
-        return symbolTable.get(symbol);
+        return SYMBOL_TABLE.get(symbol);
     }
 
     public static int getSize() {
-        return symbolTable.size();
+        return SYMBOL_TABLE.size();
     }
 
     public static boolean isKeyword(final String id) {

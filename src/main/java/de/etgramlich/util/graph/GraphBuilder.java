@@ -8,8 +8,7 @@ import de.etgramlich.parser.type.text.TextElement;
 import de.etgramlich.util.exception.InvalidGraphException;
 import de.etgramlich.util.exception.UnrecognizedElementException;
 import de.etgramlich.util.graph.type.*;
-import de.etgramlich.util.graph.type.node.Node;
-import de.etgramlich.util.graph.type.node.SequenceNode;
+import de.etgramlich.util.graph.type.Node;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -112,7 +111,7 @@ public final class GraphBuilder {
      */
     private void processElement(final Element element) {
         if (element instanceof TextElement) {
-            addNodeInSequence(new SequenceNode(element.getName()));
+            addNodeInSequence(new Node(element.getName()));
         } else if (element instanceof AbstractRepetition) {
             AbstractRepetition repetition = (AbstractRepetition) element;
 

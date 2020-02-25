@@ -4,7 +4,7 @@ import de.etgramlich.util.StringUtil;
 import de.etgramlich.util.graph.type.BnfRuleGraph;
 import de.etgramlich.util.graph.type.Scope;
 import de.etgramlich.util.graph.type.ScopeEdge;
-import de.etgramlich.util.graph.type.node.Node;
+import de.etgramlich.util.graph.type.Node;
 import org.apache.commons.lang3.StringUtils;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;

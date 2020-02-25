@@ -1,7 +1,13 @@
 package de.etgramlich.util.graph.type;
 
 public final class OptionalEdge extends ScopeEdge {
-    public OptionalEdge(Scope source, Scope target) {
+
+    /**
+     * Creates an optional edge from source to target.
+     * @param source Source vertex.
+     * @param target Target vertex.
+     */
+    public OptionalEdge(final Scope source, final Scope target) {
         super(source, target);
     }
 }

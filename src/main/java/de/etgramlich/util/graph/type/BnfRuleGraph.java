@@ -1,7 +1,6 @@
 package de.etgramlich.util.graph.type;
 
 import de.etgramlich.util.exception.InvalidGraphException;
-import de.etgramlich.util.graph.type.node.Node;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DirectedPseudograph;
 
@@ -14,15 +13,26 @@ import java.util.stream.Collectors;
 
 public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
 
+    /**
+     * Creates an unweighted BnfRuleGraph without vertex and edge supplier.
+     */
     public BnfRuleGraph() {
-        this(null, null, false);
+        this(null, null);
     }
 
-    public BnfRuleGraph(Supplier<Scope> vertexSupplier, Supplier<ScopeEdge> edgeSupplier, boolean weighted) {
-        super(vertexSupplier, edgeSupplier, weighted);
+    /**
+     * Creates an unweighted BnfRuleGraph with the provided vertex and edge supplier.
+     * @param vertexSupplier Vertex supplier.
+     * @param edgeSupplier Edge supplier.
+     */
+    public BnfRuleGraph(final Supplier<Scope> vertexSupplier, final Supplier<ScopeEdge> edgeSupplier) {
+        super(vertexSupplier, edgeSupplier, false);
     }
 
-
+    /**
+     * Returns the length from the start node to end node.
+     * @return Non-negative integer.
+     */
     public int length() {
         if (isEmpty()) {
             return 0;
@@ -30,10 +40,22 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
         return DijkstraShortestPath.findPathBetween(this, getStartScope(), getEndScope()).getLength();
     }
 
-    private boolean isEmpty() {
+    /**
+     * Returns true if the graph contains no edges and no vertices.
+     * @return True if no edges and vertices in graph.
+     */
+    public boolean isEmpty() {
         return edgeSet().isEmpty() && vertexSet().isEmpty();
     }
 
+    /**
+     * Tests whether the graph is consistent. It must:
+     * - have one start vertex,
+     * - have one end vertex,
+     * - have a parallel connection to any optional edge
+     * - have a parallel connection to any repetition edge (in reverse direction)
+     * @return True if the graph is consistent or empty.
+     */
     public boolean isConsistent() {
         // Empty graph is valid
         if (edgeSet().isEmpty() && vertexSet().isEmpty()) {
@@ -87,6 +109,11 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Returns the outgoing nodes, that are connected by a NodeEdge to the given scope.
+     * @param scope Scope, must not be null.
+     * @return List of nodes.
+     */
     public List<Node> getOutGoingNodes(final Scope scope) {
         return outgoingEdgesOf(scope).stream()
                 .filter(scopeEdge -> scopeEdge instanceof NodeEdge)
@@ -94,6 +121,11 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Returns a list of ingoing nodes that are connected by a NodeEdge to the given scope.
+     * @param scope Scope, must not be null.
+     * @return List of Nodes.
+     */
     public List<Node> getInGoingNodes(final Scope scope) {
         return edgeSet().stream()
                 .filter(scopeEdge -> scopeEdge.getTarget().equals(scope))
@@ -209,7 +241,9 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
     }
 
     private boolean connectedByNodes(final Scope start, final Scope end) {
-        if (start == end) return true;
+        if (start == end) {
+            return true;
+        }
         return DijkstraShortestPath.findPathBetween(copyWithoutBackwardEdges(), start, end).getLength() != 0;
     }
 }

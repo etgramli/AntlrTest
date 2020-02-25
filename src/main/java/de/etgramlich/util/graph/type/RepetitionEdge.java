@@ -1,7 +1,13 @@
 package de.etgramlich.util.graph.type;
 
 public final class RepetitionEdge extends ScopeEdge {
-    public RepetitionEdge(Scope source, Scope target) {
+
+    /**
+     * Creates a repetition edge from source to target.
+     * @param source Source vertex.
+     * @param target Target vertex.
+     */
+    public RepetitionEdge(final Scope source, final Scope target) {
         super(source, target);
     }
 }

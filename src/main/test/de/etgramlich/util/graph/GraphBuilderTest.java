@@ -12,7 +12,7 @@ import de.etgramlich.parser.type.Sequence;
 import de.etgramlich.util.graph.type.BnfRuleGraph;
 import de.etgramlich.util.graph.type.Scope;
 import de.etgramlich.util.graph.type.ScopeEdge;
-import de.etgramlich.util.graph.type.node.SequenceNode;
+import de.etgramlich.util.graph.type.Node;
 import org.jgrapht.alg.cycle.CycleDetector;
 import org.junit.jupiter.api.Test;
 
@@ -347,7 +347,7 @@ class GraphBuilderTest {
 
 
         // Add new node to test addition
-        builder.addNodeInSequence(new SequenceNode("New-Sequence"));
+        builder.addNodeInSequence(new Node("New-Sequence"));
         graph = builder.getGraph();
 
         assertTrue(graph.isConsistent());

@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 public final class CollectionUtil {
-    private CollectionUtil() {}
+    private CollectionUtil() { }
 
     /**
      * Creates a list of the objects passed as varargs. Never returns null,
@@ -18,7 +18,7 @@ public final class CollectionUtil {
      * @return A list, that might be empty or contain null objects.
      */
     @SafeVarargs
-    public static <T> List<T> toList(T... items) {
+    public static <T> List<T> toList(final T... items) {
         return new ArrayList<>(items != null ? Arrays.asList(items) : Collections.emptyList());
     }
 }
