@@ -28,14 +28,12 @@ public final class ElementListener extends BnfBaseListener {
             NonTerminalListener listener = new NonTerminalListener();
             if (ctx.nt() != null) {
                 listener.enterNt(ctx.nt());
-                element = listener.getNonTerminal();
             } else if (ctx.type() != null) {
                 listener.enterType(ctx.type());
-                element = listener.getType();
             } else {
                 listener.enterKeyword(ctx.keyword());
-                element = listener.getKeyword();
             }
+            element = listener.getTextElement();
         } else if (ctx.children.size() == 1 && ctx.children.get(0).getText().equals("::=")) {
             System.out.println("Assignment - skipping!!!");
         } else {

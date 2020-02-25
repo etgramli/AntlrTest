@@ -4,52 +4,26 @@ import de.etgramlich.parser.gen.bnf.BnfBaseListener;
 import de.etgramlich.parser.gen.bnf.BnfParser;
 import de.etgramlich.parser.type.text.Keyword;
 import de.etgramlich.parser.type.text.NonTerminal;
+import de.etgramlich.parser.type.text.TextElement;
 import de.etgramlich.parser.type.text.Type;
 
 public final class NonTerminalListener extends BnfBaseListener {
-    // ToDo: Merge variables
     /**
-     * Non-terminal bnf element.
+     * TextElement bnf element.
      */
-    private NonTerminal id;
+    private TextElement textElement;
 
     /**
-     * Keyword bnf element.
-     */
-    private Keyword keyword;
-
-    /**
-     * Type bnf element.
-     */
-    private Type type;
-
-    /**
-     * Returns non-terminal bnf element. Must be called after enterNt()!
+     * Returns non-terminal bnf element. Must be called after enterNt(), enterKeyword() or enterType()!
      * @return Non-terminal object after call, else null.
      */
-    public NonTerminal getNonTerminal() {
-        return id;
-    }
-
-    /**
-     * Returns keyword bnf element. Must be called after enterKeyword()!
-     * @return Keyword element, after call to enterKeyword(), else null.
-     */
-    public Keyword getKeyword() {
-        return keyword;
-    }
-
-    /**
-     * Returns type bnf element. Must be called after enterType()!
-     * @return Type object after call to enterType(), else null.
-     */
-    public Type getType() {
-        return type;
+    public TextElement getTextElement() {
+        return textElement;
     }
 
     @Override
     public void enterKeyword(final BnfParser.KeywordContext ctx) {
-        keyword = new Keyword(ctx.getText().trim());
+        textElement = new Keyword(ctx.getText().trim());
     }
 
     @Override
@@ -59,7 +33,7 @@ public final class NonTerminalListener extends BnfBaseListener {
 
     @Override
     public void enterType(final BnfParser.TypeContext ctx) {
-        type = new Type(ctx.getText().trim());
+        textElement = new Type(ctx.getText().trim());
     }
 
     @Override
@@ -69,7 +43,7 @@ public final class NonTerminalListener extends BnfBaseListener {
 
     @Override
     public void enterNt(final BnfParser.NtContext ctx) {
-        id = new NonTerminal(stripLTGT(ctx.getText()));
+        textElement = new NonTerminal(stripLTGT(ctx.getText()));
     }
 
     @Override
