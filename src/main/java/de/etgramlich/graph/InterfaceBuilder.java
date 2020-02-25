@@ -1,10 +1,10 @@
-package de.etgramlich.util.graph;
+package de.etgramlich.graph;
 
 import de.etgramlich.util.StringUtil;
-import de.etgramlich.util.graph.type.BnfRuleGraph;
-import de.etgramlich.util.graph.type.Scope;
-import de.etgramlich.util.graph.type.ScopeEdge;
-import de.etgramlich.util.graph.type.Node;
+import de.etgramlich.graph.type.BnfRuleGraph;
+import de.etgramlich.graph.type.Scope;
+import de.etgramlich.graph.type.ScopeEdge;
+import de.etgramlich.graph.type.Node;
 import org.apache.commons.lang3.StringUtils;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
@@ -31,7 +31,7 @@ public final class InterfaceBuilder {
     private static final String INTERFACE_FILENAME = "src/main/resources/ebnf.stg";
     private static final String INTERFACE_NAME = "templateInterface";
     private static final String DEFAULT_FILE_ENDING = ".java";
-    private static final STGroup stgroup = new STGroupFile(INTERFACE_FILENAME);
+    private static final STGroup ST_GROUP = new STGroupFile(INTERFACE_FILENAME);
 
     private final String targetDirectory;
     private final String targetPackage;
@@ -131,7 +131,7 @@ public final class InterfaceBuilder {
             throw new IllegalArgumentException("Interface name must start with an upper case letter!");
         }
 
-        final ST st = stgroup.getInstanceOf(INTERFACE_NAME);
+        final ST st = ST_GROUP.getInstanceOf(INTERFACE_NAME);
         st.add("package", targetPackage);
         st.add("interfaceName", iface.getName());
         st.add("parents", List.copyOf(iface.getParents()));

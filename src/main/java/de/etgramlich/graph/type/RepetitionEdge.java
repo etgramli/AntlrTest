@@ -1,4 +1,4 @@
-package de.etgramlich.util.graph.type;
+package de.etgramlich.graph.type;
 
 public final class RepetitionEdge extends ScopeEdge {
 

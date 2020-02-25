@@ -1,27 +1,26 @@
-package de.etgramlich.util.graph.type;
+package de.etgramlich.graph.type;
 
 import org.apache.commons.lang3.StringUtils;
 
-public final class Scope {
-
+public final class Node {
     /**
-     * Identifier for this scope.
+     * Identifier of the node.
      */
     private final String name;
 
     /**
-     * Creates a scope with the given name as identifier.
-     * @param name String, must not be null and blank.
+     * Creates a new node with the given identifier.
+     * @param name String, must not be blank.
      */
-    public Scope(final String name) {
+    public Node(final String name) {
         if (StringUtils.isBlank(name)) {
-            throw new IllegalArgumentException("Scope name must not be blank!");
+            throw new IllegalArgumentException("Node name must not be blank!");
         }
         this.name = name;
     }
 
     /**
-     * Returns the name of the scope.
+     * Returns the name.
      * @return String, not null, not empty.
      */
     public String getName() {
@@ -37,9 +36,9 @@ public final class Scope {
             return false;
         }
 
-        Scope scope = (Scope) o;
+        Node node = (Node) o;
 
-        return name.equals(scope.name);
+        return name.equals(node.name);
     }
 
     @Override

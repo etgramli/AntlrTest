@@ -1,4 +1,4 @@
-package de.etgramlich.util.graph.type;
+package de.etgramlich.graph.type;
 
 import org.jgrapht.graph.DefaultEdge;
 

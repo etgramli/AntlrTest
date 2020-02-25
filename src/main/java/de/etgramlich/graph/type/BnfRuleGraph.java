@@ -1,4 +1,4 @@
-package de.etgramlich.util.graph.type;
+package de.etgramlich.graph.type;
 
 import de.etgramlich.util.exception.InvalidGraphException;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
