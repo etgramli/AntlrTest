@@ -3,7 +3,11 @@ package de.etgramlich.parser.type.repetition;
 import de.etgramlich.parser.type.Alternatives;
 
 public final class ZeroOrMore extends AbstractRepetition {
-    public ZeroOrMore(Alternatives alternatives) {
+    /**
+     * Creates a new loop from alternatives.
+     * @param alternatives Alternatives, must not be null.
+     */
+    public ZeroOrMore(final Alternatives alternatives) {
         super(alternatives);
     }
 
