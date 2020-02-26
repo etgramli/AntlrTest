@@ -1,5 +1,5 @@
-templateInterface(package,interfaceName,parents,methods) ::= <<
+templateInterface(package,interfaceName,firstParent,parents,methods) ::= <<
 package <package>;
-interface <interfaceName> <parents:{parent|<parent>, }> {
+interface <interfaceName> <firstParent:{firstParent| implements <firstParent>}> <parents:{ parent |, <parent> }> {
     <methods:{ method |    <method.returnType> <method.name>();<\n>}>
 }>>

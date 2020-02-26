@@ -17,7 +17,6 @@ import java.io.FileNotFoundException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -160,15 +159,16 @@ public final class InterfaceBuilder {
         final ST st = ST_GROUP.getInstanceOf(INTERFACE_NAME);
         st.add("package", targetPackage);
         st.add("interfaceName", anInterface.getName());
-        st.add("parents", List.copyOf(anInterface.getParents()));
 
-        // Add return type and method name to String List to add to StringTemplate
-        final List<String> methodList = new ArrayList<>(anInterface.getMethods().size() * 2);
-        for (Method method : anInterface.getMethods()) {
-            methodList.add(method.getReturnType());
-            methodList.add(method.getName());
+        final List<String> parents = List.copyOf(anInterface.getParents());
+        if (!parents.isEmpty()) {
+            st.add("firstParent", parents.get(0));
+            if (parents.size() > 1) {
+                st.add("parents", parents.subList(1, parents.size()));
+            }
         }
-        st.add("methods", methodList);
+
+        st.add("methods", anInterface.getMethods());
 
         return st.render();
     }
@@ -181,7 +181,7 @@ public final class InterfaceBuilder {
             System.err.println("File not found!");
             e.printStackTrace();
         } catch (IOException e) {
-            System.err.println("Could not write file!");
+            System.err.println("Could not write to file!");
             e.printStackTrace();
         }
     }
