@@ -17,11 +17,11 @@ import java.io.FileNotFoundException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
+import java.util.HashSet;
 import java.util.Deque;
 import java.util.ArrayDeque;
+import java.util.List;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
@@ -91,27 +91,32 @@ public final class InterfaceBuilder {
         assert (graph.isConsistent());
 
         this.graph = graph;
-        final Set<String> interfaces = new HashSet<>();
 
-        final Set<Scope> alreadyVisited = new HashSet<>(graph.vertexSet().size());
-        Deque<Scope> toVisitNext = new ArrayDeque<>(graph.vertexSet().size());
-        toVisitNext.add(graph.getEndScope());
+        final Set<String> knownInterfaces = new HashSet<>();
+        final Deque<Scope> toVisitNext = new ArrayDeque<>(graph.vertexSet().size());
 
-        Scope currentScope = toVisitNext.getFirst();
-        while (graph.getStartScope() != currentScope) {
-            Interface currentInterface = fromScope(currentScope);
-            if (!interfaces.containsAll(currentInterface.getParents())) {
+        Scope currentScope = graph.getEndScope();
+        while (currentScope != null) {
+            if (knownInterfaces.contains(currentScope.getName())) {
+                System.err.println("Scope already visited! (" + currentScope.getName() + ") - Continuing!");
+                continue;
+            }
+            final Interface currentInterface = fromScope(currentScope);
+            if (!knownInterfaces.containsAll(currentInterface.getParents())) {
                 throw new NullPointerException("Not all parent interfaces found!");
             }
             saveInterface(currentInterface.getName(), renderInterface(currentInterface));
-            interfaces.add(currentInterface.getName());
-            alreadyVisited.add(currentScope);
+            knownInterfaces.add(currentInterface.getName());
 
             toVisitNext.addAll(graph.getPredecessors(currentScope).stream()
-                    .filter(scope -> !alreadyVisited.contains(scope))
+                    .filter(scope -> !knownInterfaces.contains(scope.getName()))
                     .collect(Collectors.toUnmodifiableSet()));
-            currentScope = toVisitNext.removeFirst();
+            currentScope = toVisitNext.pollFirst();
         }
+        assert (graph.vertexSet().stream()
+                .map(Scope::getName)
+                .filter(s -> !knownInterfaces.contains(s))
+                .findAny().isEmpty());
     }
 
     private Interface fromScope(final Scope scope) {
