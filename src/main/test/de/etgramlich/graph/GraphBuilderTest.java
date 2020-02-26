@@ -343,7 +343,7 @@ class GraphBuilderTest {
 
         assertEquals(endScope, graph.getSuccessors(startScope).get(0));
         assertEquals(startScope, graph.getPredecessors(endScope).get(0));
-        assertEquals(graph.getOutGoingNodes(startScope), graph.getInGoingNodes(endScope));
+        assertEquals(Set.of(graph.getOutGoingNodes(startScope)), Set.of(graph.getInGoingNodes(endScope)));
 
 
         // Add new node to test addition
