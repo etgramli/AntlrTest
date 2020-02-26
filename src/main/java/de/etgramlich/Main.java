@@ -43,9 +43,10 @@ public final class Main {
      */
     private static final Options OPTIONS = new Options();
     static {
-        OPTIONS.addOption("t", true, "Target directory for generated sources");
-        OPTIONS.addOption("p", true, "Target package");
-        OPTIONS.addOption("g", true, "Grammar file path");
+        OPTIONS.addOption("h", "help", false, "Prints this help text.");
+        OPTIONS.addOption("d", "directory", true, "Target directory for generated sources");
+        OPTIONS.addOption("p", "package", true, "Target package");
+        OPTIONS.addOption("g", "grammar", true, "Grammar file path");
     }
 
     /**
@@ -59,8 +60,8 @@ public final class Main {
         String targetPackage = StringUtils.EMPTY;
         try {
             CommandLine cmd = new DefaultParser().parse(OPTIONS, args);
-            if (cmd.hasOption("t")) {
-                targetDirectory = cmd.getOptionValue("t");
+            if (cmd.hasOption("d")) {
+                targetDirectory = cmd.getOptionValue("d");
             }
             if (cmd.hasOption("p")) {
                 targetPackage = cmd.getOptionValue("p");
