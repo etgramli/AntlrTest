@@ -119,10 +119,9 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
      * @return List of nodes.
      */
     public List<Node> getOutGoingNodes(final Scope scope) {
-        return outgoingEdgesOf(scope).stream()
-                .filter(scopeEdge -> scopeEdge instanceof NodeEdge)
-                .map(nodeEdge -> ((NodeEdge) nodeEdge).getNode())
-                .collect(Collectors.toList());
+        return outGoingNodeEdges(scope).stream()
+                .map(NodeEdge::getNode)
+                .collect(Collectors.toUnmodifiableList());
     }
 
     /**
@@ -143,8 +142,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
      * @return List of Nodes.
      */
     public List<Node> getInGoingNodes(final Scope scope) {
-        return edgeSet().stream()
-                .filter(scopeEdge -> scopeEdge.getTarget().equals(scope))
+        return incomingEdgesOf(scope).stream()
                 .filter(scopeEdge -> scopeEdge instanceof NodeEdge)
                 .map(nodeEdge -> ((NodeEdge) nodeEdge).getNode())
                 .collect(Collectors.toList());
@@ -173,10 +171,10 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
      * @return A scope, if no scope found a NPE is thrown.
      */
     public Scope getEndScope() {
-        BnfRuleGraph noBackEdgeGraph = copyWithoutBackwardEdges();
+        final BnfRuleGraph noBackEdgeGraph = copyWithoutBackwardEdges();
         final List<Scope> scopesWithoutOutgoingEdges = noBackEdgeGraph.vertexSet().stream()
                 .filter(scope -> noBackEdgeGraph.outDegreeOf(scope) == 0)
-                .collect(Collectors.toList());
+                .collect(Collectors.toUnmodifiableList());
         if (scopesWithoutOutgoingEdges.size() != 1) {
             throw new InvalidGraphException(
                     "There must be exactly one end node! (found: " + scopesWithoutOutgoingEdges.size() + ")");
@@ -190,10 +188,8 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
      * @return Set of ScopeEdges, not null.
      */
     public Set<ScopeEdge> getDanglingScopeEdges() {
-        final Set<Scope> scopesWithoutSuccessor = vertexSet().stream()
+        return vertexSet().stream()
                 .filter(scope -> outDegreeOf(scope) == 0)
-                .collect(Collectors.toUnmodifiableSet());
-        return scopesWithoutSuccessor.stream()
                 .flatMap(scope -> incomingEdgesOf(scope).stream())
                 .collect(Collectors.toSet());
     }
@@ -231,11 +227,11 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
      * @return True if target node closer to end as source node.
      */
     public boolean isForwardEdge(final ScopeEdge edge) {
-        final int lengthSource =
+        final int distanceStartSource =
                 DijkstraShortestPath.findPathBetween(this, getStartScope(), edge.getSource()).getLength();
-        final int lengthTarget =
+        final int distanceStartTarget =
                 DijkstraShortestPath.findPathBetween(this, getStartScope(), edge.getTarget()).getLength();
-        return lengthTarget > lengthSource;
+        return distanceStartTarget > distanceStartSource;
     }
 
     /**
@@ -244,19 +240,18 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
      * @return True if the target node is closer to the start node than the source, else false.
      */
     public boolean isBackwardEdge(final ScopeEdge edge) {
-        final int lengthSource =
+        final int distanceStartSource =
                 DijkstraShortestPath.findPathBetween(this, getStartScope(), edge.getSource()).getLength();
-        final int lengthTarget =
+        final int distanceStartTarget =
                 DijkstraShortestPath.findPathBetween(this, getStartScope(), edge.getTarget()).getLength();
-        return lengthTarget < lengthSource;
+        return distanceStartTarget < distanceStartSource;
     }
 
     private BnfRuleGraph copyWithoutBackwardEdges() {
         final BnfRuleGraph noBackEdges = (BnfRuleGraph) this.clone();
-        final Set<ScopeEdge> backwardEdges = noBackEdges.edgeSet().stream()
+        noBackEdges.removeAllEdges(noBackEdges.edgeSet().stream()
                 .filter(edge -> edge instanceof OptionalEdge || edge instanceof RepetitionEdge)
-                .collect(Collectors.toUnmodifiableSet());
-        noBackEdges.removeAllEdges(backwardEdges);
+                .collect(Collectors.toUnmodifiableSet()));
         return noBackEdges;
     }
 
