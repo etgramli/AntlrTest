@@ -80,7 +80,7 @@ public final class InterfaceBuilder {
             throw new IllegalArgumentException("Target directory must no be blank!");
         }
         this.targetPackage = targetPackage;
-        packageDirectory = targetDirectory + File.separator + targetPackage.replaceAll("\\.", File.separator);
+        packageDirectory = targetDirectory + File.separator + targetPackage.replace('.', File.separatorChar);
         Files.createDirectories(Paths.get(packageDirectory));
     }
 
