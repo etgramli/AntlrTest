@@ -5,10 +5,10 @@ import org.jgrapht.GraphPath;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DirectedPseudograph;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Set;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Collections;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -89,28 +89,52 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
     }
 
     /**
+     * Returns all scopes that are connected by any type of outgoing edge.
+     * @param scope Scope, must not be null and present in graph.
+     * @return Set of scopes, not null, may be empty.
+     */
+    public Set<Scope> getOutGoingScopes(final Scope scope) {
+        return outgoingEdgesOf(scope).stream()
+                .map(ScopeEdge::getTarget)
+                .collect(Collectors.toUnmodifiableSet());
+    }
+
+    /**
      * Returns the successors of a node in the directed graph.
+     * Only scopes connected by a NodeEdge are considered successors.
      *
      * @param scope Scope to find its successors.
      * @return List of Scopes.
      */
-    public List<Scope> getSuccessors(final Scope scope) {
-        return outgoingEdgesOf(scope).stream()
+    public Set<Scope> getSuccessors(final Scope scope) {
+        return outGoingNodeEdges(scope).stream()
                 .map(ScopeEdge::getTarget)
-                .collect(Collectors.toList());
+                .collect(Collectors.toUnmodifiableSet());
+    }
+
+    /**
+     * Returns all scopes connected by any type of edge ingoing to this scope.
+     * @param scope Scope, not null, must be present in the graph.
+     * @return Set of Scopes, not null.
+     */
+    public Set<Scope> getInGoingScopes(final Scope scope) {
+        return incomingEdgesOf(scope).stream()
+                .map(ScopeEdge::getSource)
+                .collect(Collectors.toUnmodifiableSet());
     }
 
     /**
      * Returns nodes that are before the given node in a directed graph.
+     * Only scopes connected by a NodeEdge are considered predecessor.
      *
      * @param scope Scope to search its predecessors.
      * @return List of nodes.
      */
-    public List<Scope> getPredecessors(final Scope scope) {
+    public Set<Scope> getPredecessors(final Scope scope) {
         return incomingEdgesOf(scope).stream()
                 .filter(edge -> edge instanceof NodeEdge)
                 .map(ScopeEdge::getSource)
-                .collect(Collectors.toList());
+                .collect(Collectors.toUnmodifiableSet());
     }
 
     /**
@@ -118,10 +142,10 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
      * @param scope Scope, must not be null.
      * @return List of nodes.
      */
-    public List<Node> getOutGoingNodes(final Scope scope) {
+    public Set<Node> getOutGoingNodes(final Scope scope) {
         return outGoingNodeEdges(scope).stream()
                 .map(NodeEdge::getNode)
-                .collect(Collectors.toUnmodifiableList());
+                .collect(Collectors.toUnmodifiableSet());
     }
 
     /**
@@ -141,11 +165,11 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
      * @param scope Scope, must not be null.
      * @return List of Nodes.
      */
-    public List<Node> getInGoingNodes(final Scope scope) {
+    public Set<Node> getInGoingNodes(final Scope scope) {
         return incomingEdgesOf(scope).stream()
                 .filter(scopeEdge -> scopeEdge instanceof NodeEdge)
                 .map(nodeEdge -> ((NodeEdge) nodeEdge).getNode())
-                .collect(Collectors.toList());
+                .collect(Collectors.toUnmodifiableSet());
     }
 
     /**
@@ -209,8 +233,8 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
                 .collect(Collectors.toSet());
     }
 
-    private List<Scope> getDanglingNodesOf(final Scope scope) {
-        List<Scope> dangling = new ArrayList<>();
+    private Set<Scope> getDanglingNodesOf(final Scope scope) {
+        final Set<Scope> dangling = new HashSet<>();
         for (Scope successor : getSuccessors(scope)) {
             if (outDegreeOf(successor) > 0) {
                 dangling.addAll(getDanglingNodesOf(successor));

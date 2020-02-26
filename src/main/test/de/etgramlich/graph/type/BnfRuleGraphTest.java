@@ -62,17 +62,17 @@ class BnfRuleGraphTest {
     void getSuccessors_twoScopes_returnsOneSuccessor() {
         BnfRuleGraph graph = (BnfRuleGraph) SEQUENCE_GRAPH.clone();
 
-        final List<Scope> successors = graph.getSuccessors(SCOPES.get(0));
+        final Set<Scope> successors = graph.getSuccessors(SCOPES.get(0));
         assertTrue(graph.isConsistent());
         assertEquals(1, successors.size());
-        assertEquals(SCOPES.get(1), successors.get(0));
+        assertEquals(SCOPES.get(1), successors.iterator().next());
     }
 
     @Test
     void getSuccessors_fourScopesAsDiamond_returnsTwoSuccessors() {
         BnfRuleGraph graph = (BnfRuleGraph) DIAMOND_GRAPH.clone();
 
-        final List<Scope> successors = graph.getSuccessors(SCOPES.get(0));
+        final Set<Scope> successors = graph.getSuccessors(SCOPES.get(0));
         assertTrue(graph.isConsistent());
         assertEquals(2, successors.size());
         assertTrue(successors.containsAll(Set.of(SCOPES.get(1), SCOPES.get(2))));
@@ -82,7 +82,7 @@ class BnfRuleGraphTest {
     void getPredecessors_diamondGraph_returnsTwoNodes() {
         BnfRuleGraph graph = (BnfRuleGraph) DIAMOND_GRAPH.clone();
 
-        final List<Scope> predecessors = graph.getPredecessors(SCOPES.get(3));
+        final Set<Scope> predecessors = graph.getPredecessors(SCOPES.get(3));
         assertTrue(graph.isConsistent());
         assertEquals(2, predecessors.size());
         assertTrue(predecessors.containsAll(Set.of(SCOPES.get(1), SCOPES.get(2))));
@@ -92,7 +92,7 @@ class BnfRuleGraphTest {
     void getOutGoingNodes_diamondGraph_twoOutgoingNodes() {
         BnfRuleGraph graph = (BnfRuleGraph) DIAMOND_GRAPH.clone();
 
-        final List<Node> successors = graph.getOutGoingNodes(SCOPES.get(0));
+        final Set<Node> successors = graph.getOutGoingNodes(SCOPES.get(0));
         assertTrue(graph.isConsistent());
         assertEquals(2, successors.size());
         assertTrue(successors.containsAll(Set.of(new Node("N0"), new Node("N1"))));
@@ -134,7 +134,8 @@ class BnfRuleGraphTest {
         assertEquals(SEQUENCE_GRAPH.incomingEdgesOf(SEQUENCE_GRAPH.getEndScope()),
                 SEQUENCE_GRAPH.getDanglingScopeEdges(start));
 
-        final Scope second = SEQUENCE_GRAPH.getSuccessors(start).get(0);
+        assertEquals(1, SEQUENCE_GRAPH.getSuccessors(start).size());
+        final Scope second = SEQUENCE_GRAPH.getSuccessors(start).iterator().next();
         assertEquals(SEQUENCE_GRAPH.incomingEdgesOf(SEQUENCE_GRAPH.getEndScope()),
                 SEQUENCE_GRAPH.getDanglingScopeEdges(second));
     }
@@ -145,7 +146,8 @@ class BnfRuleGraphTest {
         assertEquals(DIAMOND_GRAPH.incomingEdgesOf(DIAMOND_GRAPH.getEndScope()),
                 DIAMOND_GRAPH.getDanglingScopeEdges(start));
 
-        final Scope second = DIAMOND_GRAPH.getSuccessors(start).get(0);
+        assertEquals(2, DIAMOND_GRAPH.getSuccessors(start).size());
+        final Scope second = DIAMOND_GRAPH.getSuccessors(start).iterator().next();
         assertEquals(DIAMOND_GRAPH.incomingEdgesOf(DIAMOND_GRAPH.getEndScope()),
                 DIAMOND_GRAPH.getDanglingScopeEdges(second));
     }
