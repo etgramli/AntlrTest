@@ -49,9 +49,4 @@ public abstract class TextElement implements Element, BnfType {
     public final int getNumberOfElements() {
         return 1;
     }
-
-    @Override
-    public final List<String> getNonTerminalDependants() {
-        return Collections.emptyList();
-    }
 }

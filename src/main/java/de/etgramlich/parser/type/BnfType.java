@@ -1,7 +1,5 @@
 package de.etgramlich.parser.type;
 
-import java.util.List;
-
 /**
  * Super type for all BNF elements.
  */
@@ -25,10 +23,4 @@ public interface BnfType {
      * @return Non-negative integer.
      */
     int getNumberOfElements();
-
-    /**
-     * Returns a list of IDs of the non-terminals this thingy depends on.
-     * @return List of Strings, not null.
-     */
-    List<String> getNonTerminalDependants();
 }
