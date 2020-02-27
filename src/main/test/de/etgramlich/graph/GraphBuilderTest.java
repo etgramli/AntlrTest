@@ -42,8 +42,8 @@ class GraphBuilderTest {
                         new Alternatives(List.of(
                                 new Sequence(List.of(
                                         new Precedence(new Alternatives(List.of(
-                                                new Sequence(List.of(new Keyword("component"))),
-                                                new Sequence(List.of(new Keyword("singleton")))))),
+                                                new Sequence(List.of(new Keyword("'component'"))),
+                                                new Sequence(List.of(new Keyword("'singleton'")))))),
                                         new NonTerminal("componentName"),
                                         new NonTerminal("componentInterface"),
                                         new ZeroOrMore(new Alternatives(List.of(new Sequence(List.of(new NonTerminal("componentInterface")))))),

@@ -1,7 +1,6 @@
 package de.etgramlich.parser.listener;
 
 import de.etgramlich.parser.gen.bnf.BnfParser;
-import de.etgramlich.parser.listener.NonTerminalListener;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -11,29 +10,32 @@ class IdListenerTest {
     @Test
     void enterText_normalText_returnsTextItself() {
         final String expectedId = "some-text is here with spaces inside";
+        final String id = "'" + expectedId + "'";
 
         NonTerminalListener listener = new NonTerminalListener();
 
-        listener.enterKeyword(new KeywordMock(expectedId));
+        listener.enterKeyword(new KeywordMock(id));
         assertEquals(expectedId, listener.getTextElement().getName());
     }
 
     @Test
     void enterText_endsWithEmptySpaces_returnsTrimmed() {
         final String expectedId = "some-id-without-spaces in the end";
+        final String id = "'" + expectedId + "'" + "   ";
 
         NonTerminalListener listener = new NonTerminalListener();
-        listener.enterKeyword(new KeywordMock(expectedId + "   "));
+        listener.enterKeyword(new KeywordMock(id));
         assertEquals(expectedId, listener.getTextElement().getName());
     }
 
     @Test
     void enterRuleid_normalId_returnsIdItself() {
         final String expectedId = "some-id";
+        final String id = "'" + expectedId + "'";
 
         NonTerminalListener listener = new NonTerminalListener();
 
-        listener.enterKeyword(new KeywordMock(expectedId));
+        listener.enterKeyword(new KeywordMock(id));
         assertEquals(expectedId, listener.getTextElement().getName());
     }
 
