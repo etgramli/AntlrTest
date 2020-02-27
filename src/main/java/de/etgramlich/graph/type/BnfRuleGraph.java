@@ -3,6 +3,7 @@ package de.etgramlich.graph.type;
 import de.etgramlich.util.exception.InvalidGraphException;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DirectedPseudograph;
+import org.jgrapht.nio.Attribute;
 import org.jgrapht.nio.AttributeType;
 import org.jgrapht.nio.DefaultAttribute;
 import org.jgrapht.nio.dot.DOTExporter;
@@ -15,6 +16,7 @@ import java.util.Set;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 import java.util.Collections;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -302,12 +304,23 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
         exporter.setEdgeIdProvider(
                 scopeEdge -> "E_" + (scopeEdge instanceof NodeEdge ? ((NodeEdge) scopeEdge).getNode().getName()
                         : scopeEdge.getClass().getName()));
-        exporter.setEdgeAttributeProvider(
-                edge -> Map.of("name", new DefaultAttribute<>(
-                        (edge instanceof NodeEdge ? ((NodeEdge) edge).getNode().getName()
-                                : edge.getClass().getName()), AttributeType.STRING)));
+        exporter.setEdgeAttributeProvider(BnfRuleGraph::getAttributeMap);
         final StringWriter writer = new StringWriter();
         exporter.exportGraph(this, writer);
         return writer.toString();
+    }
+
+    private static Map<String, Attribute> getAttributeMap(final ScopeEdge edge) {
+        final Map<String, Attribute> attributeMap = new HashMap<>(2);
+        attributeMap.put("name",
+                new DefaultAttribute<>(
+                        (edge instanceof NodeEdge ? ((NodeEdge) edge).getNode().getName() : edge.getClass().getName()),
+                        AttributeType.STRING));
+        if (edge instanceof NodeEdge) {
+            NodeEdge nodeEdge = (NodeEdge) edge;
+            attributeMap.put("nodeType",
+                    new DefaultAttribute<>(nodeEdge.getNode().getType().toString(), AttributeType.STRING));
+        }
+        return Collections.unmodifiableMap(attributeMap);
     }
 }

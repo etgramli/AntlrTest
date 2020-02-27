@@ -39,6 +39,14 @@ public final class Node implements Serializable {
         return name;
     }
 
+    /**
+     * Returns the type of the node representing a EBNF text elemen.
+     * @return Enum value of NodeType.
+     */
+    public NodeType getType() {
+        return type;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
