@@ -20,8 +20,8 @@ import de.etgramlich.graph.type.RepetitionEdge;
 import de.etgramlich.graph.type.Node;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.stream.Collectors;
@@ -82,19 +82,19 @@ public final class GraphBuilder {
         assert (!alternatives.getSequences().isEmpty());
 
         final Scope openingAlternativeScope = lastAddedScope;
-        final Scope closingAlternativeScope = getNextScope();
-        final List<Scope> lastScopes = new ArrayList<>();
+        final Set<Scope> lastScopes = new HashSet<>();
 
-        for (int i = 0; i < alternatives.getSequences().size(); ++i) {
-            processSequence(alternatives.getSequences().get(i));
+        for (Iterator<Sequence> iter = alternatives.getSequences().iterator(); iter.hasNext();) {
+            processSequence(iter.next());
             lastScopes.add(lastAddedScope);
-            if (i != alternatives.getSequences().size() - 1) {
+            if (iter.hasNext()) {
                 lastAddedScope = openingAlternativeScope;
             }
         }
 
         // Replace scopes of dangling edges with only one (new) one to implement recursive alternatives
         if (lastScopes.size() > 1) {
+            final Scope closingAlternativeScope = getNextScope();
             graph.addVertex(closingAlternativeScope);
             mergeNodes(closingAlternativeScope, lastScopes);
             lastAddedScope = closingAlternativeScope;
