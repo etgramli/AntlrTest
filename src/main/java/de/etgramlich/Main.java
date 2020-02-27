@@ -1,8 +1,10 @@
 package de.etgramlich;
 
+import de.etgramlich.graph.ForestBuilder;
 import de.etgramlich.parser.gen.bnf.BnfLexer;
 import de.etgramlich.parser.gen.bnf.BnfParser;
 import de.etgramlich.parser.listener.BnfListener;
+import de.etgramlich.parser.type.Bnf;
 import de.etgramlich.util.StringUtil;
 import de.etgramlich.graph.GraphBuilder;
 import de.etgramlich.generator.InterfaceBuilder;
@@ -75,8 +77,10 @@ public final class Main {
 
         final BnfListener listener = new BnfListener();
         listener.enterBnf(parser.bnf());
+        final Bnf bnf = listener.getBnf();
 
-        final BnfRuleGraph graph = new GraphBuilder(listener.getBnf()).getGraph();
+        final ForestBuilder forestBuilder = new ForestBuilder(bnf);
+        final BnfRuleGraph graph = new GraphBuilder(bnf).getGraph();
         try {
             graph.renderBnfRuleGraph(targetDirectory + File.separator + "graph.gv");
 

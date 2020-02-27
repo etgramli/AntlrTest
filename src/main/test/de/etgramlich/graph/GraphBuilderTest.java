@@ -1,5 +1,6 @@
 package de.etgramlich.graph;
 
+import de.etgramlich.graph.type.*;
 import de.etgramlich.parser.type.Alternatives;
 import de.etgramlich.parser.type.Bnf;
 import de.etgramlich.parser.type.BnfRule;
@@ -9,10 +10,6 @@ import de.etgramlich.parser.type.repetition.ZeroOrMore;
 import de.etgramlich.parser.type.text.Keyword;
 import de.etgramlich.parser.type.text.NonTerminal;
 import de.etgramlich.parser.type.Sequence;
-import de.etgramlich.graph.type.BnfRuleGraph;
-import de.etgramlich.graph.type.Scope;
-import de.etgramlich.graph.type.ScopeEdge;
-import de.etgramlich.graph.type.Node;
 import org.jgrapht.alg.cycle.CycleDetector;
 import org.junit.jupiter.api.Test;
 
@@ -351,7 +348,7 @@ class GraphBuilderTest {
 
 
         // Add new node to test addition
-        builder.addNodeInSequence(new Node("New-Sequence"));
+        builder.addNodeInSequence(new Node("New-Sequence", NodeType.KEYWORD));
         graph = builder.getGraph();
 
         assertTrue(graph.isConsistent());

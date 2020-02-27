@@ -14,14 +14,21 @@ public final class Node implements Serializable {
     private final String name;
 
     /**
+     * Type of the node according to the EBNF grammar.
+     */
+    private final NodeType type;
+
+    /**
      * Creates a new node with the given identifier.
      * @param name String, must not be blank.
+     * @param type Type of the node.
      */
-    public Node(final String name) {
+    public Node(final String name, final NodeType type) {
         if (StringUtils.isBlank(name)) {
             throw new IllegalArgumentException("Node name must not be blank!");
         }
         this.name = name;
+        this.type = type;
     }
 
     /**
@@ -43,11 +50,16 @@ public final class Node implements Serializable {
 
         Node node = (Node) o;
 
-        return name.equals(node.name);
+        if (!name.equals(node.name)) {
+            return false;
+        }
+        return type == node.type;
     }
 
     @Override
     public int hashCode() {
-        return name.hashCode();
+        int result = name.hashCode();
+        result = 31 * result + type.hashCode();
+        return result;
     }
 }

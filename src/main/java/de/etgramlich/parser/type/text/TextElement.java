@@ -4,9 +4,6 @@ import de.etgramlich.parser.type.BnfType;
 import de.etgramlich.parser.type.Element;
 import de.etgramlich.util.StringUtil;
 
-import java.util.Collections;
-import java.util.List;
-
 /**
  * Represents a text element from BNF as Java type.
  */

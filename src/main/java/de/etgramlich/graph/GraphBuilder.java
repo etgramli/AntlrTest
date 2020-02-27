@@ -9,8 +9,6 @@ import de.etgramlich.parser.type.repetition.AbstractRepetition;
 import de.etgramlich.parser.type.repetition.Optional;
 import de.etgramlich.parser.type.repetition.ZeroOrMore;
 import de.etgramlich.parser.type.text.TextElement;
-import de.etgramlich.util.exception.InvalidGraphException;
-import de.etgramlich.util.exception.UnrecognizedElementException;
 import de.etgramlich.graph.type.BnfRuleGraph;
 import de.etgramlich.graph.type.Scope;
 import de.etgramlich.graph.type.ScopeEdge;
@@ -18,6 +16,9 @@ import de.etgramlich.graph.type.NodeEdge;
 import de.etgramlich.graph.type.OptionalEdge;
 import de.etgramlich.graph.type.RepetitionEdge;
 import de.etgramlich.graph.type.Node;
+import de.etgramlich.graph.type.NodeType;
+import de.etgramlich.util.exception.InvalidGraphException;
+import de.etgramlich.util.exception.UnrecognizedElementException;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -64,6 +65,8 @@ public final class GraphBuilder {
                 .collect(Collectors.toList());
         nonTerminalBnfRules.remove(startBnfRule);
 
+        System.out.println("GraphBuilder: processing " + nonTerminalBnfRules.size() + " rule(s).");
+
         // Add first scope
         final Scope firstScope = getNextScope();
         graph.addVertex(firstScope);
@@ -72,6 +75,25 @@ public final class GraphBuilder {
         for (BnfRule bnfRule : nonTerminalBnfRules) {
             processAlternatives(bnfRule.getRhs());
         }
+
+        if (!graph.isConsistent()) {
+            throw new InvalidGraphException("Graph is not consistent after build!");
+        }
+    }
+
+    /**
+     * Creates a graph for the provided rule.
+     * @param rule BnfRule, must not be null.
+     */
+    public GraphBuilder(final BnfRule rule) {
+        if (rule == null) {
+            throw new IllegalArgumentException("BnfRule must not be null!");
+        }
+        final Scope firstScope = getNextScope();
+        graph.addVertex(firstScope);
+        lastAddedScope = firstScope;
+
+        processAlternatives(rule.getRhs());
 
         if (!graph.isConsistent()) {
             throw new InvalidGraphException("Graph is not consistent after build!");
@@ -145,7 +167,9 @@ public final class GraphBuilder {
      */
     private void processElement(final Element element) {
         if (element instanceof TextElement) {
-            addNodeInSequence(new Node(element.getName()));
+            final TextElement textElement = (TextElement) element;
+
+            addNodeInSequence(new Node(textElement.getName(), NodeType.fromTextElement(textElement)));
         } else if (element instanceof AbstractRepetition) {
             AbstractRepetition repetition = (AbstractRepetition) element;
 
