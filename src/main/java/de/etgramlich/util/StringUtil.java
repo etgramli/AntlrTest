@@ -2,19 +2,35 @@ package de.etgramlich.util;
 
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.Collections;
+import java.util.Collection;
 import java.util.stream.Collectors;
 
+/**
+ * Contains additional methods to operate on Strings, that are not present in the Apache Commons library.
+ */
 public final class StringUtil extends StringUtils {
-    private StringUtil() {}
+    private StringUtil() { }
 
-    public static List<String> stripBlankLines(@NotNull final List<String> lines) {
+    /**
+     * Removes blank lines from the list.
+     * @param lines List of String, must not be null.
+     * @return List of String, may be empty.
+     */
+    public static List<String> stripBlankLines(final List<String> lines) {
         return lines.stream().filter(s -> !isBlank(s)).collect(Collectors.toList());
     }
 
-    public static List<String> trimBlankLines(@NotNull final List<String> lines) {
+    /**
+     * Removes empty Strings from the beginning and the end of the list.
+     * Empty lines in the middle remain in the list.
+     * @param lines List of Strings, must not be null.
+     * @return List of Sting, not null, may be empty.
+     */
+    public static List<String> trimBlankLines(final List<String> lines) {
         Optional<String> begin = lines.stream().filter(s -> !isBlank(s)).findFirst();
         Optional<String> end = Lists.reverse(lines).stream().filter(s -> !isBlank(s)).findFirst();
 
@@ -26,24 +42,51 @@ public final class StringUtil extends StringUtils {
         return lines.subList(beginIndex, endIndex + 1);
     }
 
-    public static List<String> removeDuplicates(@NotNull final List<String> lines) {
+    /**
+     * Removes duplicate lines from the list.
+     * @param lines List of Strings, must not be null.
+     * @return List of Strings, not null.
+     */
+    public static List<String> removeDuplicates(final List<String> lines) {
         return lines.stream().distinct().collect(Collectors.toList());
     }
 
-    public static boolean isAllBlank(@NotNull final Collection<String> lines) {
+    /**
+     * Determines if all Strings in the collection are blank.
+     * @param lines Collection of String, must not be null.
+     * @return True if all Strings are blank.
+     */
+    public static boolean isAllBlank(final Collection<String> lines) {
         return isAllBlank(lines.toArray(new String[0]));
     }
 
-    public static String removeAllWhiteSpaces(@NotNull final String str) {
+    /**
+     * Removes all whitespaces.
+     * @param str String, must not be null.
+     * @return String without whitespaces, may be empty.
+     */
+    public static String removeAllWhiteSpaces(final String str) {
         return str.replaceAll("\\s+", "");
     }
 
+    /**
+     * Determines if the character is numeric.
+     * @param c Character
+     * @return True if the char is numeric.
+     */
     public static boolean isNumeric(final char c) {
         return isNumeric(String.valueOf(c));
     }
 
-    public static boolean isAllNumeric(char... cs) {
-        if (cs == null || cs.length == 0) return false;
+    /**
+     * Determines if all characters are numeric.
+     * @param cs Array of chars.
+     * @return True if all chars are numeric.
+     */
+    public static boolean isAllNumeric(final char... cs) {
+        if (cs == null || cs.length == 0) {
+            return false;
+        }
         return toCharList(cs).stream().filter(c -> !isNumeric(c)).findAny().isEmpty();
     }
 
@@ -51,6 +94,11 @@ public final class StringUtil extends StringUtils {
         return new String(cs).chars().mapToObj(c -> (char) c).collect(Collectors.toList());
     }
 
+    /**
+     * Determines if the first character is upper case.
+     * @param charSequence Character sequence, may be null or empty.
+     * @return True if the first character is a upper case letter.
+     */
     public static boolean startsWithUpperCase(final CharSequence charSequence) {
         if (charSequence == null || charSequence.length() == 0) {
             return false;
@@ -59,6 +107,11 @@ public final class StringUtil extends StringUtils {
         return firstChar >= 'A' && firstChar <= 'Z';
     }
 
+    /**
+     * Determines if the first character is lower case.
+     * @param charSequence Character sequence, may be null or empty.
+     * @return True if the first character is a lower case letter.
+     */
     public static boolean startsWithLowerCase(final CharSequence charSequence) {
         if (charSequence == null || charSequence.length() == 0) {
             return false;

@@ -4,13 +4,15 @@ import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
+
+import java.util.Arrays;
 import java.util.List;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class BnfParser extends Parser {
 	static { RuntimeMetaData.checkVersion("4.8", RuntimeMetaData.VERSION); }
 
-	protected static final DFA[] _decisionToDFA;
+	private static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
@@ -26,7 +28,7 @@ public class BnfParser extends Parser {
 			"optional", "zeroormore", "precedence", "nt", "keyword", "type"
 		};
 	}
-	public static final String[] ruleNames = makeRuleNames();
+	private static final String[] ruleNames = makeRuleNames();
 
 	private static String[] makeLiteralNames() {
 		return new String[] {
@@ -47,7 +49,7 @@ public class BnfParser extends Parser {
 	 * @deprecated Use {@link #VOCABULARY} instead.
 	 */
 	@Deprecated
-	public static final String[] tokenNames;
+	private static final String[] tokenNames;
 	static {
 		tokenNames = new String[_SYMBOLIC_NAMES.length];
 		for (int i = 0; i < tokenNames.length; i++) {
@@ -65,7 +67,7 @@ public class BnfParser extends Parser {
 	@Override
 	@Deprecated
 	public String[] getTokenNames() {
-		return tokenNames;
+		return Arrays.copyOf(tokenNames, tokenNames.length);
 	}
 
 	@Override
@@ -78,7 +80,7 @@ public class BnfParser extends Parser {
 	public String getGrammarFileName() { return "Bnf.g4"; }
 
 	@Override
-	public String[] getRuleNames() { return ruleNames; }
+	public String[] getRuleNames() { return Arrays.copyOf(ruleNames, ruleNames.length); }
 
 	@Override
 	public String getSerializedATN() { return _serializedATN; }

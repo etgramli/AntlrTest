@@ -1,20 +1,29 @@
-package de.etgramlich.util.graph;
+package de.etgramlich.graph;
 
-import de.etgramlich.parser.type.*;
+import de.etgramlich.parser.type.Bnf;
+import de.etgramlich.parser.type.BnfRule;
+import de.etgramlich.parser.type.Alternatives;
+import de.etgramlich.parser.type.Sequence;
+import de.etgramlich.parser.type.Element;
 import de.etgramlich.parser.type.repetition.AbstractRepetition;
 import de.etgramlich.parser.type.repetition.Optional;
-import de.etgramlich.parser.type.repetition.Precedence;
 import de.etgramlich.parser.type.repetition.ZeroOrMore;
 import de.etgramlich.parser.type.text.TextElement;
 import de.etgramlich.util.exception.InvalidGraphException;
 import de.etgramlich.util.exception.UnrecognizedElementException;
-import de.etgramlich.util.graph.type.BnfRuleGraph;
-import de.etgramlich.util.graph.type.Scope;
-import de.etgramlich.util.graph.type.ScopeEdge;
-import de.etgramlich.util.graph.type.node.Node;
-import de.etgramlich.util.graph.type.node.SequenceNode;
+import de.etgramlich.graph.type.BnfRuleGraph;
+import de.etgramlich.graph.type.Scope;
+import de.etgramlich.graph.type.ScopeEdge;
+import de.etgramlich.graph.type.NodeEdge;
+import de.etgramlich.graph.type.OptionalEdge;
+import de.etgramlich.graph.type.RepetitionEdge;
+import de.etgramlich.graph.type.Node;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Set;
+import java.util.HashSet;
 import java.util.stream.Collectors;
 
 /**
@@ -22,19 +31,37 @@ import java.util.stream.Collectors;
  * List of rules must be passed as constructor argument, getGraph can be passed on each constructed object.
  */
 public final class GraphBuilder {
+    /**
+     * Graph representing the bnf passed in constructor.
+     * Can be accessed if constructor succeeds.
+     */
     private final BnfRuleGraph graph = new BnfRuleGraph();
+
+    /**
+     * Counter to create Scopes with unique names.
+     */
     private int scopeNumber = 0;
+
+    /**
+     * Saves the last added scope.
+     */
     private Scope lastAddedScope;
 
+    /**
+     * Creates a BnfRuleGraph from a Bnf (tree).
+     * @param bnf A bnf tree, must not be null.
+     */
     public GraphBuilder(final Bnf bnf) {
-        final List<BnfRule> startBnfRules = bnf.getBnfRules().stream().filter(BnfRule::isStartRule).collect(Collectors.toList());
+        final List<BnfRule> startBnfRules = bnf.getBnfRules().stream()
+                .filter(BnfRule::isStartRule)
+                .collect(Collectors.toList());
         if (startBnfRules.size() != 1) {
             throw new IllegalArgumentException("Rule-list must have exactly one Start rule");
         }
         final BnfRule startBnfRule = startBnfRules.get(0);
-        final List<BnfRule> nonTerminalBnfRules = bnf.getBnfRules().stream().filter(
-                bnfRule -> !bnfRule.isTerminal() && bnfRule.getNumberOfElements() > 1
-        ).collect(Collectors.toList());
+        final List<BnfRule> nonTerminalBnfRules = bnf.getBnfRules().stream()
+                .filter(bnfRule -> !bnfRule.isTerminal() && bnfRule.getNumberOfElements() > 1)
+                .collect(Collectors.toList());
         nonTerminalBnfRules.remove(startBnfRule);
 
         // Add first scope
@@ -67,43 +94,38 @@ public final class GraphBuilder {
         }
 
         // Replace scopes of dangling edges with only one (new) one to implement recursive alternatives
-        final Set<ScopeEdge> danglingEdges = graph.getDanglingScopeEdges();
-        if (danglingEdges.size() == 1) {
-            lastAddedScope = graph.getEndScope();
-        } else {
+        if (lastScopes.size() > 1) {
             graph.addVertex(closingAlternativeScope);
             mergeNodes(closingAlternativeScope, lastScopes);
             lastAddedScope = closingAlternativeScope;
         }
     }
 
+    /**
+     * Replaces the scopes by the new scope, to merge edges to a single target or source vertex.
+     * @param newScope New scope, must not be null.
+     * @param scopes Collection with scopes to replace.
+     */
     private void mergeNodes(final Scope newScope, final Collection<Scope> scopes) {
+        if (newScope == null || scopes == null) {
+            throw new IllegalArgumentException("New scope and scopes must not be null!");
+        }
         final Set<ScopeEdge> ingoingEdges = new HashSet<>();
         final Set<ScopeEdge> outgoingEdges = new HashSet<>();
         for (Scope scope : scopes) {
             ingoingEdges.addAll(graph.incomingEdgesOf(scope));
             outgoingEdges.addAll(graph.outgoingEdgesOf(scope));
         }
+        // Remove vertices and touching edges
+        graph.removeAllVertices(scopes);
 
+        // Remove old target vertex and edge, re-add edge with updated vertex
         for (ScopeEdge edge : ingoingEdges) {
-            // Remove old Vertex and Edge
-            Scope temp = edge.getTarget();
-            graph.removeVertex(temp);
-            graph.removeEdge(edge);
-
-            // Re-add altered edge
-            edge.setTarget(newScope);
             graph.addEdge(edge.getSource(), newScope, edge);
         }
 
+        // Remove old source vertex and edge, re-add edge with updated vertex
         for (ScopeEdge edge : outgoingEdges) {
-            // Remove old Vertex and Edge
-            Scope temp = edge.getSource();
-            graph.removeVertex(temp);
-            graph.removeEdge(edge);
-
-            // Re-add altered edge
-            edge.setSource(newScope);
             graph.addEdge(newScope, edge.getTarget(), edge);
         }
     }
@@ -123,27 +145,28 @@ public final class GraphBuilder {
      */
     private void processElement(final Element element) {
         if (element instanceof TextElement) {
-            addNodeInSequence(new SequenceNode(element.getName()));
+            addNodeInSequence(new Node(element.getName()));
         } else if (element instanceof AbstractRepetition) {
             AbstractRepetition repetition = (AbstractRepetition) element;
-            final Scope beforeOptionalLoop = lastAddedScope;
 
-            if (repetition instanceof Optional) {
-                processAlternatives(repetition.getAlternatives());
-                graph.addEdge(beforeOptionalLoop, lastAddedScope, new ScopeEdge(beforeOptionalLoop, lastAddedScope));
-            } else if (repetition instanceof ZeroOrMore) {
-                processAlternatives(repetition.getAlternatives());
-                graph.addEdge(lastAddedScope, beforeOptionalLoop, new ScopeEdge(lastAddedScope, beforeOptionalLoop));
-            } else if (repetition instanceof Precedence) {
-                processAlternatives(repetition.getAlternatives());
-            } else {
-                throw new UnrecognizedElementException("Element is unrecognized subclass of AbstractRepetition: " + element.toString());
+            final Scope beforeOptionalLoop = lastAddedScope;
+            processAlternatives(repetition.getAlternatives());
+
+            if (repetition instanceof Optional || repetition instanceof ZeroOrMore) {
+                graph.addEdge(beforeOptionalLoop, lastAddedScope, new OptionalEdge());
+                if (repetition instanceof ZeroOrMore) {
+                    graph.addEdge(lastAddedScope, beforeOptionalLoop, new RepetitionEdge());
+                }
             }
         } else {
             throw new UnrecognizedElementException("Element not recognized: " + element.toString());
         }
     }
 
+    /**
+     * Returns a copy of the graph.
+     * @return BnfRuleGraph, not null.
+     */
     public BnfRuleGraph getGraph() {
         return (BnfRuleGraph) graph.clone();
     }
@@ -155,10 +178,9 @@ public final class GraphBuilder {
      */
     public void addNodeInSequence(final Node node) {
         final Scope newScope = getNextScope();
+
         graph.addVertex(newScope);
-
-        graph.addEdge(lastAddedScope, newScope, new ScopeEdge(lastAddedScope, newScope, node));
-
+        graph.addEdge(lastAddedScope, newScope, new NodeEdge(node));
         lastAddedScope = newScope;
     }
 

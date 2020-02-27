@@ -5,42 +5,63 @@ import de.etgramlich.parser.gen.bnf.BnfParser;
 import de.etgramlich.parser.listener.BnfListener;
 import de.etgramlich.parser.type.Bnf;
 import de.etgramlich.util.StringUtil;
-import de.etgramlich.util.graph.GraphBuilder;
-import de.etgramlich.util.graph.type.Scope;
-import de.etgramlich.util.graph.type.ScopeEdge;
+import de.etgramlich.graph.GraphBuilder;
+import de.etgramlich.generator.InterfaceBuilder;
+import de.etgramlich.graph.type.BnfRuleGraph;
+import de.etgramlich.graph.type.NodeEdge;
+import de.etgramlich.graph.type.Scope;
+import de.etgramlich.graph.type.ScopeEdge;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.apache.commons.cli.*;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.ParseException;
 import org.apache.commons.lang3.StringUtils;
 import org.jgrapht.Graph;
-import org.jgrapht.io.ComponentNameProvider;
-import org.jgrapht.io.DOTExporter;
-import org.jgrapht.io.GraphExporter;
+import org.jgrapht.nio.AttributeType;
+import org.jgrapht.nio.DefaultAttribute;
+import org.jgrapht.nio.dot.DOTExporter;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import org.jgrapht.io.ExportException;
 import java.util.List;
+import java.util.Map;
 
+/**
+ * Main program that converts a EBNF grammar to Java interfaces.
+ */
 public final class Main {
-    private static final Options options = new Options();
+    private Main() { }
+
+    /**
+     * Stores command line options.
+     */
+    private static final Options OPTIONS = new Options();
     static {
-        options.addOption("t", true, "Target directory for generated sources");
-        options.addOption("p", true, "Target package");
-        options.addOption("g", true, "Grammar file path");
+        OPTIONS.addOption("h", "help", false, "Prints this help text.");
+        OPTIONS.addOption("d", "directory", true, "Target directory for generated sources");
+        OPTIONS.addOption("p", "package", true, "Target package");
+        OPTIONS.addOption("g", "grammar", true, "Grammar file path");
     }
 
+    /**
+     * Reads grammar from file and outputs java interfaces in the corresponding package directory in the provided
+     * target directory.
+     * @param args Command line arguments to be parsed. Should not be empty.
+     */
     public static void main(final String[] args) {
         final String grammar;
-        String targetDirectory = "./";
+        String targetDirectory = "." + File.separator;
         String targetPackage = StringUtils.EMPTY;
         try {
-            CommandLine cmd = new DefaultParser().parse(options, args);
-            if (cmd.hasOption("t")) {
-                targetDirectory = cmd.getOptionValue("t");
+            CommandLine cmd = new DefaultParser().parse(OPTIONS, args);
+            if (cmd.hasOption("d")) {
+                targetDirectory = cmd.getOptionValue("d");
             }
             if (cmd.hasOption("p")) {
                 targetPackage = cmd.getOptionValue("p");
@@ -61,22 +82,21 @@ public final class Main {
             return;
         }
 
-        // Create Lexer and Parser
-        BnfParser parser = new BnfParser(new CommonTokenStream(new BnfLexer(CharStreams.fromString(grammar))));
+        final BnfParser parser = new BnfParser(new CommonTokenStream(new BnfLexer(CharStreams.fromString(grammar))));
 
         // Parse given Grammar and get tree of types
-        BnfListener listener = new BnfListener();
+        final BnfListener listener = new BnfListener();
         listener.enterBnf(parser.bnf());
-        Bnf bnf = listener.getBnf();
+        final Bnf bnf = listener.getBnf();
 
-        // Convert tree of types to graph of Scopes and Nodes
-        GraphBuilder gb = new GraphBuilder(bnf);
-        Graph<Scope, ScopeEdge> graph = gb.getGraph();
+        final BnfRuleGraph graph = new GraphBuilder(bnf).getGraph();
 
-        // Render graph
         try {
-            renderHrefGraph(graph);
-        } catch (ExportException e) {
+            renderBnfRuleGraph(graph, targetDirectory + File.separator + "graph.gv");
+
+            InterfaceBuilder builder = new InterfaceBuilder(targetDirectory, targetPackage);
+            builder.saveInterfaces(graph);
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -88,18 +108,22 @@ public final class Main {
         );
         final List<String> allRules = grammar.subList(beginIndex + 1, grammar.size());
         final List<String> noDuplicateRules = StringUtil.removeDuplicates(StringUtil.stripBlankLines(allRules));
-        return String.join("\n", noDuplicateRules);
+        return String.join(System.lineSeparator(), noDuplicateRules);
     }
 
-    private static void renderHrefGraph(Graph<Scope, ScopeEdge> hrefGraph) throws ExportException {
-        final ComponentNameProvider<Scope> vertexProvider = scope -> "S_" + scope.getName();
-        final ComponentNameProvider<Scope> vertexIdProvider = scope -> "S_id_" + scope.getName();
-        final ComponentNameProvider<ScopeEdge> edgeProvider =
-                scopeEdge -> "E_" + scopeEdge.getNodes().get(0).getName() + "(" + scopeEdge.getTotalNumberOfNodes() + ")";
-        final GraphExporter<Scope, ScopeEdge> exporter =
-                new DOTExporter<>(vertexIdProvider, vertexProvider, edgeProvider);
-        final Writer writer = new StringWriter();
-        exporter.exportGraph(hrefGraph, writer);
-        System.out.println(writer.toString());
+    private static void renderBnfRuleGraph(final Graph<Scope, ScopeEdge> bnfRuleGraph, final String path)
+            throws IOException {
+        final DOTExporter<Scope, ScopeEdge> exporter = new DOTExporter<>(Scope::getName);
+        exporter.setEdgeIdProvider(
+                scopeEdge -> "E_" + (scopeEdge instanceof NodeEdge ? ((NodeEdge) scopeEdge).getNode().getName()
+                                                                    : scopeEdge.getClass().getName()));
+        exporter.setEdgeAttributeProvider(
+                edge -> Map.of("name", new DefaultAttribute<>(
+                        (edge instanceof NodeEdge ? ((NodeEdge) edge).getNode().getName()
+                                                  : edge.getClass().getName()), AttributeType.STRING)));
+
+        try (FileWriter fileWriter = new FileWriter(path, StandardCharsets.UTF_8)) {
+            exporter.exportGraph(bnfRuleGraph, fileWriter);
+        }
     }
 }

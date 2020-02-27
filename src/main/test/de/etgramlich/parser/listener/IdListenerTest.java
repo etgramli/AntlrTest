@@ -1,4 +1,4 @@
-package de.etgramlich.parser.listener.bnf;
+package de.etgramlich.parser.listener;
 
 import de.etgramlich.parser.gen.bnf.BnfParser;
 import de.etgramlich.parser.listener.NonTerminalListener;
@@ -15,7 +15,7 @@ class IdListenerTest {
         NonTerminalListener listener = new NonTerminalListener();
 
         listener.enterKeyword(new KeywordMock(expectedId));
-        assertEquals(expectedId, listener.getKeyword().getName());
+        assertEquals(expectedId, listener.getTextElement().getName());
     }
 
     @Test
@@ -24,7 +24,7 @@ class IdListenerTest {
 
         NonTerminalListener listener = new NonTerminalListener();
         listener.enterKeyword(new KeywordMock(expectedId + "   "));
-        assertEquals(expectedId, listener.getKeyword().getName());
+        assertEquals(expectedId, listener.getTextElement().getName());
     }
 
     @Test
@@ -34,7 +34,7 @@ class IdListenerTest {
         NonTerminalListener listener = new NonTerminalListener();
 
         listener.enterKeyword(new KeywordMock(expectedId));
-        assertEquals(expectedId, listener.getKeyword().getName());
+        assertEquals(expectedId, listener.getTextElement().getName());
     }
 
     @Test
@@ -43,7 +43,7 @@ class IdListenerTest {
 
         NonTerminalListener listener = new NonTerminalListener();
         listener.enterType(new TypeMock(expectedId + "   "));
-        assertEquals(expectedId, listener.getType().getName());
+        assertEquals(expectedId, listener.getTextElement().getName());
     }
 
     @Test
@@ -53,7 +53,7 @@ class IdListenerTest {
         NonTerminalListener listener = new NonTerminalListener();
 
         listener.enterNt(new NtMock("<new-id>"));
-        assertEquals(expectedId, listener.getNonTerminal().getName());
+        assertEquals(expectedId, listener.getTextElement().getName());
     }
 
     @Test
@@ -63,7 +63,7 @@ class IdListenerTest {
         NonTerminalListener listener = new NonTerminalListener();
 
         listener.enterNt(new NtMock(" <new-id   > "));
-        assertEquals(expectedId, listener.getNonTerminal().getName());
+        assertEquals(expectedId, listener.getTextElement().getName());
     }
 
 

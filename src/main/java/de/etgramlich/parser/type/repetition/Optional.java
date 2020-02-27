@@ -2,7 +2,14 @@ package de.etgramlich.parser.type.repetition;
 
 import de.etgramlich.parser.type.Alternatives;
 
+/**
+ * Represents a optional element from BNF as Java type.
+ */
 public final class Optional extends AbstractRepetition {
+    /**
+     * Creates new Optional object from Alternatives.
+     * @param alternatives Alternatives, must not be null.
+     */
     public Optional(final Alternatives alternatives) {
         super(alternatives);
         if (alternatives.getSequences().size() > 1) {

@@ -6,21 +6,23 @@ import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 
+import java.util.Arrays;
+
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class BnfLexer extends Lexer {
 	static { RuntimeMetaData.checkVersion("4.8", RuntimeMetaData.VERSION); }
 
-	protected static final DFA[] _decisionToDFA;
+	private static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
 		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, T__6=7, T__7=8, NT=9, 
 		KEYWORD=10, TYPE=11, WS=12;
-	public static String[] channelNames = {
+	private final static String[] channelNames = {
 		"DEFAULT_TOKEN_CHANNEL", "HIDDEN"
 	};
 
-	public static String[] modeNames = {
+	private final static String[] modeNames = {
 		"DEFAULT_MODE"
 	};
 
@@ -30,7 +32,7 @@ public class BnfLexer extends Lexer {
 			"KEYWORD", "TYPE", "WS"
 		};
 	}
-	public static final String[] ruleNames = makeRuleNames();
+	private static final String[] ruleNames = makeRuleNames();
 
 	private static String[] makeLiteralNames() {
 		return new String[] {
@@ -51,7 +53,7 @@ public class BnfLexer extends Lexer {
 	 * @deprecated Use {@link #VOCABULARY} instead.
 	 */
 	@Deprecated
-	public static final String[] tokenNames;
+	static final String[] tokenNames;
 	static {
 		tokenNames = new String[_SYMBOLIC_NAMES.length];
 		for (int i = 0; i < tokenNames.length; i++) {
@@ -69,7 +71,7 @@ public class BnfLexer extends Lexer {
 	@Override
 	@Deprecated
 	public String[] getTokenNames() {
-		return tokenNames;
+		return Arrays.copyOf(tokenNames, tokenNames.length);
 	}
 
 	@Override
@@ -88,16 +90,16 @@ public class BnfLexer extends Lexer {
 	public String getGrammarFileName() { return "Bnf.g4"; }
 
 	@Override
-	public String[] getRuleNames() { return ruleNames; }
+	public String[] getRuleNames() { return Arrays.copyOf(ruleNames, ruleNames.length); }
 
 	@Override
 	public String getSerializedATN() { return _serializedATN; }
 
 	@Override
-	public String[] getChannelNames() { return channelNames; }
+	public String[] getChannelNames() { return Arrays.copyOf(channelNames, channelNames.length); }
 
 	@Override
-	public String[] getModeNames() { return modeNames; }
+	public String[] getModeNames() { return Arrays.copyOf(modeNames, modeNames.length); }
 
 	@Override
 	public ATN getATN() { return _ATN; }

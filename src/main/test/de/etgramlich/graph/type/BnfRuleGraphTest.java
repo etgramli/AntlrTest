@@ -1,7 +1,5 @@
-package de.etgramlich.util.graph.type;
+package de.etgramlich.graph.type;
 
-import de.etgramlich.util.graph.type.node.Node;
-import de.etgramlich.util.graph.type.node.SequenceNode;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -24,18 +22,18 @@ class BnfRuleGraphTest {
     static {
         SEQUENCE_GRAPH.addVertex(SCOPES.get(0));
         SEQUENCE_GRAPH.addVertex(SCOPES.get(1));
-        SEQUENCE_GRAPH.addEdge(SCOPES.get(0), SCOPES.get(1), new ScopeEdge(SCOPES.get(0), SCOPES.get(1), new SequenceNode("S0")));
+        SEQUENCE_GRAPH.addEdge(SCOPES.get(0), SCOPES.get(1), new NodeEdge(new Node("S0")));
         SEQUENCE_GRAPH.addVertex(SCOPES.get(2));
-        SEQUENCE_GRAPH.addEdge(SCOPES.get(1), SCOPES.get(2), new ScopeEdge(SCOPES.get(1), SCOPES.get(2), new SequenceNode("S1")));
+        SEQUENCE_GRAPH.addEdge(SCOPES.get(1), SCOPES.get(2), new NodeEdge(new Node("S1")));
 
         DIAMOND_GRAPH.addVertex(SCOPES.get(0));
         DIAMOND_GRAPH.addVertex(SCOPES.get(1));
         DIAMOND_GRAPH.addVertex(SCOPES.get(2));
         DIAMOND_GRAPH.addVertex(SCOPES.get(3));
-        DIAMOND_GRAPH.addEdge(SCOPES.get(0), SCOPES.get(1), new ScopeEdge(SCOPES.get(0), SCOPES.get(1), new SequenceNode("N0")));
-        DIAMOND_GRAPH.addEdge(SCOPES.get(0), SCOPES.get(2), new ScopeEdge(SCOPES.get(0), SCOPES.get(2), new SequenceNode("N1")));
-        DIAMOND_GRAPH.addEdge(SCOPES.get(1), SCOPES.get(3), new ScopeEdge(SCOPES.get(1), SCOPES.get(3), new SequenceNode("N2")));
-        DIAMOND_GRAPH.addEdge(SCOPES.get(2), SCOPES.get(3), new ScopeEdge(SCOPES.get(2), SCOPES.get(3), new SequenceNode("N3")));
+        DIAMOND_GRAPH.addEdge(SCOPES.get(0), SCOPES.get(1), new NodeEdge(new Node("N0")));
+        DIAMOND_GRAPH.addEdge(SCOPES.get(0), SCOPES.get(2), new NodeEdge(new Node("N1")));
+        DIAMOND_GRAPH.addEdge(SCOPES.get(1), SCOPES.get(3), new NodeEdge(new Node("N2")));
+        DIAMOND_GRAPH.addEdge(SCOPES.get(2), SCOPES.get(3), new NodeEdge(new Node("N3")));
     }
 
     @Test
@@ -64,17 +62,17 @@ class BnfRuleGraphTest {
     void getSuccessors_twoScopes_returnsOneSuccessor() {
         BnfRuleGraph graph = (BnfRuleGraph) SEQUENCE_GRAPH.clone();
 
-        final List<Scope> successors = graph.getSuccessors(SCOPES.get(0));
+        final Set<Scope> successors = graph.getSuccessors(SCOPES.get(0));
         assertTrue(graph.isConsistent());
         assertEquals(1, successors.size());
-        assertEquals(SCOPES.get(1), successors.get(0));
+        assertEquals(SCOPES.get(1), successors.iterator().next());
     }
 
     @Test
     void getSuccessors_fourScopesAsDiamond_returnsTwoSuccessors() {
         BnfRuleGraph graph = (BnfRuleGraph) DIAMOND_GRAPH.clone();
 
-        final List<Scope> successors = graph.getSuccessors(SCOPES.get(0));
+        final Set<Scope> successors = graph.getSuccessors(SCOPES.get(0));
         assertTrue(graph.isConsistent());
         assertEquals(2, successors.size());
         assertTrue(successors.containsAll(Set.of(SCOPES.get(1), SCOPES.get(2))));
@@ -84,7 +82,7 @@ class BnfRuleGraphTest {
     void getPredecessors_diamondGraph_returnsTwoNodes() {
         BnfRuleGraph graph = (BnfRuleGraph) DIAMOND_GRAPH.clone();
 
-        final List<Scope> predecessors = graph.getPredecessors(SCOPES.get(3));
+        final Set<Scope> predecessors = graph.getPredecessors(SCOPES.get(3));
         assertTrue(graph.isConsistent());
         assertEquals(2, predecessors.size());
         assertTrue(predecessors.containsAll(Set.of(SCOPES.get(1), SCOPES.get(2))));
@@ -94,10 +92,10 @@ class BnfRuleGraphTest {
     void getOutGoingNodes_diamondGraph_twoOutgoingNodes() {
         BnfRuleGraph graph = (BnfRuleGraph) DIAMOND_GRAPH.clone();
 
-        final List<Node> successors = graph.getOutGoingNodes(SCOPES.get(0));
+        final Set<Node> successors = graph.getOutGoingNodes(SCOPES.get(0));
         assertTrue(graph.isConsistent());
         assertEquals(2, successors.size());
-        assertTrue(successors.containsAll(Set.of(new SequenceNode("N0"), new SequenceNode("N1"))));
+        assertTrue(successors.containsAll(Set.of(new Node("N0"), new Node("N1"))));
     }
 
     @Test
@@ -119,8 +117,8 @@ class BnfRuleGraphTest {
         graph.addVertex(SCOPES.get(0));
         graph.addVertex(SCOPES.get(1));
         graph.addVertex(SCOPES.get(2));
-        ScopeEdge edgeOne = new ScopeEdge(SCOPES.get(0), SCOPES.get(1), new SequenceNode("N0"));
-        ScopeEdge edgeTwo = new ScopeEdge(SCOPES.get(0), SCOPES.get(2), new SequenceNode("N1"));
+        ScopeEdge edgeOne = new NodeEdge(new Node("N0"));
+        ScopeEdge edgeTwo = new NodeEdge(new Node("N1"));
         graph.addEdge(SCOPES.get(0), SCOPES.get(1), edgeOne);
         graph.addEdge(SCOPES.get(0), SCOPES.get(2), edgeTwo);
 
@@ -136,7 +134,8 @@ class BnfRuleGraphTest {
         assertEquals(SEQUENCE_GRAPH.incomingEdgesOf(SEQUENCE_GRAPH.getEndScope()),
                 SEQUENCE_GRAPH.getDanglingScopeEdges(start));
 
-        final Scope second = SEQUENCE_GRAPH.getSuccessors(start).get(0);
+        assertEquals(1, SEQUENCE_GRAPH.getSuccessors(start).size());
+        final Scope second = SEQUENCE_GRAPH.getSuccessors(start).iterator().next();
         assertEquals(SEQUENCE_GRAPH.incomingEdgesOf(SEQUENCE_GRAPH.getEndScope()),
                 SEQUENCE_GRAPH.getDanglingScopeEdges(second));
     }
@@ -147,7 +146,8 @@ class BnfRuleGraphTest {
         assertEquals(DIAMOND_GRAPH.incomingEdgesOf(DIAMOND_GRAPH.getEndScope()),
                 DIAMOND_GRAPH.getDanglingScopeEdges(start));
 
-        final Scope second = DIAMOND_GRAPH.getSuccessors(start).get(0);
+        assertEquals(2, DIAMOND_GRAPH.getSuccessors(start).size());
+        final Scope second = DIAMOND_GRAPH.getSuccessors(start).iterator().next();
         assertEquals(DIAMOND_GRAPH.incomingEdgesOf(DIAMOND_GRAPH.getEndScope()),
                 DIAMOND_GRAPH.getDanglingScopeEdges(second));
     }
@@ -159,9 +159,9 @@ class BnfRuleGraphTest {
         unfinished.addVertex(SCOPES.get(1));
         unfinished.addVertex(SCOPES.get(2));
         unfinished.addVertex(SCOPES.get(3));
-        final ScopeEdge edge0 = new ScopeEdge(SCOPES.get(0), SCOPES.get(1), new SequenceNode("N0"));
-        final ScopeEdge edge1 = new ScopeEdge(SCOPES.get(0), SCOPES.get(2), new SequenceNode("N1"));
-        final ScopeEdge edge2 = new ScopeEdge(SCOPES.get(0), SCOPES.get(3), new SequenceNode("N2"));
+        final ScopeEdge edge0 = new NodeEdge(new Node("N0"));
+        final ScopeEdge edge1 = new NodeEdge(new Node("N1"));
+        final ScopeEdge edge2 = new NodeEdge(new Node("N2"));
         unfinished.addEdge(SCOPES.get(0), SCOPES.get(1), edge0);
         unfinished.addEdge(SCOPES.get(0), SCOPES.get(2), edge1);
         unfinished.addEdge(SCOPES.get(0), SCOPES.get(3), edge2);
@@ -176,17 +176,17 @@ class BnfRuleGraphTest {
         unfinished.addVertex(SCOPES.get(1));
         unfinished.addVertex(SCOPES.get(2));
         unfinished.addVertex(SCOPES.get(3));
-        final ScopeEdge edge0 = new ScopeEdge(SCOPES.get(0), SCOPES.get(1), new SequenceNode("N0"));
-        final ScopeEdge edge1 = new ScopeEdge(SCOPES.get(0), SCOPES.get(2), new SequenceNode("N1"));
-        final ScopeEdge edge2 = new ScopeEdge(SCOPES.get(0), SCOPES.get(3), new SequenceNode("N2"));
+        final ScopeEdge edge0 = new NodeEdge(new Node("N0"));
+        final ScopeEdge edge1 = new NodeEdge(new Node("N1"));
+        final ScopeEdge edge2 = new NodeEdge(new Node("N2"));
         unfinished.addEdge(SCOPES.get(0), SCOPES.get(1), edge0);
         unfinished.addEdge(SCOPES.get(0), SCOPES.get(2), edge1);
         unfinished.addEdge(SCOPES.get(0), SCOPES.get(3), edge2);
 
         unfinished.addVertex(SCOPES.get(4));
         unfinished.addVertex(SCOPES.get(5));
-        final ScopeEdge edge3 = new ScopeEdge(SCOPES.get(3), SCOPES.get(4), new SequenceNode("N1"));
-        final ScopeEdge edge4 = new ScopeEdge(SCOPES.get(3), SCOPES.get(5), new SequenceNode("N2"));
+        final ScopeEdge edge3 = new NodeEdge(new Node("N3"));
+        final ScopeEdge edge4 = new NodeEdge(new Node("N4"));
         unfinished.addEdge(SCOPES.get(3), SCOPES.get(4), edge3);
         unfinished.addEdge(SCOPES.get(3), SCOPES.get(5), edge4);
 

@@ -3,29 +3,40 @@ package de.etgramlich.parser.listener;
 import de.etgramlich.parser.gen.bnf.BnfBaseListener;
 import de.etgramlich.parser.gen.bnf.BnfParser;
 import de.etgramlich.parser.type.Element;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Parses an element of ANTL4's bnf grammar.
- * Currently only allows text and id options.
+ * Call sequence:
+ * 1. new ElementListener()
+ * 2. enterElement()
+ * 3. getElement()
  */
 public final class ElementListener extends BnfBaseListener {
+    /**
+     * BNF element.
+     */
     private Element element;
 
+    /**
+     * Queries the parsed bnf element. Must be called after enterElement()!
+     * @return New Element object after call to enterElement(), else null.
+     */
+    public Element getElement() {
+        return element;
+    }
+
     @Override
-    public void enterElement(@NotNull BnfParser.ElementContext ctx)  {
+    public void enterElement(final BnfParser.ElementContext ctx)  {
         if (ctx.nt() != null || ctx.keyword() != null || ctx.type() != null) {
             NonTerminalListener listener = new NonTerminalListener();
             if (ctx.nt() != null) {
                 listener.enterNt(ctx.nt());
-                element = listener.getNonTerminal();
             } else if (ctx.type() != null) {
                 listener.enterType(ctx.type());
-                element = listener.getType();
             } else {
                 listener.enterKeyword(ctx.keyword());
-                element = listener.getKeyword();
             }
+            element = listener.getTextElement();
         } else if (ctx.children.size() == 1 && ctx.children.get(0).getText().equals("::=")) {
             System.out.println("Assignment - skipping!!!");
         } else {
@@ -44,11 +55,7 @@ public final class ElementListener extends BnfBaseListener {
     }
 
     @Override
-    public void exitElement(BnfParser.ElementContext ctx) {
+    public void exitElement(final BnfParser.ElementContext ctx) {
         super.exitElement(ctx);
-    }
-
-    public Element getElement() {
-        return element;
     }
 }
