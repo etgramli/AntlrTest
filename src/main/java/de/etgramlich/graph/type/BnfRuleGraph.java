@@ -3,10 +3,18 @@ package de.etgramlich.graph.type;
 import de.etgramlich.util.exception.InvalidGraphException;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DirectedPseudograph;
+import org.jgrapht.nio.AttributeType;
+import org.jgrapht.nio.DefaultAttribute;
+import org.jgrapht.nio.dot.DOTExporter;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Collections;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -275,5 +283,31 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
 
     private boolean notConnectedByNodeEdges(final Scope start, final Scope end) {
         return DijkstraShortestPath.findPathBetween(copyWithoutBackwardEdges(), start, end) == null;
+    }
+
+    /**
+     * Renders this graph to a DOT file.
+     * @param path File path in an existing directory.
+     * @throws IOException Thrown if file could not be saved or directory does not exist.
+     */
+    public void renderBnfRuleGraph(final String path) throws IOException {
+        try (PrintWriter fileWriter = new PrintWriter(path, StandardCharsets.UTF_8)) {
+            fileWriter.println(this.toString());
+        }
+    }
+
+    @Override
+    public String toString() {
+        final DOTExporter<Scope, ScopeEdge> exporter = new DOTExporter<>(Scope::getName);
+        exporter.setEdgeIdProvider(
+                scopeEdge -> "E_" + (scopeEdge instanceof NodeEdge ? ((NodeEdge) scopeEdge).getNode().getName()
+                        : scopeEdge.getClass().getName()));
+        exporter.setEdgeAttributeProvider(
+                edge -> Map.of("name", new DefaultAttribute<>(
+                        (edge instanceof NodeEdge ? ((NodeEdge) edge).getNode().getName()
+                                : edge.getClass().getName()), AttributeType.STRING)));
+        final StringWriter writer = new StringWriter();
+        exporter.exportGraph(this, writer);
+        return writer.toString();
     }
 }
