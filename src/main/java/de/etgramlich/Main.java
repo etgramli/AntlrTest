@@ -44,9 +44,9 @@ public final class Main {
     private static final Options OPTIONS = new Options();
     static {
         OPTIONS.addOption("h", "help", false, "Prints this help text.");
-        OPTIONS.addOption("d", "directory", true, "Target directory for generated sources");
-        OPTIONS.addOption("p", "package", true, "Target package");
-        OPTIONS.addOption("g", "grammar", true, "Grammar file path");
+        OPTIONS.addRequiredOption("d", "directory", true, "Target directory for generated sources");
+        OPTIONS.addRequiredOption("p", "package", true, "Target package");
+        OPTIONS.addRequiredOption("g", "grammar", true, "Grammar file path");
     }
 
     /**
@@ -56,25 +56,16 @@ public final class Main {
      */
     public static void main(final String[] args) {
         final String grammar;
-        String targetDirectory = "." + File.separator;
-        String targetPackage = StringUtils.EMPTY;
+        String targetDirectory;
+        String targetPackage;
         try {
             CommandLine cmd = new DefaultParser().parse(OPTIONS, args);
-            if (cmd.hasOption("d")) {
-                targetDirectory = cmd.getOptionValue("d");
-            }
-            if (cmd.hasOption("p")) {
-                targetPackage = cmd.getOptionValue("p");
-            }
-            if (cmd.hasOption("g")) {
-                grammar = prepareGrammar(cmd.getOptionValue("g"));
-            } else {
-                System.err.println("No grammar file given!!!");
-                return;
-            }
+            targetDirectory = cmd.getOptionValue("d");
+            targetPackage = cmd.getOptionValue("p");
+            grammar = prepareGrammar(cmd.getOptionValue("g"));
         } catch (ParseException e) {
             e.printStackTrace();
-            System.err.println("Wrong grammar file!");
+            System.err.println("Could not parse CMD Options and Arguments!");
             return;
         } catch (IOException e) {
             e.printStackTrace();
