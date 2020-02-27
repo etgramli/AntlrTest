@@ -1,7 +1,6 @@
 package de.etgramlich.graph.type;
 
 import de.etgramlich.util.exception.InvalidGraphException;
-import org.jgrapht.GraphPath;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DirectedPseudograph;
 
@@ -40,8 +39,9 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
     public int length() {
         if (isEmpty()) {
             return 0;
+        } else {
+            return DijkstraShortestPath.findPathBetween(this, getStartScope(), getEndScope()).getLength();
         }
-        return DijkstraShortestPath.findPathBetween(this, getStartScope(), getEndScope()).getLength();
     }
 
     /**
@@ -61,24 +61,18 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
      * @return True if the graph is consistent or empty.
      */
     public boolean isConsistent() {
-        // Empty graph is valid
         if (edgeSet().isEmpty() && vertexSet().isEmpty()) {
             return true;
         }
         for (ScopeEdge edge : edgeSet()) {
             if (!vertexSet().contains(edge.getSource()) || !vertexSet().contains(edge.getTarget())) {
                 return false;
-            }
-            // There must exist a parallel connection
-            if (edge instanceof OptionalEdge && notConnectedByNodeEdges(edge.getSource(), edge.getTarget())) {
+            } else if (edge instanceof OptionalEdge && notConnectedByNodeEdges(edge.getSource(), edge.getTarget())) {
                 return false;
-            }
-            // There must exist a parallel connection in reversed direction
-            if (edge instanceof RepetitionEdge && notConnectedByNodeEdges(edge.getTarget(), edge.getSource())) {
+            } else if (edge instanceof RepetitionEdge && notConnectedByNodeEdges(edge.getTarget(), edge.getSource())) {
                 return false;
             }
         }
-        // Only one start and end scope are permitted
         try {
             getStartScope();
             getEndScope();
@@ -226,11 +220,11 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
     public Set<ScopeEdge> getDanglingScopeEdges(final Scope root) {
         if (!vertexSet().contains(root)) {
             return Collections.emptySet();
+        } else {
+            return getDanglingNodesOf(root).stream()
+                    .flatMap(scope -> incomingEdgesOf(scope).stream())
+                    .collect(Collectors.toUnmodifiableSet());
         }
-
-        return getDanglingNodesOf(root).stream()
-                .flatMap(scope -> incomingEdgesOf(scope).stream())
-                .collect(Collectors.toSet());
     }
 
     private Set<Scope> getDanglingNodesOf(final Scope scope) {
@@ -280,8 +274,6 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
     }
 
     private boolean notConnectedByNodeEdges(final Scope start, final Scope end) {
-        final GraphPath<Scope, ScopeEdge> shortestPath =
-                DijkstraShortestPath.findPathBetween(copyWithoutBackwardEdges(), start, end);
-        return shortestPath == null;
+        return DijkstraShortestPath.findPathBetween(copyWithoutBackwardEdges(), start, end) == null;
     }
 }
