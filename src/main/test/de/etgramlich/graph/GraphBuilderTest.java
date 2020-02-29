@@ -61,8 +61,7 @@ class GraphBuilderTest {
                                         new ZeroOrMore(new Alternatives(List.of(new Sequence(List.of(new NonTerminal("componentField"))))))
                                 ))
                         )))));
-        final GraphBuilder builder = new GraphBuilder(alternativesOneNodeEach);
-        final BnfRuleGraph graph = builder.getGraph();
+        final BnfRuleGraph graph = new GraphBuilder(alternativesOneNodeEach).getGraph();
 
         assertTrue(graph.isConsistent());
         assertEquals(7, graph.length());
@@ -84,8 +83,7 @@ class GraphBuilderTest {
                                                 new Sequence(List.of(NON_TERMINALS.get(3)))))),
                                         NON_TERMINALS.get(4)))
                         )))));
-        final GraphBuilder builder = new GraphBuilder(alternativesOneNodeEach);
-        final BnfRuleGraph graph = builder.getGraph();
+        final BnfRuleGraph graph = new GraphBuilder(alternativesOneNodeEach).getGraph();
 
         assertTrue(graph.isConsistent());
         assertEquals(3, graph.length());
@@ -126,8 +124,7 @@ class GraphBuilderTest {
                                                 new Sequence(List.of(NON_TERMINALS.get(3)))))),
                                         NON_TERMINALS.get(4)))
                         )))));
-        final GraphBuilder builder = new GraphBuilder(alternativesOneNodeEach);
-        final BnfRuleGraph graph = builder.getGraph();
+        final BnfRuleGraph graph = new GraphBuilder(alternativesOneNodeEach).getGraph();
 
         assertTrue(graph.isConsistent());
         assertEquals(3, graph.length());
@@ -166,8 +163,7 @@ class GraphBuilderTest {
                                         NON_TERMINALS.get(2)
                                 ))
                         )))));
-        final GraphBuilder builder = new GraphBuilder(alternativesOneNodeEach);
-        final BnfRuleGraph graph = builder.getGraph();
+        final BnfRuleGraph graph = new GraphBuilder(alternativesOneNodeEach).getGraph();
 
         assertTrue(graph.isConsistent());
         assertEquals(3, graph.length());
@@ -203,8 +199,7 @@ class GraphBuilderTest {
                                                 NON_TERMINALS.get(3)))))),
                                         NON_TERMINALS.get(4)))
                         )))));
-        final GraphBuilder builder = new GraphBuilder(alternativesOneNodeEach);
-        final BnfRuleGraph graph = builder.getGraph();
+        final BnfRuleGraph graph = new GraphBuilder(alternativesOneNodeEach).getGraph();
 
         assertTrue(graph.isConsistent());
         assertEquals(3, graph.length());
@@ -249,8 +244,7 @@ class GraphBuilderTest {
                                                 new Sequence(List.of(NON_TERMINALS.get(1)))))),
                                         NON_TERMINALS.get(2)))
                         )))));
-        final GraphBuilder builder = new GraphBuilder(alternativesOneNodeEach);
-        final BnfRuleGraph graph = builder.getGraph();
+        final BnfRuleGraph graph = new GraphBuilder(alternativesOneNodeEach).getGraph();
 
         assertTrue(graph.isConsistent());
         assertEquals(3, graph.length());
@@ -285,8 +279,7 @@ class GraphBuilderTest {
                                                 NON_TERMINALS.get(3)))))),
                                         NON_TERMINALS.get(4)))
                         )))));
-        final GraphBuilder builder = new GraphBuilder(alternativesOneNodeEach);
-        final BnfRuleGraph graph = builder.getGraph();
+        final BnfRuleGraph graph = new GraphBuilder(alternativesOneNodeEach).getGraph();
 
         assertTrue(graph.isConsistent());
         assertEquals(3, graph.length());
@@ -399,9 +392,7 @@ class GraphBuilderTest {
                                                         new Sequence(List.of(NON_TERMINALS.get(4))),
                                                         new Sequence(List.of(NON_TERMINALS.get(5))))))
                                 )))))));
-
-        final GraphBuilder graphBuilder = new GraphBuilder(nestedAlternativeWithOneNode);
-        final BnfRuleGraph graph = graphBuilder.getGraph();
+        final BnfRuleGraph graph = new GraphBuilder(nestedAlternativeWithOneNode).getGraph();
 
         assertTrue(graph.isConsistent());
         assertEquals(6, graph.getOutGoingNodes(graph.getStartScope()).size());
@@ -447,8 +438,7 @@ class GraphBuilderTest {
                                                         new Sequence(List.of(NON_TERMINALS.get(4), NON_TERMINALS.get(5))),
                                                         new Sequence(List.of(NON_TERMINALS.get(6), NON_TERMINALS.get(7)))
                                                 ))))))))));
-        final GraphBuilder builder = new GraphBuilder(nestedAlternativeEachTwoNodes);
-        final BnfRuleGraph graph = builder.getGraph();
+        final BnfRuleGraph graph = new GraphBuilder(nestedAlternativeEachTwoNodes).getGraph();
 
         assertTrue(graph.isConsistent());
         assertEquals(8, graph.edgeSet().size());
@@ -464,16 +454,12 @@ class GraphBuilderTest {
                 new BnfRule(new NonTerminal("Sequence"), new Alternatives(
                         List.of(new Sequence(List.of(NON_TERMINALS.get(0), NON_TERMINALS.get(1))))
                 ))));
+        final BnfRuleGraph graph = new GraphBuilder(sequence).getGraph();
 
-        final GraphBuilder builder = new GraphBuilder(sequence);
-        final BnfRuleGraph graph = builder.getGraph();
-
-        // Graph consistency test
         assertTrue(graph.isConsistent());
         assertEquals(3, graph.vertexSet().size());
         assertEquals(2, graph.edgeSet().size());
 
-        // Test of correct objects arrangement
         final Scope startScope = graph.getStartScope();
         final Scope secondScope = graph.getSuccessors(startScope).iterator().next();
         final Scope endScope = graph.getSuccessors(secondScope).iterator().next();
@@ -484,8 +470,64 @@ class GraphBuilderTest {
     }
 
     @Test
-    void replaceNonTerminals() {
-        // ToDo
+    void replaceNonTerminals_noNonTerminals_doNothing() {
+        final BnfRule sequence = new BnfRule(new NonTerminal("Sequence"),
+                new Alternatives(List.of(new Sequence(
+                        List.of(KEYWORDS.get(0), KEYWORDS.get(1), KEYWORDS.get(2), KEYWORDS.get(3))
+                ))));
+        final BnfRule idRule = new BnfRule(NON_TERMINALS.get(0),
+                new Alternatives(List.of(new Sequence(List.of((KEYWORDS.get(3)))))));
+
+        final GraphBuilder builder = new GraphBuilder(sequence);
+        BnfRuleGraph graph = builder.getGraph();
+
+        assertTrue(graph.isConsistent());
+        assertEquals(4, graph.length());
+        assertEquals(4, graph.edgeSet().size());
+        assertEquals(5, graph.vertexSet().size());
+
+        assertFalse(graph.containsNonTerminals());
+        assertTrue(graph.getNonTerminalNodes().isEmpty());
+        assertTrue(graph.getNonTerminalNodeEdges().isEmpty());
+
+        builder.replaceNonTerminals(Set.of(new GraphBuilder(idRule).getGraph()));
+        BnfRuleGraph graph1 = builder.getGraph();
+        assertEquals(graph, graph1);
+    }
+
+    @Test
+    void replaceNonTerminals_oneNonTerminals_replaceByTerminal() {
+        final BnfRule sequence = new BnfRule(new NonTerminal("Sequence"),
+                new Alternatives(List.of(new Sequence(
+                        List.of(KEYWORDS.get(0), KEYWORDS.get(1), NON_TERMINALS.get(0), KEYWORDS.get(2))
+                ))));
+        final BnfRule idRule = new BnfRule(NON_TERMINALS.get(0),
+                new Alternatives(List.of(new Sequence(List.of((KEYWORDS.get(3)))))));
+
+        final GraphBuilder builder = new GraphBuilder(sequence);
+        BnfRuleGraph graph = builder.getGraph();
+
+        assertTrue(graph.isConsistent());
+        assertEquals(4, graph.length());
+        assertEquals(4, graph.edgeSet().size());
+        assertEquals(5, graph.vertexSet().size());
+
+        assertTrue(graph.containsNonTerminals());
+        assertFalse(graph.getNonTerminalNodes().isEmpty());
+        assertFalse(graph.getNonTerminalNodeEdges().isEmpty());
+
+        builder.replaceNonTerminals(Set.of(new GraphBuilder(idRule).getGraph()));
+        final BnfRuleGraph graph1 = builder.getGraph();
+        assertNotEquals(graph, graph1);
+
+        assertTrue(graph1.isConsistent());
+        assertEquals(4, graph1.length());
+        assertEquals(4, graph1.edgeSet().size());
+        assertEquals(5, graph1.vertexSet().size());
+
+        assertFalse(graph1.containsNonTerminals());
+        assertTrue(graph1.getNonTerminalNodes().isEmpty());
+        assertTrue(graph1.getNonTerminalNodeEdges().isEmpty());
     }
 
     @Test
