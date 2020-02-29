@@ -79,10 +79,11 @@ public final class Main {
         listener.enterBnf(parser.bnf());
         final Bnf bnf = listener.getBnf();
 
-        final ForestBuilder forestBuilder = new ForestBuilder(bnf);
+        final BnfRuleGraph mergedGraph = new ForestBuilder(bnf).getMergedGraph();
         final BnfRuleGraph graph = new GraphBuilder(bnf).getGraph();
         try {
             graph.renderBnfRuleGraph(targetDirectory + File.separator + "graph.gv");
+            mergedGraph.renderBnfRuleGraph(targetDirectory + File.separator + "graph_merged.gv");
 
             InterfaceBuilder builder = new InterfaceBuilder(targetDirectory, targetPackage);
             builder.saveInterfaces(graph);

@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Collections;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -27,19 +26,17 @@ import java.util.stream.Collectors;
 public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
 
     /**
-     * Creates an unweighted BnfRuleGraph without vertex and edge supplier.
+     * Name to identify graph by (LHS) bnf rule name.
      */
-    public BnfRuleGraph() {
-        this(null, null);
-    }
+    private final String name;
 
     /**
-     * Creates an unweighted BnfRuleGraph with the provided vertex and edge supplier.
-     * @param vertexSupplier Vertex supplier.
-     * @param edgeSupplier Edge supplier.
+     * Creates an unweighted BnfRuleGraph without vertex and edge supplier.
+     * @param name Name of the graph (used for BNF rule LHS).
      */
-    public BnfRuleGraph(final Supplier<Scope> vertexSupplier, final Supplier<ScopeEdge> edgeSupplier) {
-        super(vertexSupplier, edgeSupplier, false);
+    public BnfRuleGraph(final String name) {
+        super(new ScopeProvider(), null, false);
+        this.name = name;
     }
 
     /**
@@ -52,6 +49,14 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
         } else {
             return DijkstraShortestPath.findPathBetween(this, getStartScope(), getEndScope()).getLength();
         }
+    }
+
+    /**
+     * Returns the (LSH side) name of the graph.
+     * @return String, not null.
+     */
+    public String getName() {
+        return name;
     }
 
     /**
@@ -285,6 +290,41 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
 
     private boolean notConnectedByNodeEdges(final Scope start, final Scope end) {
         return DijkstraShortestPath.findPathBetween(copyWithoutBackwardEdges(), start, end) == null;
+    }
+
+    /**
+     * Returns true if the graph contains at least one non-terminal node.
+     * @return True if non-terminal node is present.
+     */
+    public boolean containsNonTerminals() {
+        return getNonTerminalNodes().size() > 0;
+    }
+
+    private Set<NodeEdge> getNodeEdges() {
+        return edgeSet().stream()
+                .filter(edge -> edge instanceof NodeEdge)
+                .map(edge -> ((NodeEdge) edge))
+                .collect(Collectors.toUnmodifiableSet());
+    }
+
+    /**
+     * Returns a subset of the edge set that contains only edges that contain non-terminal nodes.
+     * @return Set of NodeEdges, not null, may be empty.
+     */
+    public Set<NodeEdge> getNonTerminalNodeEdges() {
+        return getNodeEdges().stream()
+                .filter(nodeEdge -> nodeEdge.getNode().getType().equals(NodeType.NON_TERMINAL))
+                .collect(Collectors.toUnmodifiableSet());
+    }
+
+    /**
+     * Returns the nodes of the graph's edges, that are non-terminal nodes.
+     * @return Set of Nodes, not null, may be empty.
+     */
+    public Set<Node> getNonTerminalNodes() {
+        return getNonTerminalNodeEdges().stream()
+                .map(NodeEdge::getNode)
+                .collect(Collectors.toUnmodifiableSet());
     }
 
     /**

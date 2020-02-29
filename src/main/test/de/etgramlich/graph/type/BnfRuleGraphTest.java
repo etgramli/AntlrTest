@@ -1,5 +1,6 @@
 package de.etgramlich.graph.type;
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -17,8 +18,8 @@ class BnfRuleGraphTest {
             new Scope("S4"),
             new Scope("S5"));
 
-    private static final BnfRuleGraph SEQUENCE_GRAPH = new BnfRuleGraph();
-    private static final BnfRuleGraph DIAMOND_GRAPH = new BnfRuleGraph();
+    private static final BnfRuleGraph SEQUENCE_GRAPH = new BnfRuleGraph(StringUtils.EMPTY);
+    private static final BnfRuleGraph DIAMOND_GRAPH = new BnfRuleGraph(StringUtils.EMPTY);
     static {
         SEQUENCE_GRAPH.addVertex(SCOPES.get(0));
         SEQUENCE_GRAPH.addVertex(SCOPES.get(1));
@@ -38,7 +39,7 @@ class BnfRuleGraphTest {
 
     @Test
     void length_emptyGraph_returnsZero() {
-        assertEquals(0, new BnfRuleGraph().length());
+        assertEquals(0, new BnfRuleGraph(StringUtils.EMPTY).length());
     }
 
     @Test
@@ -53,7 +54,7 @@ class BnfRuleGraphTest {
 
     @Test
     void isConsistent_emptyGraph_returnsTrue() {
-        BnfRuleGraph graph = new BnfRuleGraph();
+        BnfRuleGraph graph = new BnfRuleGraph(StringUtils.EMPTY);
 
         assertTrue(graph.isConsistent());
     }
@@ -112,7 +113,7 @@ class BnfRuleGraphTest {
 
     @Test
     void getDanglingNodeEdges() {
-        BnfRuleGraph graph = new BnfRuleGraph();
+        BnfRuleGraph graph = new BnfRuleGraph(StringUtils.EMPTY);
 
         graph.addVertex(SCOPES.get(0));
         graph.addVertex(SCOPES.get(1));
@@ -154,7 +155,7 @@ class BnfRuleGraphTest {
 
     @Test
     void getDanglingScopeEdges_unfinishedAlternatives_returnsDanglingNodes() {
-        final BnfRuleGraph unfinished = new BnfRuleGraph();
+        final BnfRuleGraph unfinished = new BnfRuleGraph(StringUtils.EMPTY);
         unfinished.addVertex(SCOPES.get(0));
         unfinished.addVertex(SCOPES.get(1));
         unfinished.addVertex(SCOPES.get(2));
@@ -171,7 +172,7 @@ class BnfRuleGraphTest {
 
     @Test
     void getDanglingScopeEdges_unfinishedNestedAlternatives_returnsDanglingNodesOfAllOrInnerAlternatives() {
-        final BnfRuleGraph unfinished = new BnfRuleGraph();
+        final BnfRuleGraph unfinished = new BnfRuleGraph(StringUtils.EMPTY);
         unfinished.addVertex(SCOPES.get(0));
         unfinished.addVertex(SCOPES.get(1));
         unfinished.addVertex(SCOPES.get(2));

@@ -51,7 +51,9 @@ public final class ForestBuilder {
      * @return A BnfRuleGraph, not null.
      */
     public BnfRuleGraph getMergedGraph() {
-        // ToDo
-        return null;
+        // ToDo: add recursion
+        GraphBuilder gb = new GraphBuilder(startRule);
+        gb.replaceNonTerminals(forest);
+        return gb.getGraph();
     }
 }
