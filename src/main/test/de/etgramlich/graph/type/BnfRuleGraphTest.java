@@ -3,6 +3,8 @@ package de.etgramlich.graph.type;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -10,17 +12,18 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class BnfRuleGraphTest {
 
-    private static final List<Scope> SCOPES = List.of(
-            new Scope("S0"),
-            new Scope("S1"),
-            new Scope("S2"),
-            new Scope("S3"),
-            new Scope("S4"),
-            new Scope("S5"));
+    private static final List<Scope> SCOPES;
+    private static final int NUM_SCOPES = 6;
 
     private static final BnfRuleGraph SEQUENCE_GRAPH = new BnfRuleGraph(StringUtils.EMPTY);
     private static final BnfRuleGraph DIAMOND_GRAPH = new BnfRuleGraph(StringUtils.EMPTY);
     static {
+        List<Scope> scopes = new ArrayList<>(NUM_SCOPES);
+        for (int i = 0; i < NUM_SCOPES; ++i) {
+            scopes.add(new Scope("S" + i));
+        }
+        SCOPES = Collections.unmodifiableList(scopes);
+
         SEQUENCE_GRAPH.addVertex(SCOPES.get(0));
         SEQUENCE_GRAPH.addVertex(SCOPES.get(1));
         SEQUENCE_GRAPH.addEdge(SCOPES.get(0), SCOPES.get(1), new NodeEdge(new Node("S0", NodeType.KEYWORD)));
