@@ -88,7 +88,9 @@ public final class InterfaceBuilder {
      * @param graph BnfRuleGraph, must not be null and consistent.
      */
     public void saveInterfaces(final BnfRuleGraph graph) {
-        assert (graph.isConsistent());
+        if (!graph.isConsistent()) {
+            throw new IllegalArgumentException("Graph is not consistent!");
+        }
 
         this.graph = graph;
 
@@ -97,10 +99,6 @@ public final class InterfaceBuilder {
 
         Scope currentScope = graph.getEndScope();
         while (currentScope != null) {
-            if (knownInterfaces.contains(currentScope.getName())) {
-                System.err.println("Scope already visited! (" + currentScope.getName() + ") - Continuing!");
-                continue;
-            }
             final Interface currentInterface = fromScope(currentScope);
             if (!knownInterfaces.containsAll(currentInterface.getParents())) {
                 throw new NullPointerException("Not all parent interfaces found!");
@@ -113,10 +111,7 @@ public final class InterfaceBuilder {
                     .collect(Collectors.toUnmodifiableSet()));
             currentScope = toVisitNext.pollFirst();
         }
-        assert (graph.vertexSet().stream()
-                .map(Scope::getName)
-                .filter(s -> !knownInterfaces.contains(s))
-                .findAny().isEmpty());
+        assert (graph.vertexSet().stream().map(Scope::getName).allMatch(knownInterfaces::contains));
     }
 
     private Interface fromScope(final Scope scope) {
@@ -142,7 +137,7 @@ public final class InterfaceBuilder {
         ).collect(Collectors.toUnmodifiableSet());
     }
 
-    private List<Argument> getArguments(final Node scope) {
+    private List<Argument> getArguments(final Node node) {
         // ToDo
         return Collections.emptyList();
     }

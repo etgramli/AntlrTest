@@ -2,8 +2,10 @@ package de.etgramlich.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * Contains misc functions for Collections.
@@ -23,5 +25,22 @@ public final class CollectionUtil {
     @SafeVarargs
     public static <T> List<T> toList(final T... items) {
         return new ArrayList<>(items != null ? Arrays.asList(items) : Collections.emptyList());
+    }
+
+    /**
+     * Converts the set to a single String, elements separated by commas.
+     * @param stringSet Set of Strings, must not be null.
+     * @return String, not null.
+     */
+    public static String asString(final Set<String> stringSet) {
+        final StringBuilder sb = new StringBuilder();
+
+        for (final Iterator<String> iter = stringSet.iterator(); iter.hasNext();) {
+            sb.append(iter.next());
+            if (iter.hasNext()) {
+                sb.append(", ");
+            }
+        }
+        return sb.toString();
     }
 }

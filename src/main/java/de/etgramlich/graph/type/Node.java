@@ -8,6 +8,8 @@ import java.io.Serializable;
  * A node contained in an NodeEdge to hold information from the EBNF grammar.
  */
 public final class Node implements Serializable {
+    private static final long serialVersionUID = 1354943842655971241L;
+
     /**
      * Identifier of the node.
      */

@@ -6,8 +6,9 @@ import org.jgrapht.graph.DefaultEdge;
  * Abstract class for nodes in the BnfRuleGraph, just to make getSource() ang getTarget() more accessible.
  */
 public abstract class ScopeEdge extends DefaultEdge {
+
     /**
-     * Returns the source vertex of the edge..
+     * Returns the source vertex of the edge.
      * @return Scope, not null.
      */
     @Override

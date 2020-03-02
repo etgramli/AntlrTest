@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
  * Builds a graph according to the rules of a EBNF (has to care about optional elements and repetitions).
  */
 public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
+    private static final long serialVersionUID = 8785829155769370692L;
 
     /**
      * Name to identify graph by (LHS) bnf rule name.
@@ -284,11 +285,10 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
     }
 
     private BnfRuleGraph copyWithoutBackwardEdges() {
-        final BnfRuleGraph noBackEdges = (BnfRuleGraph) this.clone();
-        noBackEdges.removeAllEdges(noBackEdges.edgeSet().stream()
-                .filter(edge -> edge instanceof OptionalEdge || edge instanceof RepetitionEdge)
-                .collect(Collectors.toUnmodifiableSet()));
-        return noBackEdges;
+        final BnfRuleGraph onlyForwardEdges = new BnfRuleGraph(name);
+        vertexSet().forEach(onlyForwardEdges::addVertex);
+        getNodeEdges().forEach(edge -> onlyForwardEdges.addEdge(edge.getSource(), edge.getTarget(), edge));
+        return onlyForwardEdges;
     }
 
     private boolean notConnectedByNodeEdges(final Scope start, final Scope end) {

@@ -7,12 +7,13 @@ import de.etgramlich.parser.type.BnfRule;
 import org.jgrapht.alg.cycle.CycleDetector;
 import org.jgrapht.graph.DirectedPseudograph;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+
+import de.etgramlich.util.CollectionUtil;
 
 /**
  * Builds a forest of BnfRuleGraphs, one for each BNF rule.
@@ -64,7 +65,7 @@ public final class ForestBuilder {
                 .collect(Collectors.toUnmodifiableSet());
         if (notDefinedNonTerminals.size() > 0) {
             throw new IllegalArgumentException("Bnf does not contain all rules to replace non-terminals: "
-                    + asString(notDefinedNonTerminals));
+                    + CollectionUtil.asString(notDefinedNonTerminals));
         }
     }
 
@@ -94,18 +95,6 @@ public final class ForestBuilder {
         }
 
         return new CycleDetector<>(dependencies).detectCycles();
-    }
-
-    private static String asString(final Set<String> stringSet) {
-        final StringBuilder sb = new StringBuilder();
-
-        for (final Iterator<String> iter = stringSet.iterator(); iter.hasNext();) {
-            sb.append(iter.next());
-            if (iter.hasNext()) {
-                sb.append(", ");
-            }
-        }
-        return sb.toString();
     }
 
     private static final class UniqueStringSupplier implements Supplier<String> {

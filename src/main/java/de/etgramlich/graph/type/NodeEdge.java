@@ -4,6 +4,8 @@ package de.etgramlich.graph.type;
  * An edge containing a node bearing the information to create an Interface from.
  */
 public final class NodeEdge extends ScopeEdge {
+    private static final long serialVersionUID = 7304313931535543410L;
+
     /**
      * Node containing information about the BNF element represented by the node.
      */
