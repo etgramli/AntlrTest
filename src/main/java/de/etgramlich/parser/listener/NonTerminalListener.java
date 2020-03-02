@@ -30,7 +30,7 @@ public final class NonTerminalListener extends BnfBaseListener {
 
     @Override
     public void enterKeyword(final BnfParser.KeywordContext ctx) {
-        textElement = new Keyword(ctx.getText().trim());
+        textElement = new Keyword(removeSingleQuotationMarks(ctx.getText()));
     }
 
     @Override
@@ -59,12 +59,23 @@ public final class NonTerminalListener extends BnfBaseListener {
     }
 
     /**
-     * Strips the surrounding braces.
+     * Strips the surrounding lower-than and greater-than signs.
      * @param string String, must not be blank.
      * @return String without the left- and rightmost characters.
      */
-    public static String stripLTGT(final String string) {
-        final String trimmed = string.trim();
-        return trimmed.substring(1, trimmed.length() - 1).trim();
+    private static String stripLTGT(final String string) {
+        final String trimmed = string.strip();
+        if (!(trimmed.charAt(0) == '<' && trimmed.charAt(trimmed.length() - 1) == '>')) {
+            throw new IllegalArgumentException("Not encapsulated in <> : " + string);
+        }
+        return trimmed.substring(1, trimmed.length() - 1).strip();
+    }
+
+    private static String removeSingleQuotationMarks(final String string) {
+        final String noWhitespaces = string.strip();
+        if (!(noWhitespaces.charAt(0) == '\'' && noWhitespaces.charAt(noWhitespaces.length() - 1) == '\'')) {
+            throw new IllegalArgumentException("Keyword not encapsulated in single quotation marks: " + string);
+        }
+        return noWhitespaces.substring(1, noWhitespaces.length() - 1).strip();
     }
 }

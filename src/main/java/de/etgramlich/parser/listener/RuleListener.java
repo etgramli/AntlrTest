@@ -6,7 +6,6 @@ import de.etgramlich.parser.type.Alternatives;
 import de.etgramlich.parser.type.BnfRule;
 import de.etgramlich.parser.type.text.NonTerminal;
 import de.etgramlich.parser.type.text.TextElement;
-import de.etgramlich.util.SymbolTable;
 
 /**
  * Parses a rule of EBNF.
@@ -37,17 +36,13 @@ public final class RuleListener extends BnfBaseListener {
         if (!(textElement instanceof NonTerminal)) {
             throw new IllegalArgumentException("Text element is not a NonTerminal on LHS!");
         }
-        NonTerminal lhs = (NonTerminal) textElement;
+        final NonTerminal lhs = (NonTerminal) textElement;
 
         AlternativeListener alternativesListener = new AlternativeListener();
         alternativesListener.enterAlternatives(ctx.rhs().alternatives());
-        Alternatives rhs = alternativesListener.getAlternatives();
+        final Alternatives rhs = alternativesListener.getAlternatives();
 
         bnfRule = new BnfRule(lhs, rhs);
-
-        if (!SymbolTable.add(lhs.getName(), bnfRule)) {
-            throw new IllegalArgumentException("Duplicate rule: " + lhs.getName());
-        }
     }
 
     @Override

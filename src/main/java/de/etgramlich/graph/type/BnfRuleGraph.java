@@ -3,12 +3,21 @@ package de.etgramlich.graph.type;
 import de.etgramlich.util.exception.InvalidGraphException;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DirectedPseudograph;
+import org.jgrapht.nio.Attribute;
+import org.jgrapht.nio.AttributeType;
+import org.jgrapht.nio.DefaultAttribute;
+import org.jgrapht.nio.dot.DOTExporter;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.Collections;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -17,19 +26,17 @@ import java.util.stream.Collectors;
 public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
 
     /**
-     * Creates an unweighted BnfRuleGraph without vertex and edge supplier.
+     * Name to identify graph by (LHS) bnf rule name.
      */
-    public BnfRuleGraph() {
-        this(null, null);
-    }
+    private final String name;
 
     /**
-     * Creates an unweighted BnfRuleGraph with the provided vertex and edge supplier.
-     * @param vertexSupplier Vertex supplier.
-     * @param edgeSupplier Edge supplier.
+     * Creates an unweighted BnfRuleGraph without vertex and edge supplier.
+     * @param name Name of the graph (used for BNF rule LHS).
      */
-    public BnfRuleGraph(final Supplier<Scope> vertexSupplier, final Supplier<ScopeEdge> edgeSupplier) {
-        super(vertexSupplier, edgeSupplier, false);
+    public BnfRuleGraph(final String name) {
+        super(new ScopeProvider(), null, false);
+        this.name = name;
     }
 
     /**
@@ -42,6 +49,14 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
         } else {
             return DijkstraShortestPath.findPathBetween(this, getStartScope(), getEndScope()).getLength();
         }
+    }
+
+    /**
+     * Returns the (LSH side) name of the graph.
+     * @return String, not null.
+     */
+    public String getName() {
+        return name;
     }
 
     /**
@@ -148,10 +163,10 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
      * @return Set of NodeEdges, may be empty.
      */
     public Set<NodeEdge> outGoingNodeEdges(final Scope scope) {
-        return outgoingEdgesOf(scope).stream()
+        return Collections.unmodifiableSet(outgoingEdgesOf(scope).stream()
                 .filter(scopeEdge -> scopeEdge instanceof NodeEdge)
                 .map(scopeEdge -> ((NodeEdge) scopeEdge))
-                .collect(Collectors.toUnmodifiableSet());
+                .collect(Collectors.toSet()));
     }
 
     /**
@@ -160,10 +175,10 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
      * @return List of Nodes.
      */
     public Set<Node> getInGoingNodes(final Scope scope) {
-        return incomingEdgesOf(scope).stream()
+        return Collections.unmodifiableSet(incomingEdgesOf(scope).stream()
                 .filter(scopeEdge -> scopeEdge instanceof NodeEdge)
                 .map(nodeEdge -> ((NodeEdge) nodeEdge).getNode())
-                .collect(Collectors.toUnmodifiableSet());
+                .collect(Collectors.toSet()));
     }
 
     /**
@@ -206,10 +221,13 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
      * @return Set of ScopeEdges, not null.
      */
     public Set<ScopeEdge> getDanglingScopeEdges() {
-        return vertexSet().stream()
+        // Needs to be saved to a modifiable set and then converted to a unmodifiable set, because a non-terminal may
+        // occur multiple times in a graph, producing an IllegalArgumentException on
+        // collect(Collectors.toUnmodifiableSet())
+        return Collections.unmodifiableSet(vertexSet().stream()
                 .filter(scope -> outDegreeOf(scope) == 0)
                 .flatMap(scope -> incomingEdgesOf(scope).stream())
-                .collect(Collectors.toSet());
+                .collect(Collectors.toSet()));
     }
 
     /**
@@ -275,5 +293,83 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
 
     private boolean notConnectedByNodeEdges(final Scope start, final Scope end) {
         return DijkstraShortestPath.findPathBetween(copyWithoutBackwardEdges(), start, end) == null;
+    }
+
+    /**
+     * Returns true if the graph contains at least one non-terminal node.
+     * @return True if non-terminal node is present.
+     */
+    public boolean containsNonTerminals() {
+        return getNonTerminalNodes().size() > 0;
+    }
+
+    private Set<NodeEdge> getNodeEdges() {
+        // Needs to be saved to a modifiable set and then converted to a unmodifiable set, because a non-terminal may
+        // occur multiple times in a graph, producing an IllegalArgumentException on
+        // collect(Collectors.toUnmodifiableSet())
+        return Collections.unmodifiableSet(edgeSet().stream()
+                .filter(edge -> edge instanceof NodeEdge)
+                .map(edge -> ((NodeEdge) edge))
+                .collect(Collectors.toSet()));
+    }
+
+    /**
+     * Returns a subset of the edge set that contains only edges that contain non-terminal nodes.
+     * @return Set of NodeEdges, not null, may be empty.
+     */
+    public Set<NodeEdge> getNonTerminalNodeEdges() {
+        // Needs to be saved to a modifiable set and then converted to a unmodifiable set, because a non-terminal may
+        // occur multiple times in a graph, producing an IllegalArgumentException on
+        // collect(Collectors.toUnmodifiableSet())
+        return Collections.unmodifiableSet(getNodeEdges().stream()
+                .filter(nodeEdge -> nodeEdge.getNode().getType().equals(NodeType.NON_TERMINAL))
+                .collect(Collectors.toSet()));
+    }
+
+    /**
+     * Returns the nodes of the graph's edges, that are non-terminal nodes.
+     * @return Set of Nodes, not null, may be empty.
+     */
+    public Set<Node> getNonTerminalNodes() {
+        return getNonTerminalNodeEdges().stream()
+                .map(NodeEdge::getNode)
+                .collect(Collectors.toUnmodifiableSet());
+    }
+
+    /**
+     * Renders this graph to a DOT file.
+     * @param path File path in an existing directory.
+     * @throws IOException Thrown if file could not be saved or directory does not exist.
+     */
+    public void renderBnfRuleGraph(final String path) throws IOException {
+        try (PrintWriter fileWriter = new PrintWriter(path, StandardCharsets.UTF_8)) {
+            fileWriter.println(this.toString());
+        }
+    }
+
+    @Override
+    public String toString() {
+        final DOTExporter<Scope, ScopeEdge> exporter = new DOTExporter<>(Scope::getName);
+        exporter.setEdgeIdProvider(
+                scopeEdge -> "E_" + (scopeEdge instanceof NodeEdge ? ((NodeEdge) scopeEdge).getNode().getName()
+                        : scopeEdge.getClass().getName()));
+        exporter.setEdgeAttributeProvider(BnfRuleGraph::getAttributeMap);
+        final StringWriter writer = new StringWriter();
+        exporter.exportGraph(this, writer);
+        return writer.toString();
+    }
+
+    private static Map<String, Attribute> getAttributeMap(final ScopeEdge edge) {
+        final Map<String, Attribute> attributeMap = new HashMap<>(2);
+        attributeMap.put("name",
+                new DefaultAttribute<>(
+                        (edge instanceof NodeEdge ? ((NodeEdge) edge).getNode().getName() : edge.getClass().getName()),
+                        AttributeType.STRING));
+        if (edge instanceof NodeEdge) {
+            NodeEdge nodeEdge = (NodeEdge) edge;
+            attributeMap.put("nodeType",
+                    new DefaultAttribute<>(nodeEdge.getNode().getType().toString(), AttributeType.STRING));
+        }
+        return Collections.unmodifiableMap(attributeMap);
     }
 }

@@ -45,11 +45,4 @@ public final class Sequence implements BnfType {
     public int getNumberOfElements() {
         return elements.stream().mapToInt(BnfType::getNumberOfElements).sum();
     }
-
-    @Override
-    public List<String> getNonTerminalDependants() {
-        return elements.stream()
-                .flatMap(element -> element.getNonTerminalDependants().stream())
-                .collect(Collectors.toList());
-    }
 }

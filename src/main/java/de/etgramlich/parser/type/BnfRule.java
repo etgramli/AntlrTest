@@ -84,13 +84,4 @@ public final class BnfRule implements BnfType {
     public int getNumberOfElements() {
         return rhs.getNumberOfElements();
     }
-
-    @Override
-    public List<String> getNonTerminalDependants() {
-        if (isTerminal()) {
-            return Collections.emptyList();
-        }
-        return rhs.getSequences().stream().
-                flatMap(sequence -> sequence.getNonTerminalDependants().stream()).collect(Collectors.toList());
-    }
 }

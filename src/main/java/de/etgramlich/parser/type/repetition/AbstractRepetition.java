@@ -65,12 +65,6 @@ public abstract class AbstractRepetition implements Element, BnfType {
     }
 
     @Override
-    public final List<String> getNonTerminalDependants() {
-        return getAlternatives().getSequences().stream()
-                .flatMap(a -> a.getNonTerminalDependants().stream()).collect(Collectors.toList());
-    }
-
-    @Override
     public final int getNumberOfElements() {
         return alternatives.getNumberOfElements();
     }

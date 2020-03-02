@@ -4,9 +4,6 @@ import de.etgramlich.parser.type.BnfType;
 import de.etgramlich.parser.type.Element;
 import de.etgramlich.util.StringUtil;
 
-import java.util.Collections;
-import java.util.List;
-
 /**
  * Represents a text element from BNF as Java type.
  */
@@ -48,10 +45,5 @@ public abstract class TextElement implements Element, BnfType {
     @Override
     public final int getNumberOfElements() {
         return 1;
-    }
-
-    @Override
-    public final List<String> getNonTerminalDependants() {
-        return Collections.emptyList();
     }
 }

@@ -43,9 +43,4 @@ public final class Bnf implements BnfType {
     public int getNumberOfElements() {
         return bnfRules.size();
     }
-
-    @Override
-    public List<String> getNonTerminalDependants() {
-        return Collections.emptyList();
-    }
 }

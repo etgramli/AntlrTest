@@ -69,9 +69,4 @@ public final class Alternatives implements BnfType {
     public int getNumberOfElements() {
         return sequences.stream().mapToInt(Sequence::getNumberOfElements).sum();
     }
-
-    @Override
-    public List<String> getNonTerminalDependants() {
-        return null;
-    }
 }
