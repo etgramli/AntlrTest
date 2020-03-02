@@ -15,7 +15,6 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.ParseException;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,9 +34,9 @@ public final class Main {
     private static final Options OPTIONS = new Options();
     static {
         OPTIONS.addOption("h", "help", false, "Prints this help text.");
-        OPTIONS.addOption("d", "directory", true, "Target directory for generated sources");
-        OPTIONS.addOption("p", "package", true, "Target package");
-        OPTIONS.addOption("g", "grammar", true, "Grammar file path");
+        OPTIONS.addRequiredOption("d", "directory", true, "Target directory for generated sources");
+        OPTIONS.addRequiredOption("p", "package", true, "Target package");
+        OPTIONS.addRequiredOption("g", "grammar", true, "Grammar file path");
     }
 
     /**
@@ -47,25 +46,16 @@ public final class Main {
      */
     public static void main(final String[] args) {
         final String grammar;
-        String targetDirectory = "." + File.separator;
-        String targetPackage = StringUtils.EMPTY;
+        final String targetDirectory;
+        final String targetPackage;
         try {
             final CommandLine cmd = new DefaultParser().parse(OPTIONS, args);
-            if (cmd.hasOption("d")) {
-                targetDirectory = cmd.getOptionValue("d");
-            }
-            if (cmd.hasOption("p")) {
-                targetPackage = cmd.getOptionValue("p");
-            }
-            if (cmd.hasOption("g")) {
-                grammar = prepareGrammar(cmd.getOptionValue("g"));
-            } else {
-                System.err.println("No grammar file given!!!");
-                return;
-            }
+            targetDirectory = cmd.getOptionValue("d");
+            targetPackage = cmd.getOptionValue("p");
+            grammar = prepareGrammar(cmd.getOptionValue("g"));
         } catch (ParseException e) {
             e.printStackTrace();
-            System.err.println("Wrong grammar file!");
+            System.err.println("Could not parse CMD arguments! Run with -h for help.");
             return;
         } catch (IOException e) {
             e.printStackTrace();
@@ -85,8 +75,7 @@ public final class Main {
             graph.renderBnfRuleGraph(targetDirectory + File.separator + "graph.gv");
             mergedGraph.renderBnfRuleGraph(targetDirectory + File.separator + "graph_merged.gv");
 
-            InterfaceBuilder builder = new InterfaceBuilder(targetDirectory, targetPackage);
-            builder.saveInterfaces(graph);
+            new InterfaceBuilder(targetDirectory, targetPackage).saveInterfaces(mergedGraph);
         } catch (IOException e) {
             e.printStackTrace();
         }
