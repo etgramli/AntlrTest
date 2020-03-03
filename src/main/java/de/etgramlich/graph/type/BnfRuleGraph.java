@@ -36,7 +36,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
      * @param name Name of the graph (used for BNF rule LHS).
      */
     public BnfRuleGraph(final String name) {
-        super(new ScopeProvider(), null, false);
+        super(new ScopeSupplier(), null, false);
         this.name = name;
     }
 
@@ -123,6 +123,25 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
     }
 
     /**
+     * Get the closest preceding non-terminals, connected by NodeEdges. Also, non-terminals that are indirectly
+     * connected (by a terminal in a NodeEdge) are found.
+     * @param scope Scope, must not be null and present in the graph.
+     * @return Set of Scopes, not null, may be empty.
+     */
+    public Set<Scope> getPrecedingKeywords(final Scope scope) {
+        final Set<Scope> predecessors = incomingEdgesOf(scope).stream()
+                .filter(edge -> edge instanceof NodeEdge)
+                .map(ScopeEdge::getSource)
+                .collect(Collectors.toSet());
+        final Set<Scope> keywords = predecessors.stream()
+                .filter(s -> ((NodeEdge) getEdge(s, scope)).getNode().getType().equals(NodeType.KEYWORD))
+                .collect(Collectors.toSet());
+        predecessors.removeAll(keywords);   // Now here are all non types
+        predecessors.forEach(p -> keywords.addAll(getPrecedingKeywords(p)));
+        return Collections.unmodifiableSet(keywords);
+    }
+
+    /**
      * Returns all scopes connected by any type of edge ingoing to this scope.
      * @param scope Scope, not null, must be present in the graph.
      * @return Set of Scopes, not null.
@@ -135,7 +154,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
 
     /**
      * Returns nodes that are before the given node in a directed graph.
-     * Only scopes connected by a NodeEdge are considered predecessor.
+     * Only scopes connected by a NodeEdge are considered a predecessor.
      *
      * @param scope Scope to search its predecessors.
      * @return List of nodes.
@@ -304,7 +323,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
     }
 
     private Set<NodeEdge> getNodeEdges() {
-        // Needs to be saved to a modifiable set and then converted to a unmodifiable set, because a non-terminal may
+        // Needs to be saved to a modifiable set and then converted to an unmodifiable set, because a non-terminal may
         // occur multiple times in a graph, producing an IllegalArgumentException on
         // collect(Collectors.toUnmodifiableSet())
         return Collections.unmodifiableSet(edgeSet().stream()

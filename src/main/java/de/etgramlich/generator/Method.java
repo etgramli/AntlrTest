@@ -24,6 +24,8 @@ public final class Method {
      */
     private final List<Argument> arguments;
 
+    // ToDo: Add method body
+
     /**
      * Creates new Method from return type, name and arguments.
      * @param returnType String, must not be blank.
@@ -37,6 +39,16 @@ public final class Method {
         this.returnType = returnType;
         this.name = name;
         this.arguments = arguments == null ? Collections.emptyList() : List.copyOf(arguments);
+    }
+
+    /**
+     * Creates a Method from a return type, name and single argument.
+     * @param returnType String, must not be blank.
+     * @param name String, must not be blank.
+     * @param argument Argument object, must not be null.
+     */
+    public Method(final String returnType, final String name, final Argument argument) {
+        this(returnType, name, List.of(argument));
     }
 
     /**
