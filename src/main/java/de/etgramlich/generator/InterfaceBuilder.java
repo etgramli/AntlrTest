@@ -109,9 +109,6 @@ public final class InterfaceBuilder {
         }
         this.graph = graph;
 
-        // ToDo: Keyword: mapping to Java Keywords
-        // ToDo: Type: Mapping to Java argument type
-
         final Deque<Scope> toVisitNext = new ArrayDeque<>(graph.vertexSet().size());
 
         Scope currentScope = graph.getEndScope();
