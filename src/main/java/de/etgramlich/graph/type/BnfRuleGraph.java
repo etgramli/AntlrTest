@@ -385,8 +385,8 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
         if (!(edge instanceof NodeEdge)) {
             return Map.of("name", new DefaultAttribute<>(edge.getClass().getName(), AttributeType.STRING));
         }
-        final NodeEdge nodeEdge = (NodeEdge) edge;
-        return Map.of(nodeEdge.getNode().getName(), new DefaultAttribute<>("name", AttributeType.STRING),
-                "nodeType", new DefaultAttribute<>(nodeEdge.getNode().getType().toString(), AttributeType.STRING));
+        final Node node = ((NodeEdge) edge).getNode();
+        return Map.of("name", new DefaultAttribute<>(node.getName(), AttributeType.STRING),
+                "nodeType", new DefaultAttribute<>(node.getType().toString(), AttributeType.STRING));
     }
 }
