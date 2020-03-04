@@ -303,7 +303,11 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
         return distanceStartTarget < distanceStartSource;
     }
 
-    private BnfRuleGraph copyWithoutBackwardEdges() {
+    /**
+     * Returns a copy of the graph containing no backwards edges.
+     * @return A new graph.
+     */
+    public BnfRuleGraph copyWithoutBackwardEdges() {
         final BnfRuleGraph onlyForwardEdges = new BnfRuleGraph(name);
         vertexSet().forEach(onlyForwardEdges::addVertex);
         getNodeEdges().forEach(edge -> onlyForwardEdges.addEdge(edge.getSource(), edge.getTarget(), edge));

@@ -46,11 +46,6 @@ public final class InterfaceBuilder {
     private static final String INTERFACE_NAME = "templateInterface";
 
     /**
-     * Nam of the method string template.
-     */
-    private static final String METHOD_NAME = "templateMethod";
-
-    /**
      * Java source code file ending.
      */
     private static final String DEFAULT_FILE_ENDING = ".java";
@@ -125,13 +120,21 @@ public final class InterfaceBuilder {
                     .collect(Collectors.toUnmodifiableSet()));
             currentScope = toVisitNext.pollFirst();
         }
-        if (!graph.vertexSet().stream().map(Scope::getName).allMatch(symbolTable::isType)) {
-            final Set<String> unsaved = graph.vertexSet().stream()
-                    .map(Scope::getName)
+
+        if (!scopesToBeSavedAsInterfaces().stream().allMatch(symbolTable::isType)) {
+            final Set<String> unsaved = scopesToBeSavedAsInterfaces().stream()
                     .filter(string -> !symbolTable.isType(string)).collect(Collectors.toUnmodifiableSet());
             throw new IllegalArgumentException("Not all scopes saved as interfaces: "
                     + CollectionUtil.asString(unsaved));
         }
+    }
+
+    private Set<String> scopesToBeSavedAsInterfaces() {
+        final BnfRuleGraph noBackEdges = graph.copyWithoutBackwardEdges();
+        return noBackEdges.vertexSet().stream()
+                .filter(scope -> noBackEdges.outGoingNodeEdges(scope).stream()
+                        .anyMatch(nodeEdge -> nodeEdge.getNode().getType().equals(NodeType.KEYWORD)))
+                .map(Scope::getName).collect(Collectors.toUnmodifiableSet());
     }
 
     private Interface getInterface(final Scope currentScope) {
