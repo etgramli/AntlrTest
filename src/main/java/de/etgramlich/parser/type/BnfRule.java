@@ -2,21 +2,17 @@ package de.etgramlich.parser.type;
 
 import de.etgramlich.parser.type.text.NonTerminal;
 
-import java.util.List;
-import java.util.Collections;
-import java.util.stream.Collectors;
-
 /**
  * Represents a BNF rule as Java type.
  */
 public final class BnfRule implements BnfType {
     /**
-     * Left hand side of the rule, it is an identifier / non-terminal.
+     * Left-hand side of the rule, it is an identifier / non-terminal.
      */
     private final NonTerminal lhs;
 
     /**
-     * Right hand side of the rule, an Alternatives BNF element.
+     * Right-hand side of the rule, an Alternative BNF element.
      */
     private final Alternatives rhs;
 
