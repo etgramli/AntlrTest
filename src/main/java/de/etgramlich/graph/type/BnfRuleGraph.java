@@ -182,10 +182,10 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
      * @return Set of NodeEdges, may be empty.
      */
     public Set<NodeEdge> outGoingNodeEdges(final Scope scope) {
-        return Collections.unmodifiableSet(outgoingEdgesOf(scope).stream()
+        return outgoingEdgesOf(scope).stream()
                 .filter(scopeEdge -> scopeEdge instanceof NodeEdge)
                 .map(scopeEdge -> ((NodeEdge) scopeEdge))
-                .collect(Collectors.toSet()));
+                .collect(Collectors.toUnmodifiableSet());
     }
 
     /**
@@ -194,10 +194,10 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
      * @return List of Nodes.
      */
     public Set<Node> getInGoingNodes(final Scope scope) {
-        return Collections.unmodifiableSet(incomingEdgesOf(scope).stream()
+        return incomingEdgesOf(scope).stream()
                 .filter(scopeEdge -> scopeEdge instanceof NodeEdge)
                 .map(nodeEdge -> ((NodeEdge) nodeEdge).getNode())
-                .collect(Collectors.toSet()));
+                .collect(Collectors.toUnmodifiableSet());
     }
 
     /**
@@ -240,13 +240,10 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
      * @return Set of ScopeEdges, not null.
      */
     public Set<ScopeEdge> getDanglingScopeEdges() {
-        // Needs to be saved to a modifiable set and then converted to a unmodifiable set, because a non-terminal may
-        // occur multiple times in a graph, producing an IllegalArgumentException on
-        // collect(Collectors.toUnmodifiableSet())
-        return Collections.unmodifiableSet(vertexSet().stream()
+        return vertexSet().stream()
                 .filter(scope -> outDegreeOf(scope) == 0)
                 .flatMap(scope -> incomingEdgesOf(scope).stream())
-                .collect(Collectors.toSet()));
+                .collect(Collectors.toUnmodifiableSet());
     }
 
     /**
@@ -340,7 +337,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
      * @return Set of NodeEdges, not null, may be empty.
      */
     public Set<NodeEdge> getNonTerminalNodeEdges() {
-        // Needs to be saved to a modifiable set and then converted to a unmodifiable set, because a non-terminal may
+        // Needs to be saved to a modifiable set and then converted to an unmodifiable set, because a non-terminal may
         // occur multiple times in a graph, producing an IllegalArgumentException on
         // collect(Collectors.toUnmodifiableSet())
         return Collections.unmodifiableSet(getNodeEdges().stream()
@@ -365,7 +362,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
      */
     public void renderBnfRuleGraph(final String path) throws IOException {
         try (PrintWriter fileWriter = new PrintWriter(path, StandardCharsets.UTF_8)) {
-            fileWriter.println(this.toString());
+            fileWriter.println(toString());
         }
     }
 
