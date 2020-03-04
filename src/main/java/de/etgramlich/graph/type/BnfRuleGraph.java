@@ -16,7 +16,6 @@ import java.util.Set;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
@@ -383,16 +382,11 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
     }
 
     private static Map<String, Attribute> getAttributeMap(final ScopeEdge edge) {
-        final Map<String, Attribute> attributeMap = new HashMap<>(2);
-        attributeMap.put("name",
-                new DefaultAttribute<>(
-                        (edge instanceof NodeEdge ? ((NodeEdge) edge).getNode().getName() : edge.getClass().getName()),
-                        AttributeType.STRING));
-        if (edge instanceof NodeEdge) {
-            NodeEdge nodeEdge = (NodeEdge) edge;
-            attributeMap.put("nodeType",
-                    new DefaultAttribute<>(nodeEdge.getNode().getType().toString(), AttributeType.STRING));
+        if (!(edge instanceof NodeEdge)) {
+            return Map.of("name", new DefaultAttribute<>(edge.getClass().getName(), AttributeType.STRING));
         }
-        return Collections.unmodifiableMap(attributeMap);
+        final NodeEdge nodeEdge = (NodeEdge) edge;
+        return Map.of(nodeEdge.getNode().getName(), new DefaultAttribute<>("name", AttributeType.STRING),
+                "nodeType", new DefaultAttribute<>(nodeEdge.getNode().getType().toString(), AttributeType.STRING));
     }
 }
