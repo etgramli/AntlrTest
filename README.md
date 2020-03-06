@@ -15,4 +15,4 @@ g | grammar   | file      | True  | /home/user/grammar.bnf | EBNF grammar in tex
 ## Use dependency
 You can use this project as a dependency using maven. [Link](https://github.com/etgramli/AntlrTest/packages)
 
-Use this token to access the maven dependency: b7b4514ccd30043804fa1aa083a9a78dcb499ce1
+Use this token to access the maven dependency: 9dc232ed15a45f21ec42dd06d6c3ae8cdd257a5f
