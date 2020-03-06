@@ -12,6 +12,14 @@
         <maven>3.6.1</maven>
     </prerequisites>
 
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Etgramli Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/etgramli/AntlrTest</url>
+        </repository>
+    </distributionManagement>
+
     <build>
         <plugins>
             <plugin>
