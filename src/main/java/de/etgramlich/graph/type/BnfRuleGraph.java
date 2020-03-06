@@ -31,7 +31,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
     private final String name;
 
     /**
-     * Creates an unweighted BnfRuleGraph without vertex and edge supplier.
+     * Creates an unweighted BnfRuleGraph with a vertex supplier and without an edge supplier.
      *
      * @param name Name of the graph (used for BNF rule LHS).
      */

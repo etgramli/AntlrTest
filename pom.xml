@@ -21,7 +21,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>de.etgramlich.anagramfinder.Main</mainClass>
+                            <mainClass>de.etgramlich.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -39,7 +39,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>de.etgramlich.anagramfinder.Main</mainClass>
+                            <mainClass>de.etgramlich.Main</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
