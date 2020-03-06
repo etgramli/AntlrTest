@@ -32,6 +32,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
 
     /**
      * Creates an unweighted BnfRuleGraph without vertex and edge supplier.
+     *
      * @param name Name of the graph (used for BNF rule LHS).
      */
     public BnfRuleGraph(final String name) {
@@ -41,6 +42,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
 
     /**
      * Returns the length from the start node to end node.
+     *
      * @return Non-negative integer.
      */
     public int length() {
@@ -53,6 +55,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
 
     /**
      * Returns the (LSH side) name of the graph.
+     *
      * @return String, not null.
      */
     public String getName() {
@@ -61,6 +64,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
 
     /**
      * Returns true if the graph contains no edges and no vertices.
+     *
      * @return True if no edges and vertices in graph.
      */
     public boolean isEmpty() {
@@ -73,6 +77,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
      * - have one end vertex,
      * - have a parallel connection to any optional edge
      * - have a parallel connection to any repetition edge (in reverse direction)
+     *
      * @return True if the graph is consistent or empty.
      */
     public boolean isConsistent() {
@@ -99,6 +104,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
 
     /**
      * Returns all scopes that are connected by any type of outgoing edge.
+     *
      * @param scope Scope, must not be null and present in graph.
      * @return Set of scopes, not null, may be empty.
      */
@@ -124,6 +130,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
     /**
      * Get the closest preceding non-terminals, connected by NodeEdges. Also, non-terminals that are indirectly
      * connected (by a terminal in a NodeEdge) are found.
+     *
      * @param scope Scope, must not be null and present in the graph.
      * @return Set of Scopes, not null, may be empty.
      */
@@ -142,6 +149,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
 
     /**
      * Returns all scopes connected by any type of edge ingoing to this scope.
+     *
      * @param scope Scope, not null, must be present in the graph.
      * @return Set of Scopes, not null.
      */
@@ -167,6 +175,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
 
     /**
      * Returns the outgoing nodes, that are connected by a NodeEdge to the given scope.
+     *
      * @param scope Scope, must not be null.
      * @return List of nodes.
      */
@@ -178,6 +187,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
 
     /**
      * Returns the outgoing NodeEdges of the provided scope.
+     *
      * @param scope Scope, must not be null and exist in the graph.
      * @return Set of NodeEdges, may be empty.
      */
@@ -190,6 +200,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
 
     /**
      * Returns a list of ingoing nodes that are connected by a NodeEdge to the given scope.
+     *
      * @param scope Scope, must not be null.
      * @return List of Nodes.
      */
@@ -248,6 +259,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
 
     /**
      * Returns a Set containing the ScopeEdges of Nodes having no successor, but the Node must be successor of root.
+     *
      * @param root A Node existing in the graph.
      * @return Set of ScopeEdges, not null.
      */
@@ -275,6 +287,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
 
     /**
      * Returns true if the target node is closer to the end node than to the start node compared to the source node.
+     *
      * @param edge Edge to be determined.
      * @return True if target node closer to end as source node.
      */
@@ -288,6 +301,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
 
     /**
      * Determines if the target node is closer to the start node than to the end node compared to the source node.
+     *
      * @param edge Edge to be determined.
      * @return True if the target node is closer to the start node than the source, else false.
      */
@@ -301,6 +315,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
 
     /**
      * Returns a copy of the graph containing no backwards edges.
+     *
      * @return A new graph.
      */
     public BnfRuleGraph copyWithoutBackwardEdges() {
@@ -316,6 +331,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
 
     /**
      * Returns true if the graph contains at least one non-terminal node.
+     *
      * @return True if non-terminal node is present.
      */
     public boolean containsNonTerminals() {
@@ -334,6 +350,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
 
     /**
      * Returns a subset of the edge set that contains only edges that contain non-terminal nodes.
+     *
      * @return Set of NodeEdges, not null, may be empty.
      */
     public Set<NodeEdge> getNonTerminalNodeEdges() {
@@ -347,6 +364,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
 
     /**
      * Returns the nodes of the graph's edges, that are non-terminal nodes.
+     *
      * @return Set of Nodes, not null, may be empty.
      */
     public Set<Node> getNonTerminalNodes() {
@@ -357,6 +375,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
 
     /**
      * Renders this graph to a DOT file.
+     *
      * @param path File path in an existing directory.
      * @throws IOException Thrown if file could not be saved or directory does not exist.
      */
@@ -369,9 +388,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
     @Override
     public String toString() {
         final DOTExporter<Scope, ScopeEdge> exporter = new DOTExporter<>(Scope::getName);
-        exporter.setEdgeIdProvider(
-                scopeEdge -> "E_" + (scopeEdge instanceof NodeEdge ? ((NodeEdge) scopeEdge).getNode().getName()
-                        : scopeEdge.getClass().getName()));
+        exporter.setEdgeIdProvider(edge -> getAttributeMap(edge).get("label").getValue());
         exporter.setEdgeAttributeProvider(BnfRuleGraph::getAttributeMap);
         final StringWriter writer = new StringWriter();
         exporter.exportGraph(this, writer);
@@ -380,10 +397,10 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
 
     private static Map<String, Attribute> getAttributeMap(final ScopeEdge edge) {
         if (!(edge instanceof NodeEdge)) {
-            return Map.of("name", new DefaultAttribute<>(edge.getClass().getName(), AttributeType.STRING));
+            return Map.of("label", new DefaultAttribute<>(edge.getClass().getSimpleName(), AttributeType.STRING));
         }
         final Node node = ((NodeEdge) edge).getNode();
-        return Map.of("name", new DefaultAttribute<>(node.getName(), AttributeType.STRING),
-                "nodeType", new DefaultAttribute<>(node.getType().toString(), AttributeType.STRING));
+        final String labelValue = node.getName() + " [" + node.getType().toString() + "]";
+        return Map.of("label", new DefaultAttribute<>(labelValue, AttributeType.STRING));
     }
 }
