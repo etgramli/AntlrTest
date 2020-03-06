@@ -14,5 +14,3 @@ Short option | Long option | Expected argument | Required | Example | Descriptio
 
 ## Use dependency
 You can use this project as a dependency using maven. [Link](https://github.com/etgramli/AntlrTest/packages)
-
-Use this token to access the maven dependency: 9dc232ed15a45f21ec42dd06d6c3ae8cdd257a5f
