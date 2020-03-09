@@ -18,6 +18,7 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
+import java.util.Arrays;
 import java.util.List;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
@@ -26,7 +27,7 @@ public class BnfParser extends Parser {
         RuntimeMetaData.checkVersion("4.8", RuntimeMetaData.VERSION);
     }
 
-    protected static final DFA[] _decisionToDFA;
+    private static final DFA[] _decisionToDFA;
     protected static final PredictionContextCache _sharedContextCache = new PredictionContextCache();
     public static final int T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, T__6 = 7, T__7 = 8, T__8 = 9,
             NT = 10, KEYWORD = 11, TYPE = 12, WS = 13;
@@ -34,12 +35,8 @@ public class BnfParser extends Parser {
             RULE_sequence = 5, RULE_element = 6, RULE_optional = 7, RULE_zeroormore = 8, RULE_precedence = 9,
             RULE_nt = 10, RULE_keyword = 11, RULE_type = 12;
 
-    private static String[] makeRuleNames() {
-        return new String[]{"bnf", "bnfrule", "lhs", "rhs", "alternatives", "sequence", "element", "optional",
-                "zeroormore", "precedence", "nt", "keyword", "type"};
-    }
-
-    public static final String[] ruleNames = makeRuleNames();
+    private static final String[] ruleNames = new String[]{"bnf", "bnfrule", "lhs", "rhs", "alternatives", "sequence",
+            "element", "optional", "zeroormore", "precedence", "nt", "keyword", "type"};
 
     private static String[] makeLiteralNames() {
         return new String[]{null, "'='", "';'", "'|'", "'['", "']'", "'{'", "'}'", "'('", "')'"};
@@ -58,7 +55,7 @@ public class BnfParser extends Parser {
      * @deprecated Use {@link #VOCABULARY} instead.
      */
     @Deprecated
-    public static final String[] tokenNames;
+    private static final String[] tokenNames;
 
     static {
         tokenNames = new String[_SYMBOLIC_NAMES.length];
@@ -77,7 +74,7 @@ public class BnfParser extends Parser {
     @Override
     @Deprecated
     public String[] getTokenNames() {
-        return tokenNames;
+        return Arrays.copyOf(tokenNames, tokenNames.length);
     }
 
     @Override
@@ -92,7 +89,7 @@ public class BnfParser extends Parser {
 
     @Override
     public String[] getRuleNames() {
-        return ruleNames;
+        return Arrays.copyOf(ruleNames, ruleNames.length);
     }
 
     @Override

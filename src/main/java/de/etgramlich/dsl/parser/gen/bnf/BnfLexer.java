@@ -12,27 +12,25 @@ import org.antlr.v4.runtime.atn.ATN;
 import org.antlr.v4.runtime.atn.ATNDeserializer;
 import org.antlr.v4.runtime.dfa.DFA;
 
+import java.util.Arrays;
+
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class BnfLexer extends Lexer {
     static {
         RuntimeMetaData.checkVersion("4.8", RuntimeMetaData.VERSION);
     }
 
-    protected static final DFA[] _decisionToDFA;
+    private static final DFA[] _decisionToDFA;
     protected static final PredictionContextCache _sharedContextCache = new PredictionContextCache();
     public static final int T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, T__6 = 7, T__7 = 8, T__8 = 9,
             NT = 10, KEYWORD = 11, TYPE = 12, WS = 13;
-    public static String[] channelNames = {"DEFAULT_TOKEN_CHANNEL", "HIDDEN"};
+    private final static String[] channelNames = {"DEFAULT_TOKEN_CHANNEL", "HIDDEN"};
 
-    public static String[] modeNames = {"DEFAULT_MODE"};
+    private final static String[] modeNames = {"DEFAULT_MODE"};
 
-    private static String[] makeRuleNames() {
-        return new String[]{
-                "T__0", "T__1", "T__2", "T__3", "T__4", "T__5", "T__6", "T__7", "T__8", "NT", "KEYWORD", "TYPE", "WS"
-        };
-    }
-
-    public static final String[] ruleNames = makeRuleNames();
+    private static final String[] ruleNames = new String[]{
+            "T__0", "T__1", "T__2", "T__3", "T__4", "T__5", "T__6", "T__7", "T__8", "NT", "KEYWORD", "TYPE", "WS"
+    };
 
     private static String[] makeLiteralNames() {
         return new String[]{null, "'='", "';'", "'|'", "'['", "']'", "'{'", "'}'", "'('", "')'"};
@@ -51,7 +49,7 @@ public class BnfLexer extends Lexer {
      * @deprecated Use {@link #VOCABULARY} instead.
      */
     @Deprecated
-    public static final String[] tokenNames;
+    private static final String[] tokenNames;
 
     static {
         tokenNames = new String[_SYMBOLIC_NAMES.length];
@@ -70,7 +68,7 @@ public class BnfLexer extends Lexer {
     @Override
     @Deprecated
     public String[] getTokenNames() {
-        return tokenNames;
+        return Arrays.copyOf(tokenNames, tokenNames.length);
     }
 
     @Override
@@ -90,7 +88,7 @@ public class BnfLexer extends Lexer {
 
     @Override
     public String[] getRuleNames() {
-        return ruleNames;
+        return Arrays.copyOf(ruleNames, ruleNames.length);
     }
 
     @Override
@@ -100,12 +98,12 @@ public class BnfLexer extends Lexer {
 
     @Override
     public String[] getChannelNames() {
-        return channelNames;
+        return Arrays.copyOf(channelNames, channelNames.length);
     }
 
     @Override
     public String[] getModeNames() {
-        return modeNames;
+        return Arrays.copyOf(modeNames, modeNames.length);
     }
 
     @Override
