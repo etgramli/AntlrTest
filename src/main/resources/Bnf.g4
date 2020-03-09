@@ -5,7 +5,7 @@ bnf
 ;
 
 bnfrule
-    : lhs '::=' rhs
+    : lhs '=' rhs ';'
     ;
 
 lhs
@@ -71,4 +71,3 @@ TYPE
 WS
     : [ \r\n\t] -> skip
     ;
-

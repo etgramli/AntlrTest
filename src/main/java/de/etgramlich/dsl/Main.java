@@ -82,7 +82,6 @@ public final class Main {
         return Files.readAllLines(Paths.get(filepath)).stream()
                 .dropWhile(i -> i.matches("grammar .*;"))
                 .filter(line -> !StringUtils.isBlank(line))
-                .distinct()
                 .collect(Collectors.joining(System.lineSeparator()));
     }
 }

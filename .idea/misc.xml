@@ -9,7 +9,7 @@
           <option name="outputDir" value="$PROJECT_DIR$/src/main/java" />
           <option name="libDir" value="$PROJECT_DIR$/src/main/resources" />
           <option name="encoding" value="" />
-          <option name="pkg" value="de.etgramlich.parser.gen.bnf" />
+          <option name="pkg" value="de.etgramlich.dsl.parser.gen.bnf" />
           <option name="language" value="Java" />
           <option name="generateVisitor" value="true" />
         </PerGrammarGenerationSettings>
