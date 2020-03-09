@@ -28,6 +28,11 @@ public final class Main {
     private Main() { }
 
     /**
+     * A regex string matching a non-terminal of the grammar.
+     */
+    private static final String NON_TERMINAL_REGEX = "<[a-zA-Z]+>";
+
+    /**
      * Stores command line options.
      */
     private static final Options OPTIONS = new Options();
@@ -80,7 +85,7 @@ public final class Main {
 
     private static String prepareGrammar(final String filepath) throws IOException {
         return Files.readAllLines(Paths.get(filepath)).stream()
-                .dropWhile(i -> i.matches("grammar .*;"))
+                .dropWhile(line -> !line.matches(NON_TERMINAL_REGEX))
                 .filter(line -> !StringUtils.isBlank(line))
                 .collect(Collectors.joining(System.lineSeparator()));
     }
