@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.FileOutputStream;
 import java.io.FileNotFoundException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -35,12 +36,6 @@ import java.util.stream.Collectors;
  */
 public final class InterfaceBuilder {
     /**
-     * File path to the interface template.
-     */
-    private static final String INTERFACE_FILENAME =
-            "src" + File.separator + "main" + File.separator + "resources" + File.separator + "ebnf.stg";
-
-    /**
      * Name of the interface template.
      */
     private static final String INTERFACE_NAME = "templateInterface";
@@ -53,7 +48,14 @@ public final class InterfaceBuilder {
     /**
      * Loaded template file to be reused.
      */
-    private static final STGroup ST_GROUP = new STGroupFile(INTERFACE_FILENAME);
+    private static final STGroup ST_GROUP;
+    static {
+        final URL templateFileUrl = Thread.currentThread().getContextClassLoader().getResource("ebnf.stg");
+        if (templateFileUrl == null) {
+            throw new RuntimeException("Template fie ebnf.stg could not be read!");
+        }
+        ST_GROUP = new STGroupFile(templateFileUrl);
+    }
 
     /**
      * Package to be used in interfaces.
