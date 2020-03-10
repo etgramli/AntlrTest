@@ -135,15 +135,27 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
      * @return Set of Scopes, not null, may be empty.
      */
     public Set<Scope> getPrecedingKeywords(final Scope scope) {
-        final Set<Scope> predecessors = incomingEdgesOf(scope).stream()
-                .filter(edge -> edge instanceof NodeEdge)
-                .map(ScopeEdge::getSource)
-                .collect(Collectors.toSet());
+        final Set<Scope> predecessors = new HashSet<>(getPredecessors(scope));
         final Set<Scope> keywords = predecessors.stream()
                 .filter(s -> ((NodeEdge) getEdge(s, scope)).getNode().getType().equals(NodeType.KEYWORD))
                 .collect(Collectors.toSet());
         predecessors.removeAll(keywords);   // Now here are all non types
         predecessors.forEach(p -> keywords.addAll(getPrecedingKeywords(p)));
+        return Collections.unmodifiableSet(keywords);
+    }
+
+    /**
+     * Get the closest following scopes following a NodeEdge containing a TYPE node.
+     * @param scope Scope, must not be null, must be in the graph.
+     * @return Set of Scopes, not null, may be empty.
+     */
+    public Set<Scope> getSubsequentType(final Scope scope) {
+        final Set<Scope> successors = new HashSet<>(getSuccessors(scope));
+        final Set<Scope> keywords = successors.stream()
+                .filter(s -> ((NodeEdge) getEdge(scope, s)).getNode().getType().equals(NodeType.TYPE))
+                .collect(Collectors.toSet());
+        successors.removeAll(keywords);
+        successors.forEach(s -> keywords.addAll(getSubsequentType(s)));
         return Collections.unmodifiableSet(keywords);
     }
 

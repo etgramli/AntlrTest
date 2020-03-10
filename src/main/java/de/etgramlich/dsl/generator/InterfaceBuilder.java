@@ -168,15 +168,21 @@ public final class InterfaceBuilder {
         final Set<Method> methods = new HashSet<>(graph.outGoingNodeEdges(scope).size());
         for (NodeEdge nodeEdge : graph.outGoingNodeEdges(scope)) {
             if (nodeEdge.getNode().getType().equals(NodeType.KEYWORD)) {
-                methods.add(new Method(nodeEdge.getTarget().getName(),
-                        nodeEdge.getNode().getName(),
-                        getArgument(nodeEdge)));
+                methods.add(fromNodeEdge(nodeEdge));
             } else {
                 throw new IllegalArgumentException("Method requires a Keyword Node! was: "
                         + nodeEdge.getNode().getType().toString());
             }
         }
         return Collections.unmodifiableSet(methods);
+    }
+
+    private Method fromNodeEdge(final NodeEdge edge) {
+        final Set<Scope> subsequent = graph.getSubsequentType(edge.getTarget());
+        if (subsequent.size() != 1) {
+            throw new IllegalArgumentException("There must be exactly one keyword scopes!");
+        }
+        return new Method(subsequent.iterator().next().getName(), edge.getNode().getName(), getArgument(edge));
     }
 
     private Argument getArgument(final NodeEdge nodeEdge) {

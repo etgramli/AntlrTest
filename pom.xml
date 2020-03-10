@@ -6,7 +6,7 @@
 
     <groupId>de.etgramlich</groupId>
     <artifactId>antlr-test</artifactId>
-    <version>0.9-SNAPSHOT</version>
+    <version>1.0</version>
 
     <prerequisites>
         <maven>3.6.1</maven>

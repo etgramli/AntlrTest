@@ -41,6 +41,7 @@ public final class Main {
         OPTIONS.addRequiredOption("d", "directory", true, "Target directory for generated sources");
         OPTIONS.addRequiredOption("p", "package", true, "Target package");
         OPTIONS.addRequiredOption("g", "grammar", true, "Grammar file path");
+        OPTIONS.addOption("s", "sketch-graph", true, "Writes DOT graph to file");
     }
 
     /**
@@ -52,11 +53,13 @@ public final class Main {
         final String grammar;
         final String targetDirectory;
         final String targetPackage;
+        final String graphFilePath;
         try {
             final CommandLine cmd = new DefaultParser().parse(OPTIONS, args);
             targetDirectory = cmd.getOptionValue("d");
             targetPackage = cmd.getOptionValue("p");
             grammar = prepareGrammar(cmd.getOptionValue("g"));
+            graphFilePath = cmd.hasOption("s") ? cmd.getOptionValue("s") : null;
         } catch (ParseException e) {
             e.printStackTrace();
             System.err.println("Could not parse CMD arguments! Run with -h for help.");
@@ -75,8 +78,9 @@ public final class Main {
         final BnfRuleGraph graph = new ForestBuilder(bnf).getMergedGraph();
 
         try {
-            graph.renderBnfRuleGraph(targetDirectory + File.separator + "graph.gv");
-
+            if (graphFilePath != null) {
+                graph.renderBnfRuleGraph(targetDirectory + File.separator + graphFilePath + ".gv");
+            }
             new InterfaceBuilder(targetDirectory, targetPackage).saveInterfaces(graph);
         } catch (IOException e) {
             e.printStackTrace();
