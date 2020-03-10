@@ -2,7 +2,10 @@ package de.etgramlich.dsl.util;
 
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.*;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Collection;
 
 public final class SymbolTable {
     /**
@@ -42,8 +45,14 @@ public final class SymbolTable {
             "field", ""
     );
 
+    /**
+     * Set of types that are no types of the language, but instead custom types.
+     */
     private final Set<String> customTypes;
 
+    /**
+     * Creates symbol table with java types and no custom types.
+     */
     public SymbolTable() {
         customTypes = new HashSet<>();
     }
@@ -55,6 +64,15 @@ public final class SymbolTable {
      */
     public boolean isType(final String type) {
         return JAVA_TYPES.contains(type) || customTypes.contains(type);
+    }
+
+    /**
+     * Determines whether all strings of the collection are types (language or user-defined).
+     * @param types Collection, must not be null.
+     * @return True if all strings match a type.
+     */
+    public boolean areAllTypes(final Collection<String> types) {
+        return types.stream().allMatch(this::isType);
     }
 
     /**

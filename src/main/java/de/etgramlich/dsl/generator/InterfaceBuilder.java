@@ -49,6 +49,7 @@ public final class InterfaceBuilder {
      * Loaded template file to be reused.
      */
     private static final STGroup ST_GROUP;
+
     static {
         final URL templateFileUrl = Thread.currentThread().getContextClassLoader().getResource("ebnf.stg");
         if (templateFileUrl == null) {
@@ -79,8 +80,9 @@ public final class InterfaceBuilder {
 
     /**
      * Creates InterfaceBuilder with target (root) directory and package of the interfaces.
+     *
      * @param targetDirectory Target directory to contain all interfaces.
-     * @param targetPackage Package of the interfaces (a subfolder will be created in target directory).
+     * @param targetPackage   Package of the interfaces (a subfolder will be created in target directory).
      * @throws IOException Throws exception if the target directory can not be created.
      */
     public InterfaceBuilder(final String targetDirectory, final String targetPackage) throws IOException {
@@ -98,6 +100,7 @@ public final class InterfaceBuilder {
 
     /**
      * Save all interfaces for the scopes in the graph.
+     *
      * @param graph BnfRuleGraph, must not be null and consistent.
      */
     public void saveInterfaces(final BnfRuleGraph graph) {
@@ -107,6 +110,7 @@ public final class InterfaceBuilder {
         this.graph = graph;
 
         final Deque<Scope> toVisitNext = new ArrayDeque<>(graph.vertexSet().size());
+        final Set<Interface> interfaces = new HashSet<>(graph.vertexSet().size());
 
         Scope currentScope = graph.getEndScope();
         while (currentScope != null) {
@@ -115,6 +119,7 @@ public final class InterfaceBuilder {
                 throw new NullPointerException("Not all parent interfaces found!");
             }
             saveInterface(currentInterface.getName(), renderInterface(currentInterface));
+            interfaces.add(currentInterface);
             symbolTable.addType(currentInterface.getName());
 
             toVisitNext.addAll(graph.getPrecedingKeywords(currentScope).stream()
@@ -123,20 +128,26 @@ public final class InterfaceBuilder {
             currentScope = toVisitNext.pollFirst();
         }
 
-        if (!scopesToBeSavedAsInterfaces().stream().allMatch(symbolTable::isType)) {
-            final Set<String> unsaved = scopesToBeSavedAsInterfaces().stream()
-                    .filter(string -> !symbolTable.isType(string)).collect(Collectors.toUnmodifiableSet());
+        final Set<String> unsavedTypes = typesToBeSaved(interfaces).stream()
+                .filter(type -> !symbolTable.isType(type))
+                .collect(Collectors.toUnmodifiableSet());
+        if (!unsavedTypes.isEmpty()) {
             throw new IllegalArgumentException("Not all scopes saved as interfaces: "
-                    + CollectionUtil.asString(unsaved));
+                    + CollectionUtil.asString(unsavedTypes));
         }
     }
 
-    private Set<String> scopesToBeSavedAsInterfaces() {
-        final BnfRuleGraph noBackEdges = graph.copyWithoutBackwardEdges();
-        return noBackEdges.vertexSet().stream()
-                .filter(scope -> noBackEdges.outGoingNodeEdges(scope).stream()
-                        .anyMatch(nodeEdge -> nodeEdge.getNode().getType().equals(NodeType.KEYWORD)))
-                .map(Scope::getName).collect(Collectors.toUnmodifiableSet());
+    private Set<String> typesToBeSaved(final Set<Interface> interfaces) {
+        final Set<String> types = new HashSet<>();
+        for (Interface anInterface : interfaces) {
+            types.add(anInterface.getName());
+            types.addAll(anInterface.getParents());
+            for (Method method : anInterface.getMethods()) {
+                types.add(method.getReturnType());
+                types.addAll(method.getArguments().stream().map(Argument::getType).collect(Collectors.toList()));
+            }
+        }
+        return Collections.unmodifiableSet(types);
     }
 
     private Interface getInterface(final Scope currentScope) {
@@ -158,8 +169,8 @@ public final class InterfaceBuilder {
         for (NodeEdge nodeEdge : graph.outGoingNodeEdges(scope)) {
             if (nodeEdge.getNode().getType().equals(NodeType.KEYWORD)) {
                 methods.add(new Method(nodeEdge.getTarget().getName(),
-                                       nodeEdge.getNode().getName(),
-                                       getArgument(nodeEdge)));
+                        nodeEdge.getNode().getName(),
+                        getArgument(nodeEdge)));
             } else {
                 throw new IllegalArgumentException("Method requires a Keyword Node! was: "
                         + nodeEdge.getNode().getType().toString());
