@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.FileOutputStream;
 import java.io.FileNotFoundException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -37,8 +38,7 @@ public final class InterfaceBuilder {
     /**
      * File path to the interface template.
      */
-    private static final String INTERFACE_FILENAME =
-            "src" + File.separator + "main" + File.separator + "resources" + File.separator + "ebnf.stg";
+    private static final URL INTERFACE_FILENAME = Thread.currentThread().getContextClassLoader().getResource("ebnf.stg");
 
     /**
      * Name of the interface template.
@@ -53,6 +53,7 @@ public final class InterfaceBuilder {
     /**
      * Loaded template file to be reused.
      */
+    @SuppressWarnings("ConstantConditions")
     private static final STGroup ST_GROUP = new STGroupFile(INTERFACE_FILENAME);
 
     /**
@@ -77,8 +78,9 @@ public final class InterfaceBuilder {
 
     /**
      * Creates InterfaceBuilder with target (root) directory and package of the interfaces.
+     *
      * @param targetDirectory Target directory to contain all interfaces.
-     * @param targetPackage Package of the interfaces (a subfolder will be created in target directory).
+     * @param targetPackage   Package of the interfaces (a subfolder will be created in target directory).
      * @throws IOException Throws exception if the target directory can not be created.
      */
     public InterfaceBuilder(final String targetDirectory, final String targetPackage) throws IOException {
@@ -96,6 +98,7 @@ public final class InterfaceBuilder {
 
     /**
      * Save all interfaces for the scopes in the graph.
+     *
      * @param graph BnfRuleGraph, must not be null and consistent.
      */
     public void saveInterfaces(final BnfRuleGraph graph) {
@@ -156,8 +159,8 @@ public final class InterfaceBuilder {
         for (NodeEdge nodeEdge : graph.outGoingNodeEdges(scope)) {
             if (nodeEdge.getNode().getType().equals(NodeType.KEYWORD)) {
                 methods.add(new Method(nodeEdge.getTarget().getName(),
-                                       nodeEdge.getNode().getName(),
-                                       getArgument(nodeEdge)));
+                        nodeEdge.getNode().getName(),
+                        getArgument(nodeEdge)));
             } else {
                 throw new IllegalArgumentException("Method requires a Keyword Node! was: "
                         + nodeEdge.getNode().getType().toString());
