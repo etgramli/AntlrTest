@@ -37,7 +37,7 @@ class InterfaceBuilderTest {
     void renderInterface_interfaceWithOneParent() {
         final Set<String> parents = Set.of("SuperInterface");
         final Interface anInterface = new Interface("Test", parents, Collections.emptySet());
-        final String expected = "package " + DUMMY_PACKAGE + ";\n interface Test implements " + parents.iterator().next() + "{ }";
+        final String expected = "package " + DUMMY_PACKAGE + ";\n interface Test extends " + parents.iterator().next() + "{ }";
 
         try {
             Method method = InterfaceBuilder.class.getDeclaredMethod("renderInterface", Interface.class);
@@ -55,7 +55,7 @@ class InterfaceBuilderTest {
         final Set<String> parents = Set.of("SuperInterface", "OtherParent");
         final Iterator<String> parentIterator = parents.iterator();
         final Interface anInterface = new Interface("Test", parents, Collections.emptySet());
-        final String expected = "package " + DUMMY_PACKAGE + ";\n interface Test implements " + parentIterator.next() + ", " + parentIterator.next() + "{ }";
+        final String expected = "package " + DUMMY_PACKAGE + ";\n interface Test extends " + parentIterator.next() + ", " + parentIterator.next() + "{ }";
 
         try {
             Method method = InterfaceBuilder.class.getDeclaredMethod("renderInterface", Interface.class);
