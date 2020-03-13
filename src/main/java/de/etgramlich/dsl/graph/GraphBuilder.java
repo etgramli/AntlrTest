@@ -95,12 +95,12 @@ public final class GraphBuilder {
         }
     }
 
-    private Set<ScopeEdge> processAlternatives(final Alternatives alternatives) {
+    private Set<NodeEdge> processAlternatives(final Alternatives alternatives) {
         assert (!alternatives.getSequences().isEmpty());
 
         final Scope openingAlternativeScope = lastAddedScope;
         final Set<Scope> lastScopes = new HashSet<>(alternatives.getSequences().size());
-        final Set<ScopeEdge> lastEdges = new HashSet<>(alternatives.getSequences().size());
+        final Set<NodeEdge> lastEdges = new HashSet<>(alternatives.getSequences().size());
 
         for (Iterator<Sequence> iter = alternatives.getSequences().iterator(); iter.hasNext();) {
             lastEdges.addAll(processSequence(iter.next()));
@@ -149,11 +149,11 @@ public final class GraphBuilder {
         selfEdges.forEach(e -> graph.addEdge(newScope, newScope, e));
     }
 
-    private Set<ScopeEdge> processSequence(final Sequence sequence) {
+    private Set<NodeEdge> processSequence(final Sequence sequence) {
         if (sequence.getElements().isEmpty()) {
             throw new IllegalArgumentException("Sequence must have at least one element!");
         }
-        Set<ScopeEdge> lastEdges = Collections.emptySet();
+        Set<NodeEdge> lastEdges = Collections.emptySet();
         for (Element element : sequence.getElements()) {
             lastEdges = processElement(element);
         }
@@ -166,7 +166,7 @@ public final class GraphBuilder {
      * @param element Element of EBNF grammar to be added, must not be null.
      * @return Set of the last returned edges (before the lastAddedScope);
      */
-    private Set<ScopeEdge> processElement(final Element element) {
+    private Set<NodeEdge> processElement(final Element element) {
         if (element instanceof TextElement) {
             return processTextElement((TextElement) element);
         } else if (element instanceof AbstractRepetition) {
@@ -181,27 +181,25 @@ public final class GraphBuilder {
      * @param textElement TextElement, must not be null.
      * @return The edge before the newly added scope.
      */
-    private Set<ScopeEdge> processTextElement(final TextElement textElement) {
+    private Set<NodeEdge> processTextElement(final TextElement textElement) {
         final Scope newScope = graph.addVertex();
-        final Node node = new Node(textElement.getName(), NodeType.fromTextElement(textElement));
-        graph.addEdge(lastAddedScope, newScope, new NodeEdge(node));
+        final NodeEdge nodeEdge = new NodeEdge(new Node(textElement.getName(), NodeType.fromTextElement(textElement)));
+        graph.addEdge(lastAddedScope, newScope, nodeEdge);
         lastAddedScope = newScope;
-        return graph.incomingEdgesOf(newScope);
+        return Set.of(nodeEdge);
     }
 
-    private Set<ScopeEdge> processAbstractRepetition(final AbstractRepetition repetition) {
+    private Set<NodeEdge> processAbstractRepetition(final AbstractRepetition repetition) {
         final Scope beforeOptionalLoop = lastAddedScope;
 
-        final Set<ScopeEdge> lastEdges = processAlternatives(repetition.getAlternatives());
+        final Set<NodeEdge> lastEdges = processAlternatives(repetition.getAlternatives());
 
         if (repetition instanceof Optional || repetition instanceof ZeroOrMore) {
             graph.addEdge(beforeOptionalLoop, lastAddedScope, new OptionalEdge());
             if (repetition instanceof ZeroOrMore) {
-                for (ScopeEdge edge : lastEdges) {
-                    if (edge instanceof NodeEdge) {
-                        for (Scope s : getSecondScopeOfPath(beforeOptionalLoop, lastAddedScope)) {
-                            graph.addEdge(lastAddedScope, s, new NodeEdge(((NodeEdge) edge).getNode()));
-                        }
+                for (NodeEdge edge : lastEdges) {
+                    for (Scope s : getSecondScopeOfPath(beforeOptionalLoop, lastAddedScope)) {
+                        graph.addEdge(lastAddedScope, s, new NodeEdge(edge.getNode()));
                     }
                 }
             }
