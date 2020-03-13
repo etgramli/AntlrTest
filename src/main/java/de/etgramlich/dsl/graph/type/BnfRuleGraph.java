@@ -89,8 +89,6 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
                 return false;
             } else if (edge instanceof OptionalEdge && notConnectedByNodeEdges(edge.getSource(), edge.getTarget())) {
                 return false;
-            } else if (edge instanceof RepetitionEdge && notConnectedByNodeEdges(edge.getTarget(), edge.getSource())) {
-                return false;
             }
         }
         try {
@@ -110,6 +108,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
      */
     public Set<Scope> getOutGoingScopes(final Scope scope) {
         return outgoingEdgesOf(scope).stream()
+                .filter(edge -> edge.getSource() != edge.getTarget())
                 .map(ScopeEdge::getTarget)
                 .collect(Collectors.toUnmodifiableSet());
     }
@@ -180,6 +179,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
      */
     public Set<Scope> getPredecessors(final Scope scope) {
         return incomingEdgesOf(scope).stream()
+                .filter(edge -> edge.getSource() != edge.getTarget())
                 .filter(edge -> edge instanceof NodeEdge)
                 .map(ScopeEdge::getSource)
                 .collect(Collectors.toUnmodifiableSet());
@@ -205,6 +205,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
      */
     public Set<NodeEdge> outGoingNodeEdges(final Scope scope) {
         return outgoingEdgesOf(scope).stream()
+                .filter(edge -> edge.getSource() != edge.getTarget())
                 .filter(scopeEdge -> scopeEdge instanceof NodeEdge)
                 .map(scopeEdge -> ((NodeEdge) scopeEdge))
                 .collect(Collectors.toUnmodifiableSet());
@@ -333,7 +334,9 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
     public BnfRuleGraph copyWithoutBackwardEdges() {
         final BnfRuleGraph onlyForwardEdges = new BnfRuleGraph(name);
         vertexSet().forEach(onlyForwardEdges::addVertex);
-        getNodeEdges().forEach(edge -> onlyForwardEdges.addEdge(edge.getSource(), edge.getTarget(), edge));
+        getNodeEdges().stream()
+                .filter(edge -> edge.getSource() != edge.getTarget())
+                .forEach(edge -> onlyForwardEdges.addEdge(edge.getSource(), edge.getTarget(), edge));
         return onlyForwardEdges;
     }
 

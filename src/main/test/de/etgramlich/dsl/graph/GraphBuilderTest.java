@@ -10,9 +10,12 @@ import de.etgramlich.dsl.parser.type.repetition.ZeroOrMore;
 import de.etgramlich.dsl.parser.type.text.Keyword;
 import de.etgramlich.dsl.parser.type.text.NonTerminal;
 import de.etgramlich.dsl.parser.type.Sequence;
+import de.etgramlich.dsl.parser.type.text.TextElement;
 import org.jgrapht.alg.cycle.CycleDetector;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -94,19 +97,19 @@ class GraphBuilderTest {
         final Scope endScope = graph.getEndScope();
         assertEquals(1, graph.getSuccessors(startScope).size());
         final Scope secondScope = graph.getSuccessors(startScope).iterator().next();
-        assertEquals(2, graph.inDegreeOf(secondScope));
+        assertEquals(1, graph.inDegreeOf(secondScope));
         assertEquals(4, graph.outDegreeOf(secondScope));
 
         assertEquals(1, graph.getPredecessors(endScope).size());
         final Scope secondLastScope = graph.getPredecessors(endScope).iterator().next();
         assertEquals(2, graph.outDegreeOf(secondLastScope));
-        assertEquals(4, graph.inDegreeOf(secondLastScope));
+        assertEquals(5, graph.inDegreeOf(secondLastScope));
 
         final CycleDetector<Scope, ScopeEdge> cycleDetector = new CycleDetector<>(graph);
         assertTrue(cycleDetector.detectCycles());
-        assertEquals(Set.of(secondScope, secondLastScope), cycleDetector.findCycles());
+        assertEquals(Set.of(secondLastScope), cycleDetector.findCycles());
         assertEquals(Set.of(endScope), graph.getSuccessors(secondLastScope));
-        assertEquals(Set.of(secondScope, endScope), graph.getOutGoingScopes(secondLastScope));
+        assertEquals(Set.of(endScope), graph.getOutGoingScopes(secondLastScope));
         assertEquals(Set.of(secondLastScope), graph.getSuccessors(secondScope));
     }
 
@@ -129,25 +132,25 @@ class GraphBuilderTest {
         assertTrue(graph.isConsistent());
         assertEquals(3, graph.length());
         assertEquals(4, graph.vertexSet().size());
-        assertEquals(7, graph.edgeSet().size());
+        assertEquals(9, graph.edgeSet().size());
 
         final Scope startScope = graph.getStartScope();
         final Scope endScope = graph.getEndScope();
         assertEquals(1, graph.getSuccessors(startScope).size());
         final Scope secondScope = graph.getSuccessors(startScope).iterator().next();
-        assertEquals(2, graph.inDegreeOf(secondScope));
+        assertEquals(1, graph.inDegreeOf(secondScope));
         assertEquals(4, graph.outDegreeOf(secondScope));
 
         assertEquals(1, graph.getPredecessors(endScope).size());
         final Scope secondLastScope = graph.getPredecessors(endScope).iterator().next();
-        assertEquals(2, graph.outDegreeOf(secondLastScope));
-        assertEquals(4, graph.inDegreeOf(secondLastScope));
+        assertEquals(4, graph.outDegreeOf(secondLastScope));
+        assertEquals(7, graph.inDegreeOf(secondLastScope));
 
         final CycleDetector<Scope, ScopeEdge> cycleDetector = new CycleDetector<>(graph);
         assertTrue(cycleDetector.detectCycles());
-        assertEquals(Set.of(secondScope, secondLastScope), cycleDetector.findCycles());
+        assertEquals(Set.of(secondLastScope), cycleDetector.findCycles());
         assertEquals(Set.of(endScope), graph.getSuccessors(secondLastScope));
-        assertEquals(Set.of(secondScope, endScope), graph.getOutGoingScopes(secondLastScope));
+        assertEquals(Set.of(endScope), graph.getOutGoingScopes(secondLastScope));
         assertEquals(Set.of(secondLastScope), graph.getSuccessors(secondScope));
     }
 
@@ -172,17 +175,17 @@ class GraphBuilderTest {
 
         assertEquals(1, graph.getSuccessors(graph.getStartScope()).size());
         final Scope secondScope = graph.getSuccessors(graph.getStartScope()).iterator().next();
-        assertEquals(2, graph.inDegreeOf(secondScope));
+        assertEquals(1, graph.inDegreeOf(secondScope));
         assertEquals(2, graph.outDegreeOf(secondScope));
 
         assertEquals(1, graph.getPredecessors(graph.getEndScope()).size());
         final Scope secondLastScope = graph.getPredecessors(graph.getEndScope()).iterator().next();
-        assertEquals(2, graph.inDegreeOf(secondLastScope));
+        assertEquals(3, graph.inDegreeOf(secondLastScope));
         assertEquals(2, graph.outDegreeOf(secondLastScope));
 
         final CycleDetector<Scope, ScopeEdge> cycleDetector = new CycleDetector<>(graph);
         assertTrue(cycleDetector.detectCycles());
-        assertEquals(Set.of(secondScope, secondLastScope), cycleDetector.findCycles());
+        assertEquals(Set.of(secondLastScope), cycleDetector.findCycles());
     }
 
     @Test
@@ -210,7 +213,7 @@ class GraphBuilderTest {
         final Scope endScope = graph.getEndScope();
         assertEquals(1, graph.getSuccessors(startScope).size());
         final Scope secondScope = graph.getSuccessors(startScope).iterator().next();
-        assertEquals(2, graph.inDegreeOf(secondScope));
+        assertEquals(1, graph.inDegreeOf(secondScope));
         assertEquals(2, graph.outDegreeOf(secondScope));
 
         assertEquals(1, graph.getPredecessors(endScope).size());
@@ -220,16 +223,19 @@ class GraphBuilderTest {
 
         assertEquals(1, graph.getSuccessors(secondScope).size());
         final Scope thirdScope = graph.getSuccessors(secondScope).iterator().next();
-        assertEquals(1, graph.getPredecessors(secondLastScope).size());
+        assertEquals(2, graph.inDegreeOf(thirdScope));
+        assertEquals(2, graph.outDegreeOf(thirdScope));
         final Scope thirdLastScope = graph.getPredecessors(secondLastScope).iterator().next();
+        assertEquals(3, graph.inDegreeOf(thirdLastScope));
+        assertEquals(2, graph.outDegreeOf(thirdLastScope));
 
         final CycleDetector<Scope, ScopeEdge> cycleDetector = new CycleDetector<>(graph);
         assertTrue(cycleDetector.detectCycles());
-        assertEquals(Set.of(thirdLastScope, thirdScope, secondScope, secondLastScope), cycleDetector.findCycles());
-        assertEquals(Set.of(endScope), graph.getSuccessors(secondLastScope));
-        assertEquals(Set.of(secondScope, endScope), graph.getOutGoingScopes(secondLastScope));
+        assertEquals(Set.of(thirdLastScope, thirdScope, secondLastScope), cycleDetector.findCycles());
+        assertEquals(Set.of(thirdScope, endScope), graph.getSuccessors(secondLastScope));
+        assertEquals(Set.of(thirdScope, endScope), graph.getOutGoingScopes(secondLastScope));
         assertEquals(Set.of(secondLastScope), graph.getSuccessors(thirdLastScope));
-        assertEquals(Set.of(thirdScope, secondLastScope), graph.getOutGoingScopes(thirdLastScope));
+        assertEquals(Set.of(secondLastScope), graph.getOutGoingScopes(thirdLastScope));
     }
 
     @Test
@@ -325,7 +331,7 @@ class GraphBuilderTest {
     }
 
     @Test
-    void graphBuilder_oneRule_alternativesEachOneNode() {
+    void graphBuilder_oneRule_alternativesEachOneNode() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         final Bnf alternativesOneNodeEach = new Bnf(List.of(
                 START_RULE,
                 new BnfRule(new NonTerminal("Alternative"),
@@ -353,7 +359,9 @@ class GraphBuilderTest {
 
 
         // Add new node to test addition
-        builder.addNodeInSequence(new Node("New-Sequence", NodeType.KEYWORD));
+        Method processTextElement = GraphBuilder.class.getDeclaredMethod("processTextElement", TextElement.class);
+        processTextElement.setAccessible(true);
+        processTextElement.invoke(builder, new Keyword("New-Sequence"));
         graph = builder.getGraph();
 
         assertTrue(graph.isConsistent());

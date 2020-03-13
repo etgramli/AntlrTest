@@ -6,7 +6,6 @@ import org.apache.commons.lang3.StringUtils;
  * Scope representing a node in the graph. Each node has usually a numbered name.
  */
 public final class Scope {
-
     /**
      * Identifier for this scope.
      */
@@ -25,7 +24,7 @@ public final class Scope {
 
     /**
      * Returns the name of the scope.
-     * @return String, not null, not empty.
+     * @return String, not null, not blank.
      */
     public String getName() {
         return name;
@@ -41,12 +40,16 @@ public final class Scope {
         }
 
         Scope scope = (Scope) o;
-
         return name.equals(scope.name);
     }
 
     @Override
     public int hashCode() {
         return name.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "Scope:(" + name + ")";
     }
 }

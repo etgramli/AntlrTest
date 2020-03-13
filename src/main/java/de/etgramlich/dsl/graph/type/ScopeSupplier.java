@@ -13,7 +13,7 @@ public final class ScopeSupplier implements Supplier<Scope> {
     /**
      * Supplier to generate numbered names for the scopes.
      */
-    private StringSupplier supplier = new StringSupplier(PREFIX);
+    private final StringSupplier supplier = new StringSupplier(PREFIX);
 
     @Override
     public Scope get() {

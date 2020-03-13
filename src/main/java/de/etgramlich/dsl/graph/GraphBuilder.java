@@ -14,11 +14,12 @@ import de.etgramlich.dsl.graph.type.Scope;
 import de.etgramlich.dsl.graph.type.ScopeEdge;
 import de.etgramlich.dsl.graph.type.NodeEdge;
 import de.etgramlich.dsl.graph.type.OptionalEdge;
-import de.etgramlich.dsl.graph.type.RepetitionEdge;
 import de.etgramlich.dsl.graph.type.Node;
 import de.etgramlich.dsl.graph.type.NodeType;
 import de.etgramlich.dsl.util.exception.InvalidGraphException;
 import de.etgramlich.dsl.util.exception.UnrecognizedElementException;
+import org.jgrapht.GraphPath;
+import org.jgrapht.alg.shortestpath.AllDirectedPaths;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -29,6 +30,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Builds a Graph with Scopes as vertices and Node as edges.
@@ -36,7 +38,7 @@ import java.util.stream.Collectors;
  */
 public final class GraphBuilder {
     /**
-     * Graph representing the bnf passed in constructor.
+     * Graph representing the bnf passed to the constructor.
      * Can be accessed if constructor succeeds.
      */
     private final BnfRuleGraph graph;
@@ -63,10 +65,9 @@ public final class GraphBuilder {
                 .collect(Collectors.toList());
         nonTerminalBnfRules.remove(startBnfRule);
 
-        // Add first scope
         graph = new BnfRuleGraph(startBnfRule.getName());
         lastAddedScope = graph.addVertex();
-        // Parse all rules
+
         for (BnfRule bnfRule : nonTerminalBnfRules) {
             processAlternatives(bnfRule.getRhs());
         }
@@ -94,14 +95,15 @@ public final class GraphBuilder {
         }
     }
 
-    private void processAlternatives(final Alternatives alternatives) {
+    private Set<ScopeEdge> processAlternatives(final Alternatives alternatives) {
         assert (!alternatives.getSequences().isEmpty());
 
         final Scope openingAlternativeScope = lastAddedScope;
-        final Set<Scope> lastScopes = new HashSet<>();
+        final Set<Scope> lastScopes = new HashSet<>(alternatives.getSequences().size());
+        final Set<ScopeEdge> lastEdges = new HashSet<>(alternatives.getSequences().size());
 
         for (Iterator<Sequence> iter = alternatives.getSequences().iterator(); iter.hasNext();) {
-            processSequence(iter.next());
+            lastEdges.addAll(processSequence(iter.next()));
             lastScopes.add(lastAddedScope);
             if (iter.hasNext()) {
                 lastAddedScope = openingAlternativeScope;
@@ -114,6 +116,7 @@ public final class GraphBuilder {
             mergeNodes(closingAlternativeScope, lastScopes);
             lastAddedScope = closingAlternativeScope;
         }
+        return Collections.unmodifiableSet(lastEdges);
     }
 
     /**
@@ -125,63 +128,104 @@ public final class GraphBuilder {
         if (newScope == null || scopes == null) {
             throw new IllegalArgumentException("New scope and scopes must not be null!");
         }
+        if (!graph.vertexSet().contains(newScope)) {
+            throw new IllegalArgumentException("Graph does not contain the scope " + newScope);
+        }
         final Set<ScopeEdge> ingoingEdges = new HashSet<>();
         final Set<ScopeEdge> outgoingEdges = new HashSet<>();
         for (Scope scope : scopes) {
             ingoingEdges.addAll(graph.incomingEdgesOf(scope));
             outgoingEdges.addAll(graph.outgoingEdgesOf(scope));
         }
-        // Remove vertices and touching edges
+        final Set<ScopeEdge> selfEdges = Stream.concat(ingoingEdges.stream(), outgoingEdges.stream())
+                .filter(edge -> scopes.contains(edge.getSource()) && scopes.contains(edge.getTarget()))
+                .collect(Collectors.toSet());
+        ingoingEdges.removeAll(selfEdges);
+        outgoingEdges.removeAll(selfEdges);
+
         graph.removeAllVertices(scopes);
-
-        // Remove old target vertex and edge, re-add edge with updated vertex
-        for (ScopeEdge edge : ingoingEdges) {
-            graph.addEdge(edge.getSource(), newScope, edge);
-        }
-
-        // Remove old source vertex and edge, re-add edge with updated vertex
-        for (ScopeEdge edge : outgoingEdges) {
-            graph.addEdge(newScope, edge.getTarget(), edge);
-        }
+        ingoingEdges.forEach(e -> graph.addEdge(e.getSource(), newScope, e));
+        outgoingEdges.forEach(e -> graph.addEdge(newScope, e.getTarget(), e));
+        selfEdges.forEach(e -> graph.addEdge(newScope, newScope, e));
     }
 
-    private void processSequence(final Sequence sequence) {
-        assert (sequence.getElements().size() > 0);
-
-        for (Element element : sequence.getElements()) {
-            processElement(element);
+    private Set<ScopeEdge> processSequence(final Sequence sequence) {
+        if (sequence.getElements().isEmpty()) {
+            throw new IllegalArgumentException("Sequence must have at least one element!");
         }
+        Set<ScopeEdge> lastEdges = Collections.emptySet();
+        for (Element element : sequence.getElements()) {
+            lastEdges = processElement(element);
+        }
+        return Collections.unmodifiableSet(lastEdges);
     }
 
     /**
      * Processes given element and adds it to the Graph.
      *
      * @param element Element of EBNF grammar to be added, must not be null.
+     * @return Set of the last returned edges (before the lastAddedScope);
      */
-    private void processElement(final Element element) {
+    private Set<ScopeEdge> processElement(final Element element) {
         if (element instanceof TextElement) {
-            final TextElement textElement = (TextElement) element;
-
-            addNodeInSequence(new Node(textElement.getName(), NodeType.fromTextElement(textElement)));
+            return processTextElement((TextElement) element);
         } else if (element instanceof AbstractRepetition) {
-            AbstractRepetition repetition = (AbstractRepetition) element;
-
-            final Scope beforeOptionalLoop = lastAddedScope;
-            processAlternatives(repetition.getAlternatives());
-
-            if (repetition instanceof Optional || repetition instanceof ZeroOrMore) {
-                graph.addEdge(beforeOptionalLoop, lastAddedScope, new OptionalEdge());
-                if (repetition instanceof ZeroOrMore) {
-                    graph.addEdge(lastAddedScope, beforeOptionalLoop, new RepetitionEdge());
-                }
-            }
+            return processAbstractRepetition((AbstractRepetition) element);
         } else {
             throw new UnrecognizedElementException("Element not recognized: " + element.toString());
         }
     }
 
     /**
-     * Replaces non-terminal nodes with graph from the forest.
+     * Adds a new node in sequence to the last added scope with the name of the provided text element.
+     * @param textElement TextElement, must not be null.
+     * @return The edge before the newly added scope.
+     */
+    private Set<ScopeEdge> processTextElement(final TextElement textElement) {
+        final Scope newScope = graph.addVertex();
+        final Node node = new Node(textElement.getName(), NodeType.fromTextElement(textElement));
+        graph.addEdge(lastAddedScope, newScope, new NodeEdge(node));
+        lastAddedScope = newScope;
+        return graph.incomingEdgesOf(newScope);
+    }
+
+    private Set<ScopeEdge> processAbstractRepetition(final AbstractRepetition repetition) {
+        final Scope beforeOptionalLoop = lastAddedScope;
+
+        final Set<ScopeEdge> lastEdges = processAlternatives(repetition.getAlternatives());
+
+        if (repetition instanceof Optional || repetition instanceof ZeroOrMore) {
+            graph.addEdge(beforeOptionalLoop, lastAddedScope, new OptionalEdge());
+            if (repetition instanceof ZeroOrMore) {
+                for (ScopeEdge edge : lastEdges) {
+                    if (edge instanceof NodeEdge) {
+                        for (Scope s : getSecondScopeOfPath(beforeOptionalLoop, lastAddedScope)) {
+                            graph.addEdge(lastAddedScope, s, new NodeEdge(((NodeEdge) edge).getNode()));
+                        }
+                    }
+                }
+            }
+        }
+        return lastEdges;
+    }
+
+    private Set<Scope> getSecondScopeOfPath(final Scope start, final Scope end) {
+        final AllDirectedPaths<Scope, ScopeEdge> allPaths = new AllDirectedPaths<>(graph.copyWithoutBackwardEdges());
+        final List<GraphPath<Scope, ScopeEdge>> paths = allPaths.getAllPaths(start, end, true, null);
+        if (paths.isEmpty()) {
+            throw new InvalidGraphException("There must be at least one path between " + start + " and " + end);
+        }
+        final Set<ScopeEdge> firstEdges = paths.stream()
+                .map(path -> path.getEdgeList().get(0))
+                .collect(Collectors.toUnmodifiableSet());
+        if (!firstEdges.stream().allMatch(edge -> edge instanceof NodeEdge)) {
+            throw new InvalidGraphException("First edge of all paths must be a NodeEdge!");
+        }
+        return firstEdges.stream().map(ScopeEdge::getTarget).collect(Collectors.toUnmodifiableSet());
+    }
+
+    /**
+     * Replaces non-terminal nodes with a graph from the forest.
      * Assumes that all required non-terminals exist in the branch.
      * @param forest Set of BnfRuleGraphs, must not be null. Arguments will be altered by this call.
      */
@@ -210,21 +254,15 @@ public final class GraphBuilder {
     }
 
     private void replaceNonTerminalNodeEdge(final NodeEdge nodeEdge, final BnfRuleGraph nodeEdgeReplacement) {
-        final Map<Scope, Scope> originalScopeToReplacedScope = new HashMap<>(nodeEdgeReplacement.vertexSet().size());
-        for (Scope scope : nodeEdgeReplacement.vertexSet()) {
-            originalScopeToReplacedScope.put(scope, graph.addVertex());
-        }
+        final Map<Scope, Scope> scopeMap = new HashMap<>(nodeEdgeReplacement.vertexSet().size());
+        nodeEdgeReplacement.vertexSet().forEach(scope -> scopeMap.put(scope, graph.addVertex()));
+
         for (ScopeEdge edge : nodeEdgeReplacement.edgeSet()) {
-            graph.addEdge(
-                    originalScopeToReplacedScope.get(edge.getSource()),
-                    originalScopeToReplacedScope.get(edge.getTarget()),
-                    (ScopeEdge) edge.clone());
+            graph.addEdge(scopeMap.get(edge.getSource()), scopeMap.get(edge.getTarget()), (ScopeEdge) edge.clone());
         }
 
-        final Scope subGraphStart = originalScopeToReplacedScope.get(nodeEdgeReplacement.getStartScope());
-        mergeNodes(subGraphStart, Collections.singleton(nodeEdge.getSource()));
-        final Scope subGraphEnd = originalScopeToReplacedScope.get(nodeEdgeReplacement.getEndScope());
-        mergeNodes(subGraphEnd, Collections.singleton(nodeEdge.getTarget()));
+        mergeNodes(scopeMap.get(nodeEdgeReplacement.getStartScope()), Set.of(nodeEdge.getSource()));
+        mergeNodes(scopeMap.get(nodeEdgeReplacement.getEndScope()), Set.of(nodeEdge.getTarget()));
 
         graph.removeEdge(nodeEdge);
 
@@ -240,16 +278,5 @@ public final class GraphBuilder {
      */
     public BnfRuleGraph getGraph() {
         return (BnfRuleGraph) graph.clone();
-    }
-
-    /**
-     * Adds a node in sequence to the graph following the last added scope and followed by a newly created scope.
-     *
-     * @param node  Node(s) to be associated with the edge.
-     */
-    public void addNodeInSequence(final Node node) {
-        final Scope newScope = graph.addVertex();
-        graph.addEdge(lastAddedScope, newScope, new NodeEdge(node));
-        lastAddedScope = newScope;
     }
 }

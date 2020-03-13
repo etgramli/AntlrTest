@@ -2,7 +2,7 @@ grammar Bnf;
 
 bnf
     : bnfrule* EOF
-;
+    ;
 
 bnfrule
     : lhs '=' rhs ';'
