@@ -2,10 +2,14 @@ package de.etgramlich.dsl.graph.type;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.Serializable;
+
 /**
  * Scope representing a node in the graph. Each node has usually a numbered name.
  */
-public final class Scope {
+public final class Scope implements Serializable {
+    private static final long serialVersionUID = 1257205342952787622L;
+
     /**
      * Identifier for this scope.
      */
