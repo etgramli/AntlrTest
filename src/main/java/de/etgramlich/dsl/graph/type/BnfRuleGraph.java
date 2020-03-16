@@ -1,6 +1,5 @@
 package de.etgramlich.dsl.graph.type;
 
-import de.etgramlich.dsl.util.exception.InvalidGraphException;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DirectedPseudograph;
 import org.jgrapht.nio.Attribute;
@@ -14,7 +13,6 @@ import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.Set;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Collections;
 import java.util.stream.Collectors;
@@ -23,6 +21,16 @@ import java.util.stream.Collectors;
  * Builds a graph according to the rules of a EBNF (has to care about optional elements and repetitions).
  */
 public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
+    /**
+     * Scope representing the entry point of the rule.
+     */
+    private Scope startScope;
+
+    /**
+     * Scope representing the end of the rule.
+     */
+    private Scope endScope;
+
     private static final long serialVersionUID = 8785829155769370692L;
 
     /**
@@ -38,6 +46,8 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
     public BnfRuleGraph(final String name) {
         super(new ScopeSupplier(), null, false);
         this.name = name;
+        this.startScope = null;
+        this.endScope = null;
     }
 
     /**
@@ -84,18 +94,18 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
         if (edgeSet().isEmpty() && vertexSet().isEmpty()) {
             return true;
         }
+        if (startScope == null || !vertexSet().contains(startScope)) {
+            return false;
+        }
+        if (endScope == null || !vertexSet().contains(endScope)) {
+            return false;
+        }
         for (ScopeEdge edge : edgeSet()) {
             if (!vertexSet().contains(edge.getSource()) || !vertexSet().contains(edge.getTarget())) {
                 return false;
             } else if (edge instanceof OptionalEdge && notConnectedByNodeEdges(edge.getSource(), edge.getTarget())) {
                 return false;
             }
-        }
-        try {
-            getStartScope();
-            getEndScope();
-        } catch (InvalidGraphException e) {
-            return false;
         }
         return true;
     }
@@ -230,15 +240,21 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
      * @return A scope, if no scope found a NPE is thrown.
      */
     public Scope getStartScope() {
-        BnfRuleGraph noBackEdgeGraph = copyWithoutBackwardEdges();
-        final List<Scope> scopesWithoutIngoingEdges = noBackEdgeGraph.vertexSet().stream()
-                .filter(o -> noBackEdgeGraph.inDegreeOf(o) == 0)
-                .collect(Collectors.toList());
-        if (scopesWithoutIngoingEdges.size() != 1) {
-            throw new InvalidGraphException(
-                    "There must be exactly one starting node! (found: " + scopesWithoutIngoingEdges.size() + ")");
+        return startScope;
+    }
+
+    /**
+     * Sets the new start scope.
+     * @param newStartScope Scope, must be not null and be in the graph.
+     */
+    public void setStartScope(final Scope newStartScope) {
+        if (newStartScope == null) {
+            throw new IllegalArgumentException("Start scope must not be null!");
         }
-        return scopesWithoutIngoingEdges.get(0);
+        if (!containsVertex(newStartScope)) {
+            throw new IllegalArgumentException("Start scope must not be null!");
+        }
+        startScope = newStartScope;
     }
 
     /**
@@ -247,15 +263,21 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
      * @return A scope, if no scope found a NPE is thrown.
      */
     public Scope getEndScope() {
-        final BnfRuleGraph noBackEdgeGraph = copyWithoutBackwardEdges();
-        final List<Scope> scopesWithoutOutgoingEdges = noBackEdgeGraph.vertexSet().stream()
-                .filter(scope -> noBackEdgeGraph.outDegreeOf(scope) == 0)
-                .collect(Collectors.toUnmodifiableList());
-        if (scopesWithoutOutgoingEdges.size() != 1) {
-            throw new InvalidGraphException(
-                    "There must be exactly one end node! (found: " + scopesWithoutOutgoingEdges.size() + ")");
+        return endScope;
+    }
+
+    /**
+     * Sets new end scope.
+     * @param newEndScope Scope, must not be null and in the graph.
+     */
+    public void setEndScope(final Scope newEndScope) {
+        if (newEndScope == null) {
+            throw new IllegalArgumentException("End scope must not be null!");
         }
-        return scopesWithoutOutgoingEdges.get(0);
+        if (!containsVertex(newEndScope)) {
+            throw new IllegalArgumentException("End scope must not be null!");
+        }
+        endScope = newEndScope;
     }
 
     /**

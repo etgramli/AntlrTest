@@ -4,7 +4,6 @@ import de.etgramlich.dsl.graph.ForestBuilder;
 import de.etgramlich.dsl.parser.gen.bnf.BnfLexer;
 import de.etgramlich.dsl.parser.gen.bnf.BnfParser;
 import de.etgramlich.dsl.parser.listener.BnfListener;
-import de.etgramlich.dsl.parser.type.Bnf;
 import de.etgramlich.dsl.generator.InterfaceBuilder;
 import de.etgramlich.dsl.graph.type.BnfRuleGraph;
 import org.antlr.v4.runtime.CharStreams;
@@ -70,12 +69,9 @@ public final class Main {
             return;
         }
 
-        final BnfParser parser = new BnfParser(new CommonTokenStream(new BnfLexer(CharStreams.fromString(grammar))));
         final BnfListener listener = new BnfListener();
-        listener.enterBnf(parser.bnf());
-        final Bnf bnf = listener.getBnf();
-
-        final BnfRuleGraph graph = new ForestBuilder(bnf).getMergedGraph();
+        listener.enterBnf(new BnfParser(new CommonTokenStream(new BnfLexer(CharStreams.fromString(grammar)))).bnf());
+        final BnfRuleGraph graph = new ForestBuilder(listener.getBnf()).getMergedGraph();
 
         try {
             if (graphFilePath != null) {

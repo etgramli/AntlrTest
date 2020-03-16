@@ -6,6 +6,7 @@ import de.etgramlich.dsl.util.SymbolTable;
 import de.etgramlich.dsl.graph.type.BnfRuleGraph;
 import de.etgramlich.dsl.graph.type.NodeType;
 import de.etgramlich.dsl.graph.type.NodeEdge;
+import de.etgramlich.dsl.graph.type.OptionalEdge;
 import de.etgramlich.dsl.graph.type.Scope;
 import de.etgramlich.dsl.graph.type.Node;
 import org.apache.commons.lang3.StringUtils;
@@ -115,9 +116,6 @@ public final class InterfaceBuilder {
         Scope currentScope = graph.getEndScope();
         while (currentScope != null) {
             final Interface currentInterface = getInterface(currentScope);
-            if (!symbolTable.allCustomType(currentInterface.getParents())) {
-                throw new NullPointerException("Not all parent interfaces found!");
-            }
             saveInterface(currentInterface.getName(), renderInterface(currentInterface));
             interfaces.add(currentInterface);
             symbolTable.addType(currentInterface.getName());
@@ -152,7 +150,7 @@ public final class InterfaceBuilder {
 
     private Interface getInterface(final Scope currentScope) {
         final Set<String> parents = graph.incomingEdgesOf(currentScope).stream()
-                .filter(edge -> graph.isBackwardEdge(edge))
+                .filter(edge -> edge instanceof OptionalEdge)
                 .map(edge -> edge.getSource().getName())
                 .collect(Collectors.toUnmodifiableSet());
         return new Interface(currentScope.getName(), parents, getMethods(currentScope));

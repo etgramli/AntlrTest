@@ -29,6 +29,8 @@ class BnfRuleGraphTest {
         SEQUENCE_GRAPH.addEdge(SCOPES.get(0), SCOPES.get(1), new NodeEdge(new Node("S0", NodeType.KEYWORD)));
         SEQUENCE_GRAPH.addVertex(SCOPES.get(2));
         SEQUENCE_GRAPH.addEdge(SCOPES.get(1), SCOPES.get(2), new NodeEdge(new Node("S1", NodeType.KEYWORD)));
+        SEQUENCE_GRAPH.setStartScope(SCOPES.get(0));
+        SEQUENCE_GRAPH.setEndScope(SCOPES.get(2));
 
         DIAMOND_GRAPH.addVertex(SCOPES.get(0));
         DIAMOND_GRAPH.addVertex(SCOPES.get(1));
@@ -38,6 +40,8 @@ class BnfRuleGraphTest {
         DIAMOND_GRAPH.addEdge(SCOPES.get(0), SCOPES.get(2), new NodeEdge(new Node("N1", NodeType.KEYWORD)));
         DIAMOND_GRAPH.addEdge(SCOPES.get(1), SCOPES.get(3), new NodeEdge(new Node("N2", NodeType.KEYWORD)));
         DIAMOND_GRAPH.addEdge(SCOPES.get(2), SCOPES.get(3), new NodeEdge(new Node("N3", NodeType.KEYWORD)));
+        DIAMOND_GRAPH.setStartScope(SCOPES.get(0));
+        DIAMOND_GRAPH.setEndScope(SCOPES.get(3));
     }
 
     @Test
@@ -177,6 +181,7 @@ class BnfRuleGraphTest {
     void getDanglingScopeEdges_unfinishedNestedAlternatives_returnsDanglingNodesOfAllOrInnerAlternatives() {
         final BnfRuleGraph unfinished = new BnfRuleGraph(StringUtils.EMPTY);
         unfinished.addVertex(SCOPES.get(0));
+        unfinished.setStartScope(SCOPES.get(0));
         unfinished.addVertex(SCOPES.get(1));
         unfinished.addVertex(SCOPES.get(2));
         unfinished.addVertex(SCOPES.get(3));

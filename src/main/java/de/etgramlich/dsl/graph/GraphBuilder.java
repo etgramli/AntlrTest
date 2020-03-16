@@ -16,6 +16,7 @@ import de.etgramlich.dsl.graph.type.NodeEdge;
 import de.etgramlich.dsl.graph.type.OptionalEdge;
 import de.etgramlich.dsl.graph.type.Node;
 import de.etgramlich.dsl.graph.type.NodeType;
+import de.etgramlich.dsl.util.CollectionUtil;
 import de.etgramlich.dsl.util.exception.InvalidGraphException;
 import de.etgramlich.dsl.util.exception.UnrecognizedElementException;
 import org.jgrapht.GraphPath;
@@ -67,6 +68,8 @@ public final class GraphBuilder {
 
         graph = new BnfRuleGraph(startBnfRule.getName());
         lastAddedScope = graph.addVertex();
+        graph.setStartScope(lastAddedScope);
+        graph.setEndScope(lastAddedScope);
 
         for (BnfRule bnfRule : nonTerminalBnfRules) {
             processAlternatives(bnfRule.getRhs());
@@ -87,6 +90,7 @@ public final class GraphBuilder {
         }
         graph = new BnfRuleGraph(rule.getName());
         lastAddedScope = graph.addVertex();
+        graph.setStartScope(lastAddedScope);
 
         processAlternatives(rule.getRhs());
 
@@ -116,6 +120,7 @@ public final class GraphBuilder {
             mergeNodes(closingAlternativeScope, lastScopes);
             lastAddedScope = closingAlternativeScope;
         }
+        graph.setEndScope(lastAddedScope);
         return Collections.unmodifiableSet(lastEdges);
     }
 
@@ -130,6 +135,13 @@ public final class GraphBuilder {
         }
         if (!graph.vertexSet().contains(newScope)) {
             throw new IllegalArgumentException("Graph does not contain the scope " + newScope);
+        }
+        if (!graph.vertexSet().containsAll(scopes)) {
+            final Set<String> missing = scopes.stream()
+                    .filter(s -> !graph.vertexSet().contains(s)).map(Scope::getName)
+                    .collect(Collectors.toUnmodifiableSet());
+            throw new IllegalArgumentException("Graph must contain all scopes to be replaced! (missing: "
+                    + CollectionUtil.asString(missing));
         }
         final Set<ScopeEdge> ingoingEdges = new HashSet<>();
         final Set<ScopeEdge> outgoingEdges = new HashSet<>();
@@ -147,6 +159,13 @@ public final class GraphBuilder {
         ingoingEdges.forEach(e -> graph.addEdge(e.getSource(), newScope, e));
         outgoingEdges.forEach(e -> graph.addEdge(newScope, e.getTarget(), e));
         selfEdges.forEach(e -> graph.addEdge(newScope, newScope, e));
+
+        if (scopes.contains(graph.getStartScope())) {
+            graph.setStartScope(newScope);
+        }
+        if (scopes.contains(graph.getEndScope())) {
+            graph.setEndScope(newScope);
+        }
     }
 
     private Set<NodeEdge> processSequence(final Sequence sequence) {
@@ -186,6 +205,7 @@ public final class GraphBuilder {
         final NodeEdge nodeEdge = new NodeEdge(new Node(textElement.getName(), NodeType.fromTextElement(textElement)));
         graph.addEdge(lastAddedScope, newScope, nodeEdge);
         lastAddedScope = newScope;
+        graph.setEndScope(lastAddedScope);
         return Set.of(nodeEdge);
     }
 
@@ -236,18 +256,18 @@ public final class GraphBuilder {
             throw new IllegalArgumentException("Forest does not contain all required non-terminals!");
         }
 
-        for (NodeEdge edge : graph.getNonTerminalNodeEdges()) {
-            if (!forestRuleNames.contains(edge.getNode().getName())) {
-                throw new IllegalArgumentException("Missing rule in forest: " + edge.getNode().getName());
+        while (graph.containsNonTerminals()) {
+            final NodeEdge nonTerminalEdge = graph.getNonTerminalNodeEdges().iterator().next();
+            if (!forestRuleNames.contains(nonTerminalEdge.getNode().getName())) {
+                throw new IllegalArgumentException("Missing rule in forest: " + nonTerminalEdge.getNode().getName());
             }
-            // Replace NodeEdge by graph
-            final BnfRuleGraph graph = forest.stream()
-                    .filter(bnfRuleGraph -> edge.getNode().getName().equals(bnfRuleGraph.getName()))
-                    .findFirst().orElse(null);
-            if (graph == null) {
-                throw new IllegalArgumentException("Missing rule in forest: " + edge.getNode().getName());
+            final java.util.Optional<BnfRuleGraph> edgeReplacement = forest.stream()
+                    .filter(bnfRuleGraph -> nonTerminalEdge.getNode().getName().equals(bnfRuleGraph.getName()))
+                    .findFirst();
+            if (edgeReplacement.isEmpty()) {
+                throw new IllegalArgumentException("Missing rule in forest: " + nonTerminalEdge.getNode().getName());
             }
-            replaceNonTerminalNodeEdge(edge, graph);
+            replaceNonTerminalNodeEdge(nonTerminalEdge, edgeReplacement.get());
         }
     }
 
@@ -259,8 +279,13 @@ public final class GraphBuilder {
             graph.addEdge(scopeMap.get(edge.getSource()), scopeMap.get(edge.getTarget()), (ScopeEdge) edge.clone());
         }
 
-        mergeNodes(scopeMap.get(nodeEdgeReplacement.getStartScope()), Set.of(nodeEdge.getSource()));
-        mergeNodes(scopeMap.get(nodeEdgeReplacement.getEndScope()), Set.of(nodeEdge.getTarget()));
+        if (nodeEdge.getSource() != nodeEdge.getTarget()) {
+            mergeNodes(scopeMap.get(nodeEdgeReplacement.getStartScope()), Set.of(nodeEdge.getSource()));
+            mergeNodes(scopeMap.get(nodeEdgeReplacement.getEndScope()), Set.of(nodeEdge.getTarget()));
+        } else {
+            mergeNodes(nodeEdge.getTarget(), Set.of(scopeMap.get(nodeEdgeReplacement.getStartScope())));
+            mergeNodes(nodeEdge.getTarget(), Set.of(scopeMap.get(nodeEdgeReplacement.getEndScope())));
+        }
 
         graph.removeEdge(nodeEdge);
 
