@@ -35,7 +35,7 @@ public abstract class TextElement implements Element, BnfType {
 
     /**
      * Returns true if the Element does not represent another element.
-     * @return True if it does not represent other element.
+     * @return True if it does not represent the other element.
      */
     @Override
     public boolean isTerminal() {
@@ -45,5 +45,24 @@ public abstract class TextElement implements Element, BnfType {
     @Override
     public final int getNumberOfElements() {
         return 1;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        TextElement that = (TextElement) o;
+
+        return name.equals(that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
     }
 }

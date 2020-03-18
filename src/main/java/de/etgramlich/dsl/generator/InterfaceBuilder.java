@@ -149,11 +149,14 @@ public final class InterfaceBuilder {
     }
 
     private Interface getInterface(final Scope currentScope) {
-        final Set<String> parents = graph.incomingEdgesOf(currentScope).stream()
+        return new Interface(currentScope.getName(), getParents(currentScope), getMethods(currentScope));
+    }
+
+    private Set<String> getParents(final Scope currentScope) {
+        return graph.incomingEdgesOf(currentScope).stream()
                 .filter(edge -> edge instanceof OptionalEdge)
                 .map(edge -> edge.getSource().getName())
                 .collect(Collectors.toUnmodifiableSet());
-        return new Interface(currentScope.getName(), parents, getMethods(currentScope));
     }
 
     /**
