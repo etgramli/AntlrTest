@@ -26,6 +26,7 @@ class BnfListenerTest {
     private static final String GRAMMAR_ZEROORMORE = "<nonterminal> = {'alternativeA' 'alternativeB'};";
     private static final String GRAMMAR_OPTIONAL = "<nonterminal> = ['alternativeA' 'alternativeB'];";
     private static final String GRAMMAR_PRECEDENCE = "<nonterminal> = ('alternativeA' 'alternativeB');";
+    private static final String GRAMMAR_PRECEDENCE_ALTERNATIVE = "<nonterminal> = ('alternativeA' | 'alternativeB');";
     private static final TextElement ALT_A = new Keyword("alternativeA");
     private static final TextElement ALT_B = new Keyword("alternativeB");
 
@@ -113,5 +114,28 @@ class BnfListenerTest {
         assertEquals(List.of(ALT_A, ALT_B), elements);
     }
 
-    // ToDo: Add tests with recursion
+    @Test
+    void enterBnf_ruleWithPrecedenceAndInnerAlternative() {
+        final BnfListener listener = new BnfListener();
+        listener.enterBnf(new BnfParser(new CommonTokenStream(new BnfLexer(CharStreams.fromString(GRAMMAR_PRECEDENCE_ALTERNATIVE)))).bnf());
+
+        final Bnf bnf = listener.getBnf();
+
+        assertEquals(1, bnf.getBnfRules().size());
+        final BnfRule rule = bnf.getBnfRules().get(0);
+        assertEquals("nonterminal", rule.getName());
+        final Alternatives rhs = rule.getRhs();
+        assertEquals(1, rhs.getSequences().size());
+        final Sequence sequence = rhs.getSequences().get(0);
+        assertEquals(1, sequence.getElements().size());
+        final Element element = sequence.getElements().get(0);
+        assertTrue(element instanceof Precedence);
+        final Precedence zeroOrMore = (Precedence) element;
+        final List<Sequence> subSequence = zeroOrMore.getAlternatives().getSequences();
+        assertEquals(2, subSequence.size());
+        for (Sequence s : subSequence) {
+            assertEquals(1, s.getElements().size());
+            assertTrue(s.getElements().get(0).equals(ALT_A) || s.getElements().get(0).equals(ALT_B));
+        }
+    }
 }
