@@ -305,7 +305,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
     }
 
     private Set<Scope> getDanglingNodesOf(final Scope scope) {
-        final Set<Scope> dangling = new HashSet<>();
+        final Set<Scope> dangling = new HashSet<>(getSuccessors(scope).size());
         for (Scope successor : getSuccessors(scope)) {
             if (outDegreeOf(successor) > 0) {
                 dangling.addAll(getDanglingNodesOf(successor));

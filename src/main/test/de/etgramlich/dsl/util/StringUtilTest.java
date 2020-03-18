@@ -347,4 +347,27 @@ class StringUtilTest {
 
         assertFalse(StringUtil.startsWithLowerCase(string));
     }
+
+    @Test
+    void removeAllWhiteSpaces_blankString_returnsEmptyString() {
+        final String blank = "   \t  ";
+
+        assertEquals(StringUtil.EMPTY, StringUtil.removeAllWhiteSpaces(blank));
+    }
+
+    @Test
+    void removeAllWhiteSpaces_blankAtStartAndEnd_returnsCharacters() {
+        final String withBlank = "   HelloWorld!\t";
+        final String expected = "HelloWorld!";
+
+        assertEquals(expected, StringUtil.removeAllWhiteSpaces(withBlank));
+    }
+
+    @Test
+    void removeAllWhiteSpaces_blankAtStartEndAndBetween_returnsOnlyCharacters() {
+        final String withBlank = "   Hello World!\t ";
+        final String expected = "HelloWorld!";
+
+        assertEquals(expected, StringUtil.removeAllWhiteSpaces(withBlank));
+    }
 }

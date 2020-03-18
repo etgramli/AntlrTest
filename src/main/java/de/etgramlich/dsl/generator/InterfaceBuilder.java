@@ -136,7 +136,7 @@ public final class InterfaceBuilder {
     }
 
     private Set<String> typesToBeSaved(final Set<Interface> interfaces) {
-        final Set<String> types = new HashSet<>();
+        final Set<String> types = new HashSet<>(interfaces.size());
         for (Interface anInterface : interfaces) {
             types.add(anInterface.getName());
             types.addAll(anInterface.getParents());

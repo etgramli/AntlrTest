@@ -2,6 +2,7 @@ package de.etgramlich.dsl.parser.type;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Represents a list of sequence as alternative from BNF as Java type.
@@ -57,7 +58,7 @@ public final class Alternatives implements BnfType {
 
     @Override
     public String getName() {
-        return null;
+        return sequences.stream().map(seq -> seq.getElements().get(0).getName()).collect(Collectors.joining());
     }
 
     @Override

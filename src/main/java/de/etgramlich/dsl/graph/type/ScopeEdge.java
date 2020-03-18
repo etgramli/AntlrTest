@@ -11,6 +11,7 @@ import java.util.Map;
  * Abstract class for nodes in the BnfRuleGraph, just to make getSource() ang getTarget() more accessible.
  */
 public abstract class ScopeEdge extends DefaultEdge {
+    private static final long serialVersionUID = 3921976600725957520L;
 
     /**
      * Returns the source vertex of the edge.

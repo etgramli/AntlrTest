@@ -25,7 +25,7 @@ public final class AlternativeListener extends BnfBaseListener {
     /**
      * List of Sequence of that the resulting Alternatives is composed.
      */
-    private final List<Sequence> alternatives = new ArrayList<>();
+    private List<Sequence> alternatives;
 
     /**
      * Returns a newly created Alternatives of parsed sequences. Must be called after enterAlternatives()!
@@ -37,6 +37,7 @@ public final class AlternativeListener extends BnfBaseListener {
 
     @Override
     public void enterAlternatives(final BnfParser.AlternativesContext ctx) {
+        alternatives = new ArrayList<>(ctx.sequence().size());
         for (BnfParser.SequenceContext context : ctx.sequence()) {
             enterSequence(context);
             alternatives.add(sequence);
@@ -45,7 +46,7 @@ public final class AlternativeListener extends BnfBaseListener {
 
     @Override
     public void enterSequence(final BnfParser.SequenceContext ctx) {
-        List<Element> elements = new ArrayList<>(ctx.getChildCount());
+        final List<Element> elements = new ArrayList<>(ctx.getChildCount());
         ElementListener listener = new ElementListener();
 
         for (BnfParser.ElementContext elementContext : ctx.element()) {

@@ -38,7 +38,7 @@ public final class BnfListener extends BnfBaseListener {
             listener.enterBnfrule(context);
             bnfRules.add(listener.getBnfRule());
         }
-        this.bnf = new Bnf(bnfRules);
+        bnf = new Bnf(bnfRules);
     }
 
     @Override

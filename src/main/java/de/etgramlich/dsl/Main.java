@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -27,9 +28,9 @@ public final class Main {
     private Main() { }
 
     /**
-     * A regex string matching a non-terminal of the grammar.
+     * A regex pattern matching a non-terminal of the grammar.
      */
-    private static final String NON_TERMINAL_REGEX = "<[a-zA-Z]+>";
+    private static final Pattern NON_TERMINAL_PATTERN = Pattern.compile("<[a-zA-Z]+>");
 
     /**
      * Stores command line options.
@@ -85,7 +86,7 @@ public final class Main {
 
     private static String prepareGrammar(final String filepath) throws IOException {
         return Files.readAllLines(Paths.get(filepath)).stream()
-                .dropWhile(line -> !line.matches(NON_TERMINAL_REGEX))
+                .dropWhile(line -> !NON_TERMINAL_PATTERN.matcher(line).matches())
                 .filter(line -> !StringUtils.isBlank(line))
                 .collect(Collectors.joining(System.lineSeparator()));
     }

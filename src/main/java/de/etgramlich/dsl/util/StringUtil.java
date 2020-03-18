@@ -7,12 +7,18 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Collections;
 import java.util.Collection;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
  * Contains additional methods to operate on Strings, that are not present in the Apache Commons library.
  */
 public final class StringUtil extends StringUtils {
+    /**
+     * White space pattern.
+     */
+    private static final Pattern BLANK_CHARS_PATTERN = Pattern.compile("\\s+");
+
     private StringUtil() { }
 
     /**
@@ -66,7 +72,7 @@ public final class StringUtil extends StringUtils {
      * @return String without whitespaces, may be empty.
      */
     public static String removeAllWhiteSpaces(final String str) {
-        return str.replaceAll("\\s+", "");
+        return BLANK_CHARS_PATTERN.matcher(str).replaceAll("");
     }
 
     /**
