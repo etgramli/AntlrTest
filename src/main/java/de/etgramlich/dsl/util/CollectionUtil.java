@@ -33,6 +33,9 @@ public final class CollectionUtil {
      * @return String, not null.
      */
     public static String asString(final Set<String> stringSet) {
+        if (stringSet == null) {
+            throw new IllegalArgumentException("String set must not be null!");
+        }
         final StringBuilder sb = new StringBuilder();
 
         for (final Iterator<String> iter = stringSet.iterator(); iter.hasNext();) {

@@ -186,6 +186,9 @@ public final class GraphBuilder {
      * @return Set of the last returned edges (before the lastAddedScope);
      */
     private Set<NodeEdge> processElement(final Element element) {
+        if (element == null) {
+            throw new IllegalArgumentException("Element must not be null!");
+        }
         if (element instanceof TextElement) {
             return processTextElement((TextElement) element);
         } else if (element instanceof AbstractRepetition) {
@@ -201,9 +204,14 @@ public final class GraphBuilder {
      * @return The edge before the newly added scope.
      */
     private Set<NodeEdge> processTextElement(final TextElement textElement) {
+        if (textElement == null) {
+            throw new IllegalArgumentException("TextElement must not be null!");
+        }
         final Scope newScope = graph.addVertex();
+
         final NodeEdge nodeEdge = new NodeEdge(new Node(textElement.getName(), NodeType.fromTextElement(textElement)));
         graph.addEdge(lastAddedScope, newScope, nodeEdge);
+
         lastAddedScope = newScope;
         graph.setEndScope(lastAddedScope);
         return Set.of(nodeEdge);
@@ -212,19 +220,19 @@ public final class GraphBuilder {
     private Set<NodeEdge> processAbstractRepetition(final AbstractRepetition repetition) {
         final Scope beforeOptionalLoop = lastAddedScope;
 
-        final Set<NodeEdge> lastEdges = processAlternatives(repetition.getAlternatives());
+        final Set<NodeEdge> lastAddedEdges = processAlternatives(repetition.getAlternatives());
 
         if (repetition instanceof Optional || repetition instanceof ZeroOrMore) {
             graph.addEdge(beforeOptionalLoop, lastAddedScope, new OptionalEdge());
             if (repetition instanceof ZeroOrMore) {
-                for (NodeEdge edge : lastEdges) {
-                    for (Scope s : getSecondScopeOfPath(beforeOptionalLoop, lastAddedScope)) {
-                        graph.addEdge(lastAddedScope, s, new NodeEdge(edge.getNode()));
+                for (NodeEdge edgeToDuplicate : lastAddedEdges) {
+                    for (Scope entryPointOfLoop : getSecondScopeOfPath(beforeOptionalLoop, lastAddedScope)) {
+                        graph.addEdge(lastAddedScope, entryPointOfLoop, new NodeEdge(edgeToDuplicate.getNode()));
                     }
                 }
             }
         }
-        return lastEdges;
+        return lastAddedEdges;
     }
 
     private Set<Scope> getSecondScopeOfPath(final Scope start, final Scope end) {
