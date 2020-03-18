@@ -2,9 +2,6 @@ package de.etgramlich.dsl.graph.type;
 
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DirectedPseudograph;
-import org.jgrapht.nio.Attribute;
-import org.jgrapht.nio.AttributeType;
-import org.jgrapht.nio.DefaultAttribute;
 import org.jgrapht.nio.dot.DOTExporter;
 
 import java.io.IOException;
@@ -13,7 +10,6 @@ import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.Set;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
@@ -425,19 +421,10 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
     @Override
     public String toString() {
         final DOTExporter<Scope, ScopeEdge> exporter = new DOTExporter<>(Scope::getName);
-        exporter.setEdgeIdProvider(edge -> getAttributeMap(edge).get("label").getValue());
-        exporter.setEdgeAttributeProvider(BnfRuleGraph::getAttributeMap);
+        exporter.setEdgeIdProvider(edge -> edge.getAttributeMap().get("label").getValue());
+        exporter.setEdgeAttributeProvider(ScopeEdge::getAttributeMap);
         final StringWriter writer = new StringWriter();
         exporter.exportGraph(this, writer);
         return writer.toString();
-    }
-
-    private static Map<String, Attribute> getAttributeMap(final ScopeEdge edge) {
-        if (!(edge instanceof NodeEdge)) {
-            return Map.of("label", new DefaultAttribute<>(edge.getClass().getSimpleName(), AttributeType.STRING));
-        }
-        final Node node = ((NodeEdge) edge).getNode();
-        final String labelValue = node.getName() + " [" + node.getType().toString() + "]";
-        return Map.of("label", new DefaultAttribute<>(labelValue, AttributeType.STRING));
     }
 }

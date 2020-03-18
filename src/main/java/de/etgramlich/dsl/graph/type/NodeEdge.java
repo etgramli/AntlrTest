@@ -1,5 +1,11 @@
 package de.etgramlich.dsl.graph.type;
 
+import org.jgrapht.nio.Attribute;
+import org.jgrapht.nio.AttributeType;
+import org.jgrapht.nio.DefaultAttribute;
+
+import java.util.Map;
+
 /**
  * An edge containing a node bearing the information to create an Interface from.
  */
@@ -50,5 +56,11 @@ public final class NodeEdge extends ScopeEdge {
         hashCode = 31 * hashCode + getTarget().hashCode();
         hashCode = 31 * hashCode + node.hashCode();
         return hashCode;
+    }
+
+    @Override
+    Map<String, Attribute> getAttributeMap() {
+        final String labelValue = node.getName() + " [" + node.getType().toString() + "]";
+        return Map.of("label", new DefaultAttribute<>(labelValue, AttributeType.STRING));
     }
 }
