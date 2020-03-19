@@ -1,5 +1,6 @@
 package de.etgramlich.dsl.graph;
 
+import com.google.common.collect.Sets;
 import de.etgramlich.dsl.parser.type.Bnf;
 import de.etgramlich.dsl.parser.type.BnfRule;
 import de.etgramlich.dsl.parser.type.Alternatives;
@@ -21,7 +22,6 @@ import de.etgramlich.dsl.util.exception.UnrecognizedElementException;
 import org.jgrapht.GraphPath;
 import org.jgrapht.alg.shortestpath.AllDirectedPaths;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -132,7 +132,7 @@ public final class GraphBuilder {
      * @param newScope New scope, must not be null.
      * @param scopes Collection with scopes to replace.
      */
-    private void mergeNodes(final Scope newScope, final Collection<Scope> scopes) {
+    private void mergeNodes(final Scope newScope, final Set<Scope> scopes) {
         if (newScope == null || scopes == null) {
             throw new IllegalArgumentException("New scope and scopes must not be null!");
         }
@@ -141,7 +141,7 @@ public final class GraphBuilder {
         }
         if (!graph.vertexSet().containsAll(scopes)) {
             throw new IllegalArgumentException("Graph must contain all scopes to be replaced! (missing: "
-                    + scopes.stream().filter(s -> !graph.vertexSet().contains(s)).map(Scope::getName)
+                    + Sets.difference(scopes, graph.vertexSet()).stream().map(Scope::getName)
                     .collect(Collectors.joining(", ")));
         }
         final Set<ScopeEdge> ingoingEdges = new HashSet<>();

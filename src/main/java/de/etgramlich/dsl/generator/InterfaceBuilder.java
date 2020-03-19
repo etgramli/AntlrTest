@@ -1,6 +1,5 @@
 package de.etgramlich.dsl.generator;
 
-import de.etgramlich.dsl.util.CollectionUtil;
 import de.etgramlich.dsl.util.StringUtil;
 import de.etgramlich.dsl.util.SymbolTable;
 import de.etgramlich.dsl.graph.type.BnfRuleGraph;

@@ -13,8 +13,6 @@ import java.util.UUID;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import de.etgramlich.dsl.util.CollectionUtil;
-
 /**
  * Builds a forest of BnfRuleGraphs, one for each BNF rule.
  * Can replace non-terminals in one graph by rules represented by another graph.
@@ -86,8 +84,8 @@ public final class ForestBuilder {
      * @return True if there is at least one circular dependency.
      */
     public boolean hasCircularDependencies() {
-        final DirectedPseudograph<String, String> dependencies
-                = new DirectedPseudograph<>(new UniqueStringSupplier(), new UniqueStringSupplier(), false);
+        final UniqueStringSupplier supplier = new UniqueStringSupplier();
+        final DirectedPseudograph<String, String> dependencies = new DirectedPseudograph<>(supplier, supplier, false);
         forest.forEach(rule -> dependencies.addVertex(rule.getName()));
 
         for (BnfRuleGraph graph : forest) {

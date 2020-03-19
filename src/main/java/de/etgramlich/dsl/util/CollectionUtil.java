@@ -1,8 +1,9 @@
 package de.etgramlich.dsl.util;
 
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Contains misc functions for Collections.
