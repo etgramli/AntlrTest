@@ -131,7 +131,7 @@ public final class InterfaceBuilder {
                 .collect(Collectors.toUnmodifiableSet());
         if (!unsavedTypes.isEmpty()) {
             throw new IllegalArgumentException("Not all scopes saved as interfaces: "
-                    + CollectionUtil.asString(unsavedTypes));
+                    + String.join(", ", unsavedTypes));
         }
     }
 

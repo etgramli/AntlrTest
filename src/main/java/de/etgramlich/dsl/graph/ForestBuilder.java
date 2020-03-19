@@ -65,7 +65,7 @@ public final class ForestBuilder {
                 .collect(Collectors.toUnmodifiableSet());
         if (notDefinedNonTerminals.size() > 0) {
             throw new IllegalArgumentException("Bnf does not contain all rules to replace non-terminals: "
-                    + CollectionUtil.asString(notDefinedNonTerminals));
+                    + String.join(", ", notDefinedNonTerminals));
         }
     }
 

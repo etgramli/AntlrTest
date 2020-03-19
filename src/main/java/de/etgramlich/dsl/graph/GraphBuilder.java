@@ -16,7 +16,6 @@ import de.etgramlich.dsl.graph.type.NodeEdge;
 import de.etgramlich.dsl.graph.type.OptionalEdge;
 import de.etgramlich.dsl.graph.type.Node;
 import de.etgramlich.dsl.graph.type.NodeType;
-import de.etgramlich.dsl.util.CollectionUtil;
 import de.etgramlich.dsl.util.exception.InvalidGraphException;
 import de.etgramlich.dsl.util.exception.UnrecognizedElementException;
 import org.jgrapht.GraphPath;
@@ -141,11 +140,9 @@ public final class GraphBuilder {
             throw new IllegalArgumentException("Graph does not contain the scope " + newScope);
         }
         if (!graph.vertexSet().containsAll(scopes)) {
-            final Set<String> missing = scopes.stream()
-                    .filter(s -> !graph.vertexSet().contains(s)).map(Scope::getName)
-                    .collect(Collectors.toUnmodifiableSet());
             throw new IllegalArgumentException("Graph must contain all scopes to be replaced! (missing: "
-                    + CollectionUtil.asString(missing));
+                    + scopes.stream().filter(s -> !graph.vertexSet().contains(s)).map(Scope::getName)
+                    .collect(Collectors.joining(", ")));
         }
         final Set<ScopeEdge> ingoingEdges = new HashSet<>();
         final Set<ScopeEdge> outgoingEdges = new HashSet<>();
@@ -232,14 +229,19 @@ public final class GraphBuilder {
         if (repetition instanceof Optional || repetition instanceof ZeroOrMore) {
             graph.addEdge(beforeOptionalLoop, lastAddedScope, new OptionalEdge());
             if (repetition instanceof ZeroOrMore) {
-                for (NodeEdge edgeToDuplicate : lastAddedEdges) {
-                    for (Scope entryPointOfLoop : getSecondScopeOfPath(beforeOptionalLoop, lastAddedScope)) {
-                        graph.addEdge(lastAddedScope, entryPointOfLoop, new NodeEdge(edgeToDuplicate.getNode()));
-                    }
-                }
+                final Set<Scope> secondScopes = getSecondScopeOfPath(beforeOptionalLoop, lastAddedScope);
+                duplicateEdges(lastAddedEdges, lastAddedScope, secondScopes);
             }
         }
         return lastAddedEdges;
+    }
+
+    private void duplicateEdges(final Set<NodeEdge> toDuplicate, final Scope source, final Set<Scope> targets) {
+        for (NodeEdge edge : toDuplicate) {
+            for (Scope target : targets) {
+                graph.addEdge(source, target, new NodeEdge(edge.getNode()));
+            }
+        }
     }
 
     private Set<Scope> getSecondScopeOfPath(final Scope start, final Scope end) {
