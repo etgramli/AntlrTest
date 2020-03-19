@@ -3,7 +3,6 @@ package de.etgramlich.dsl.generator;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -28,16 +27,22 @@ public final class Interface {
     /**
      * Creates interface from name, List of super types and collection of methods.
      * @param name Name of the interface as string, must not be blank.
-     * @param parents Collection of super types as sting, may be null or empty.
-     * @param methods Collection of Methods, may be null or empty.
+     * @param parents Collection of super types as sting, must noe be null, may be empty.
+     * @param methods Collection of Methods, must not be null, may be empty.
      */
     public Interface(final String name, final Collection<String> parents, final Collection<Method> methods) {
         if (StringUtils.isBlank(name)) {
             throw new IllegalArgumentException("Interface name must not be blank!");
         }
+        if (parents == null) {
+            throw new IllegalArgumentException("Parents must not be null!");
+        }
+        if (methods == null) {
+            throw new IllegalArgumentException("Methods must not be null!");
+        }
         this.name = name;
-        this.parents = parents == null ? Collections.emptySet() : Set.copyOf(parents);
-        this.methods = methods == null ? Collections.emptySet() : Set.copyOf(methods);
+        this.parents = Set.copyOf(parents);
+        this.methods = Set.copyOf(methods);
     }
 
     /**

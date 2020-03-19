@@ -52,3 +52,5 @@ hs_err_pid*
 
 src/main/java/de/etgramlich/antlr
 src/main/java/de/etgramlich/dsl/joi
+
+*.gv

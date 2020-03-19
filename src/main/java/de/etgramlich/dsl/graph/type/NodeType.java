@@ -23,7 +23,15 @@ public enum NodeType {
      */
     TYPE;
 
+    /**
+     * Returns the Enum Value to the according text element.
+     * @param textElement Text element, must not be null!
+     * @return Enum value.
+     */
     public static NodeType fromTextElement(final TextElement textElement) {
+        if (textElement == null) {
+            throw new IllegalArgumentException("Text element must not be null!");
+        }
         if (textElement instanceof Keyword) {
             return KEYWORD;
         } else if (textElement instanceof NonTerminal) {

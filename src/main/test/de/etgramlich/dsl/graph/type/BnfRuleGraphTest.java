@@ -45,6 +45,22 @@ class BnfRuleGraphTest {
     }
 
     @Test
+    void isForwardEdge_edgeInAlternative_returnsTrue() {
+        final Scope start = DIAMOND_GRAPH.getStartScope();
+        final Scope second = DIAMOND_GRAPH.getSuccessors(start).iterator().next();
+
+        assertTrue(DIAMOND_GRAPH.isForwardEdge(DIAMOND_GRAPH.getEdge(start, second)));
+    }
+
+    @Test
+    void isBackwardEdge_edgeInAlternative_returnsFalse() {
+        final Scope start = DIAMOND_GRAPH.getStartScope();
+        final Scope second = DIAMOND_GRAPH.getSuccessors(start).iterator().next();
+
+        assertFalse(DIAMOND_GRAPH.isBackwardEdge(DIAMOND_GRAPH.getEdge(start, second)));
+    }
+
+    @Test
     void length_emptyGraph_returnsZero() {
         assertEquals(0, new BnfRuleGraph(StringUtils.EMPTY).length());
     }

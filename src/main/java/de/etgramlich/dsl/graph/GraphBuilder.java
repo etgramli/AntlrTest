@@ -169,6 +169,9 @@ public final class GraphBuilder {
     }
 
     private Set<NodeEdge> processSequence(final Sequence sequence) {
+        if (sequence == null) {
+            throw new IllegalArgumentException("Sequence must not be null!");
+        }
         if (sequence.getElements().isEmpty()) {
             throw new IllegalArgumentException("Sequence must have at least one element!");
         }
