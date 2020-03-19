@@ -1,7 +1,6 @@
 package de.etgramlich.dsl.graph;
 
 import com.google.common.collect.Sets;
-import de.etgramlich.dsl.parser.type.Bnf;
 import de.etgramlich.dsl.parser.type.BnfRule;
 import de.etgramlich.dsl.parser.type.Alternatives;
 import de.etgramlich.dsl.parser.type.Sequence;
@@ -47,37 +46,6 @@ public final class GraphBuilder {
      * Saves the last added scope.
      */
     private Scope lastAddedScope;
-
-    /**
-     * Creates a BnfRuleGraph from a Bnf (tree).
-     * @param bnf A bnf tree, must not be null.
-     */
-    public GraphBuilder(final Bnf bnf) {
-        final List<BnfRule> startBnfRules = bnf.getBnfRules().stream()
-                .filter(BnfRule::isStartRule)
-                .collect(Collectors.toList());
-        if (startBnfRules.size() != 1) {
-            throw new IllegalArgumentException("Rule-list must have exactly one Start rule");
-        }
-        final BnfRule startBnfRule = startBnfRules.get(0);
-        final List<BnfRule> nonTerminalBnfRules = bnf.getBnfRules().stream()
-                .filter(bnfRule -> !bnfRule.isTerminal() && bnfRule.getNumberOfElements() > 1)
-                .collect(Collectors.toList());
-        nonTerminalBnfRules.remove(startBnfRule);
-
-        graph = new BnfRuleGraph(startBnfRule.getName());
-        lastAddedScope = graph.addVertex();
-        graph.setStartScope(lastAddedScope);
-        graph.setEndScope(lastAddedScope);
-
-        for (BnfRule bnfRule : nonTerminalBnfRules) {
-            processAlternatives(bnfRule.getRhs());
-        }
-
-        if (!graph.isConsistent()) {
-            throw new InvalidGraphException("Graph is not consistent after build!");
-        }
-    }
 
     /**
      * Creates a graph for the provided rule.
