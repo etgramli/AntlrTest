@@ -1,6 +1,8 @@
 package de.etgramlich.dsl.graph;
 
-import de.etgramlich.dsl.graph.type.*;
+import de.etgramlich.dsl.graph.type.BnfRuleGraph;
+import de.etgramlich.dsl.graph.type.Scope;
+import de.etgramlich.dsl.graph.type.ScopeEdge;
 import de.etgramlich.dsl.parser.type.Alternatives;
 import de.etgramlich.dsl.parser.type.Bnf;
 import de.etgramlich.dsl.parser.type.BnfRule;

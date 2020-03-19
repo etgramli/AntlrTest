@@ -124,6 +124,10 @@ public final class GraphBuilder {
         return Collections.unmodifiableSet(lastEdges);
     }
 
+    private void mergeNodes(final Scope newScope, final Scope toReplace) {
+        mergeNodes(newScope, Set.of(toReplace));
+    }
+
     /**
      * Replaces the scopes by the new scope, to merge edges to a single target or source vertex.
      * @param newScope New scope, must not be null.
@@ -290,13 +294,8 @@ public final class GraphBuilder {
             graph.addEdge(scopeMap.get(edge.getSource()), scopeMap.get(edge.getTarget()), (ScopeEdge) edge.clone());
         }
 
-        if (nodeEdge.getSource() != nodeEdge.getTarget()) {
-            mergeNodes(scopeMap.get(nodeEdgeReplacement.getStartScope()), Set.of(nodeEdge.getSource()));
-            mergeNodes(scopeMap.get(nodeEdgeReplacement.getEndScope()), Set.of(nodeEdge.getTarget()));
-        } else {
-            mergeNodes(nodeEdge.getTarget(), Set.of(scopeMap.get(nodeEdgeReplacement.getStartScope())));
-            mergeNodes(nodeEdge.getTarget(), Set.of(scopeMap.get(nodeEdgeReplacement.getEndScope())));
-        }
+        mergeNodes(nodeEdge.getSource(), scopeMap.get(nodeEdgeReplacement.getStartScope()));
+        mergeNodes(nodeEdge.getTarget(), scopeMap.get(nodeEdgeReplacement.getEndScope()));
 
         graph.removeEdge(nodeEdge);
 
