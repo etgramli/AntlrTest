@@ -18,12 +18,10 @@ import de.etgramlich.dsl.graph.type.Node;
 import de.etgramlich.dsl.graph.type.NodeType;
 import de.etgramlich.dsl.util.exception.InvalidGraphException;
 import de.etgramlich.dsl.util.exception.UnrecognizedElementException;
-import org.jgrapht.GraphPath;
 import org.jgrapht.alg.shortestpath.AllDirectedPaths;
 
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Map;
@@ -204,6 +202,14 @@ public final class GraphBuilder {
         return lastAddedEdges;
     }
 
+    /**
+     * Duplicates all provided edges from the source scope to all target scopes.
+     * If no edge and target scopes are provided, nothing will happen.
+     * All given scopes must be present in the graph.
+     * @param toDuplicate Edges, must not be null, should not be empty.
+     * @param source Source scope, must not be null and in the graph. The scope must already be in the graph.
+     * @param targets Target scopes, must not be null and should not be empty. All scopes must already be in the graph.
+     */
     private void duplicateEdges(final Set<NodeEdge> toDuplicate, final Scope source, final Set<Scope> targets) {
         for (NodeEdge edge : toDuplicate) {
             for (Scope target : targets) {
@@ -213,14 +219,13 @@ public final class GraphBuilder {
     }
 
     private Set<Scope> getSecondScopeOfPath(final Scope start, final Scope end) {
-        final AllDirectedPaths<Scope, ScopeEdge> allPaths = new AllDirectedPaths<>(graph.copyWithoutBackwardEdges());
-        final List<GraphPath<Scope, ScopeEdge>> paths = allPaths.getAllPaths(start, end, true, null);
-        if (paths.isEmpty()) {
-            throw new InvalidGraphException("There must be at least one path between " + start + " and " + end);
-        }
-        final Set<ScopeEdge> firstEdges = paths.stream()
+        final Set<ScopeEdge> firstEdges =
+                new AllDirectedPaths<>(graph.copyWithoutBackwardEdges()).getAllPaths(start, end, true, null).stream()
                 .map(path -> path.getEdgeList().get(0))
                 .collect(Collectors.toUnmodifiableSet());
+        if (firstEdges.isEmpty()) {
+            throw new InvalidGraphException("There must be at least one path between " + start + " and " + end);
+        }
         if (!firstEdges.stream().allMatch(edge -> edge instanceof NodeEdge)) {
             throw new InvalidGraphException("First edge of all paths must be a NodeEdge!");
         }

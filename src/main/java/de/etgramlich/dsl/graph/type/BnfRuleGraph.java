@@ -8,9 +8,11 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
-import java.util.Set;
-import java.util.HashSet;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -140,13 +142,10 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
      * @return Set of Scopes, not null, may be empty.
      */
     public Set<Scope> getPrecedingKeywords(final Scope scope) {
-        final Set<Scope> predecessors = new HashSet<>(getPredecessors(scope));
-        final Set<Scope> keywords = predecessors.stream()
-                .filter(s -> ((NodeEdge) getEdge(s, scope)).getNode().getType().equals(NodeType.KEYWORD))
-                .collect(Collectors.toSet());
-        predecessors.removeAll(keywords);   // Now here are all non types
-        predecessors.forEach(p -> keywords.addAll(getPrecedingKeywords(p)));
-        return Collections.unmodifiableSet(keywords);
+        final Map<Boolean, List<Scope>> keywordMap = getPredecessors(scope).stream().collect(Collectors
+                .partitioningBy(s -> ((NodeEdge) getEdge(s, scope)).getNode().getType().equals(NodeType.KEYWORD)));
+        keywordMap.get(Boolean.FALSE).forEach(s -> keywordMap.get(Boolean.TRUE).addAll(getPrecedingKeywords(s)));
+        return Set.copyOf(keywordMap.get(Boolean.TRUE));
     }
 
     /**

@@ -4,6 +4,7 @@ import de.etgramlich.dsl.graph.type.BnfRuleGraph;
 import de.etgramlich.dsl.graph.type.Node;
 import de.etgramlich.dsl.parser.type.Bnf;
 import de.etgramlich.dsl.parser.type.BnfRule;
+import org.apache.commons.lang3.StringUtils;
 import org.jgrapht.alg.cycle.CycleDetector;
 import org.jgrapht.graph.DirectedPseudograph;
 
@@ -53,17 +54,16 @@ public final class ForestBuilder {
             throw new IllegalArgumentException("BNF must not have circular dependencies in its rules!");
         }
 
-        final Set<String> bnfRuleNames = forest.stream()
+        final Set<String> ruleNames = forest.stream()
                 .map(BnfRuleGraph::getName)
                 .collect(Collectors.toUnmodifiableSet());
-        final Set<String> notDefinedNonTerminals = forest.stream()
+        final String notDefinedNonTerminals = forest.stream()
                 .flatMap(graph -> graph.getNonTerminalNodes().stream())
-                .map(Node::getName)
-                .filter(name -> !bnfRuleNames.contains(name))
-                .collect(Collectors.toUnmodifiableSet());
-        if (notDefinedNonTerminals.size() > 0) {
+                .map(Node::getName).filter(name -> !ruleNames.contains(name))
+                .collect(Collectors.joining(", "));
+        if (!StringUtils.isBlank(notDefinedNonTerminals)) {
             throw new IllegalArgumentException("Bnf does not contain all rules to replace non-terminals: "
-                    + String.join(", ", notDefinedNonTerminals));
+                    + notDefinedNonTerminals);
         }
     }
 
