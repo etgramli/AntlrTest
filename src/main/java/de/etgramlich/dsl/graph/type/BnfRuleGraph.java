@@ -365,17 +365,6 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
         return DijkstraShortestPath.findPathBetween(copyWithoutBackwardEdges(), start, end) == null;
     }
 
-    private boolean notConnectedByNodeEdges(final Scope start, final Scope end) {
-        final BnfRuleGraph copy = new BnfRuleGraph(name);
-        vertexSet().forEach(copy::addVertex);
-        edgeSet().stream()
-                .filter(edge -> edge.getSource() != edge.getTarget())
-                .filter(this::isForwardEdge)
-                .filter(edge -> edge instanceof NodeEdge)
-                .forEach(edge -> copy.addEdge(edge.getSource(), edge.getTarget(), edge));
-        return DijkstraShortestPath.findPathBetween(copy, start, end) == null;
-    }
-
     /**
      * Returns true if the graph contains at least one non-terminal node.
      *
