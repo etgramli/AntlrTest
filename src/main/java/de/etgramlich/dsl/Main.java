@@ -41,18 +41,6 @@ public final class Main {
             Option.builder("h").required(false).hasArg(false).longOpt("help").desc("Prints this help text.").build();
 
     /**
-     * Stores command line options.
-     */
-    private static final Options OPTIONS = new Options();
-    static {
-        OPTIONS.addOption(HELP_OPTION);
-        OPTIONS.addRequiredOption("d", "directory", true, "Target directory for generated sources");
-        OPTIONS.addRequiredOption("p", "package", true, "Target package");
-        OPTIONS.addRequiredOption("g", "grammar", true, "Grammar file path");
-        OPTIONS.addOption("s", "sketch-graph", true, "Writes DOT graph to file");
-    }
-
-    /**
      * Save line separator for current system.
      */
     private static final String NEWLINE = System.lineSeparator();
@@ -82,13 +70,20 @@ public final class Main {
         final String targetDirectory;
         final String targetPackage;
         final String graphFilePath;
+
+        final Options options = new Options();
+        options.addOption(HELP_OPTION);
+        options.addRequiredOption("d", "directory", true, "Target directory for generated sources");
+        options.addRequiredOption("p", "package", true, "Target package");
+        options.addRequiredOption("g", "grammar", true, "Grammar file path");
+        options.addOption("s", "sketch-graph", true, "Writes DOT graph to file");
         try {
             if (testForHelp(args)) {
                 final HelpFormatter formatter = new HelpFormatter();
-                formatter.printHelp(CMD_SYNTAX, HEADER, OPTIONS, FOOTER, true);
+                formatter.printHelp(CMD_SYNTAX, HEADER, options, FOOTER, true);
                 return;
             }
-            final CommandLine cmd = new DefaultParser().parse(OPTIONS, args);
+            final CommandLine cmd = new DefaultParser().parse(options, args);
             targetDirectory = cmd.getOptionValue("d");
             targetPackage = cmd.getOptionValue("p");
             grammar = prepareGrammar(cmd.getOptionValue("g"));

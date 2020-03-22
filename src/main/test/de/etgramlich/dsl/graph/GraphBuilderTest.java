@@ -1,6 +1,7 @@
 package de.etgramlich.dsl.graph;
 
 import de.etgramlich.dsl.graph.type.BnfRuleGraph;
+import de.etgramlich.dsl.graph.type.OptionalEdge;
 import de.etgramlich.dsl.graph.type.Scope;
 import de.etgramlich.dsl.graph.type.ScopeEdge;
 import de.etgramlich.dsl.parser.type.Alternatives;
@@ -61,8 +62,8 @@ class GraphBuilderTest {
         final BnfRuleGraph graph = new GraphBuilder(alternativesOneNodeEach).getGraph();
 
         assertTrue(graph.isConsistent());
-        assertEquals(7, graph.length());
-        assertEquals(8, graph.vertexSet().size());
+        assertEquals(10, graph.length());
+        assertEquals(11, graph.vertexSet().size());
         assertEquals(14, graph.edgeSet().size());
     }
 
@@ -82,7 +83,7 @@ class GraphBuilderTest {
 
         assertTrue(graph.isConsistent());
         assertEquals(3, graph.length());
-        assertEquals(4, graph.vertexSet().size());
+        assertEquals(5, graph.vertexSet().size());
         assertEquals(7, graph.edgeSet().size());
 
         final Scope startScope = graph.getStartScope();
@@ -90,19 +91,22 @@ class GraphBuilderTest {
         assertEquals(1, graph.getSuccessors(startScope).size());
         final Scope secondScope = graph.getSuccessors(startScope).iterator().next();
         assertEquals(1, graph.inDegreeOf(secondScope));
-        assertEquals(4, graph.outDegreeOf(secondScope));
+        assertEquals(3, graph.outDegreeOf(secondScope));
+
+        final Scope thirdScope = graph.outgoingEdgesOf(secondScope).stream()
+                .filter(edge -> edge instanceof OptionalEdge)
+                .findFirst().get().getTarget();
+        assertEquals(2, graph.inDegreeOf(thirdScope));
+        assertEquals(2, graph.outDegreeOf(thirdScope));
 
         assertEquals(1, graph.getPredecessors(endScope).size());
         final Scope secondLastScope = graph.getPredecessors(endScope).iterator().next();
-        assertEquals(2, graph.outDegreeOf(secondLastScope));
-        assertEquals(5, graph.inDegreeOf(secondLastScope));
+        assertEquals(1, graph.outDegreeOf(secondLastScope));
+        assertEquals(3, graph.inDegreeOf(secondLastScope));
 
         final CycleDetector<Scope, ScopeEdge> cycleDetector = new CycleDetector<>(graph);
         assertTrue(cycleDetector.detectCycles());
-        assertEquals(Set.of(secondLastScope), cycleDetector.findCycles());
-        assertEquals(Set.of(endScope), graph.getSuccessors(secondLastScope));
-        assertEquals(Set.of(endScope), graph.getOutGoingScopes(secondLastScope));
-        assertEquals(Set.of(secondLastScope), graph.getSuccessors(secondScope));
+        assertEquals(Set.of(thirdScope), cycleDetector.findCycles());
     }
 
     @Test
@@ -120,28 +124,29 @@ class GraphBuilderTest {
         final BnfRuleGraph graph = new GraphBuilder(alternativesOneNodeEach).getGraph();
 
         assertTrue(graph.isConsistent());
-        assertEquals(3, graph.length());
-        assertEquals(4, graph.vertexSet().size());
-        assertEquals(9, graph.edgeSet().size());
+        assertEquals(4, graph.length());
+        assertEquals(5, graph.vertexSet().size());
+        assertEquals(7, graph.edgeSet().size());
 
         final Scope startScope = graph.getStartScope();
         final Scope endScope = graph.getEndScope();
         assertEquals(1, graph.getSuccessors(startScope).size());
         final Scope secondScope = graph.getSuccessors(startScope).iterator().next();
         assertEquals(1, graph.inDegreeOf(secondScope));
-        assertEquals(4, graph.outDegreeOf(secondScope));
+        assertEquals(1, graph.outDegreeOf(secondScope));
+
+        final Scope thirdScope = graph.getOutGoingScopes(secondScope).iterator().next();
+        assertEquals(4, graph.inDegreeOf(thirdScope));
+        assertEquals(4, graph.outDegreeOf(thirdScope));
 
         assertEquals(1, graph.getPredecessors(endScope).size());
         final Scope secondLastScope = graph.getPredecessors(endScope).iterator().next();
-        assertEquals(4, graph.outDegreeOf(secondLastScope));
-        assertEquals(7, graph.inDegreeOf(secondLastScope));
+        assertEquals(1, graph.outDegreeOf(secondLastScope));
+        assertEquals(1, graph.inDegreeOf(secondLastScope));
 
         final CycleDetector<Scope, ScopeEdge> cycleDetector = new CycleDetector<>(graph);
         assertTrue(cycleDetector.detectCycles());
-        assertEquals(Set.of(secondLastScope), cycleDetector.findCycles());
-        assertEquals(Set.of(endScope), graph.getSuccessors(secondLastScope));
-        assertEquals(Set.of(endScope), graph.getOutGoingScopes(secondLastScope));
-        assertEquals(Set.of(secondLastScope), graph.getSuccessors(secondScope));
+        assertEquals(Set.of(thirdScope), cycleDetector.findCycles());
     }
 
     @Test
@@ -157,23 +162,23 @@ class GraphBuilderTest {
         final BnfRuleGraph graph = new GraphBuilder(alternativesOneNodeEach).getGraph();
 
         assertTrue(graph.isConsistent());
-        assertEquals(3, graph.length());
-        assertEquals(4, graph.vertexSet().size());
+        assertEquals(4, graph.length());
+        assertEquals(5, graph.vertexSet().size());
         assertEquals(5, graph.edgeSet().size());
 
         assertEquals(1, graph.getSuccessors(graph.getStartScope()).size());
         final Scope secondScope = graph.getSuccessors(graph.getStartScope()).iterator().next();
         assertEquals(1, graph.inDegreeOf(secondScope));
-        assertEquals(2, graph.outDegreeOf(secondScope));
+        assertEquals(1, graph.outDegreeOf(secondScope));
 
         assertEquals(1, graph.getPredecessors(graph.getEndScope()).size());
         final Scope secondLastScope = graph.getPredecessors(graph.getEndScope()).iterator().next();
-        assertEquals(3, graph.inDegreeOf(secondLastScope));
-        assertEquals(2, graph.outDegreeOf(secondLastScope));
+        assertEquals(1, graph.inDegreeOf(secondLastScope));
+        assertEquals(1, graph.outDegreeOf(secondLastScope));
 
         final CycleDetector<Scope, ScopeEdge> cycleDetector = new CycleDetector<>(graph);
         assertTrue(cycleDetector.detectCycles());
-        assertEquals(Set.of(secondLastScope), cycleDetector.findCycles());
+        assertEquals(graph.getOutGoingScopes(secondScope), cycleDetector.findCycles());
     }
 
     @Test
@@ -191,8 +196,8 @@ class GraphBuilderTest {
         final BnfRuleGraph graph = new GraphBuilder(alternativesOneNodeEach).getGraph();
 
         assertTrue(graph.isConsistent());
-        assertEquals(3, graph.length());
-        assertEquals(6, graph.vertexSet().size());
+        assertEquals(4, graph.length());
+        assertEquals(8, graph.vertexSet().size());
         assertEquals(9, graph.edgeSet().size());
 
         final Scope startScope = graph.getStartScope();
@@ -200,28 +205,36 @@ class GraphBuilderTest {
         assertEquals(1, graph.getSuccessors(startScope).size());
         final Scope secondScope = graph.getSuccessors(startScope).iterator().next();
         assertEquals(1, graph.inDegreeOf(secondScope));
-        assertEquals(2, graph.outDegreeOf(secondScope));
+        assertEquals(1, graph.outDegreeOf(secondScope));
 
         assertEquals(1, graph.getPredecessors(endScope).size());
         final Scope secondLastScope = graph.getPredecessors(endScope).iterator().next();
-        assertEquals(2, graph.outDegreeOf(secondLastScope));
-        assertEquals(2, graph.inDegreeOf(secondLastScope));
+        assertEquals(1, graph.outDegreeOf(secondLastScope));
+        assertEquals(1, graph.inDegreeOf(secondLastScope));
 
-        assertEquals(1, graph.getSuccessors(secondScope).size());
-        final Scope thirdScope = graph.getSuccessors(secondScope).iterator().next();
+        assertEquals(1, graph.getOutGoingScopes(secondScope).size());
+        final Scope thirdScope = graph.getOutGoingScopes(secondScope).iterator().next();
         assertEquals(2, graph.inDegreeOf(thirdScope));
         assertEquals(2, graph.outDegreeOf(thirdScope));
-        final Scope thirdLastScope = graph.getPredecessors(secondLastScope).iterator().next();
-        assertEquals(3, graph.inDegreeOf(thirdLastScope));
-        assertEquals(2, graph.outDegreeOf(thirdLastScope));
+        assertEquals(1, graph.getSuccessors(thirdScope).size());
+
+        final Scope inLoopOne = graph.getSuccessors(thirdScope).iterator().next();
+        assertEquals(1, graph.inDegreeOf(inLoopOne));
+        assertEquals(1, graph.outDegreeOf(inLoopOne));
+        assertEquals(1, graph.getOutGoingScopes(inLoopOne).size());
+        final Scope inLoopSecond = graph.getOutGoingScopes(inLoopOne).iterator().next();
+        assertEquals(2, graph.inDegreeOf(inLoopSecond));
+        assertEquals(2, graph.outDegreeOf(inLoopSecond));
+        assertEquals(1, graph.getOutGoingScopes(inLoopSecond).size());
+        final Scope inLoopThird = graph.getOutGoingScopes(inLoopSecond).iterator().next();
+        assertEquals(1, graph.inDegreeOf(inLoopThird));
+        assertEquals(1, graph.outDegreeOf(inLoopThird));
+        assertEquals(1, graph.getOutGoingScopes(inLoopThird).size());
+        assertEquals(thirdScope, graph.getOutGoingScopes(inLoopThird).iterator().next());
 
         final CycleDetector<Scope, ScopeEdge> cycleDetector = new CycleDetector<>(graph);
         assertTrue(cycleDetector.detectCycles());
-        assertEquals(Set.of(thirdLastScope, thirdScope, secondLastScope), cycleDetector.findCycles());
-        assertEquals(Set.of(thirdScope, endScope), graph.getSuccessors(secondLastScope));
-        assertEquals(Set.of(thirdScope, endScope), graph.getOutGoingScopes(secondLastScope));
-        assertEquals(Set.of(secondLastScope), graph.getSuccessors(thirdLastScope));
-        assertEquals(Set.of(secondLastScope), graph.getOutGoingScopes(thirdLastScope));
+        assertEquals(Set.of(thirdScope, inLoopOne, inLoopSecond, inLoopThird), cycleDetector.findCycles());
     }
 
     @Test

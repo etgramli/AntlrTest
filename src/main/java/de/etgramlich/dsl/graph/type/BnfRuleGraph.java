@@ -98,14 +98,17 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
         if (endScope == null || !vertexSet().contains(endScope)) {
             return false;
         }
-        for (ScopeEdge edge : edgeSet()) {
-            if (!vertexSet().contains(edge.getSource()) || !vertexSet().contains(edge.getTarget())) {
-                return false;
-            } else if (edge instanceof OptionalEdge && notConnectedByNodeEdges(edge.getSource(), edge.getTarget())) {
-                return false;
-            }
+        if (inDegreeOf(startScope) > 0) {
+            return false;
         }
-        return true;
+        if (outDegreeOf(endScope) > 0) {
+            return false;
+        }
+        if (notConnectedByEdges(startScope, endScope)) {
+            return false;
+        }
+        return edgeSet().stream()
+                .noneMatch(edge -> !vertexSet().contains(edge.getSource()) || !vertexSet().contains(edge.getTarget()));
     }
 
     /**
@@ -323,9 +326,9 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
      */
     public boolean isForwardEdge(final ScopeEdge edge) {
         final int distanceStartSource =
-                DijkstraShortestPath.findPathBetween(this, getStartScope(), edge.getSource()).getLength();
+                DijkstraShortestPath.findPathBetween(this, startScope, edge.getSource()).getLength();
         final int distanceStartTarget =
-                DijkstraShortestPath.findPathBetween(this, getStartScope(), edge.getTarget()).getLength();
+                DijkstraShortestPath.findPathBetween(this, startScope, edge.getTarget()).getLength();
         return distanceStartTarget > distanceStartSource;
     }
 
@@ -337,9 +340,9 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
      */
     public boolean isBackwardEdge(final ScopeEdge edge) {
         final int distanceStartSource =
-                DijkstraShortestPath.findPathBetween(this, getStartScope(), edge.getSource()).getLength();
+                DijkstraShortestPath.findPathBetween(this, startScope, edge.getSource()).getLength();
         final int distanceStartTarget =
-                DijkstraShortestPath.findPathBetween(this, getStartScope(), edge.getTarget()).getLength();
+                DijkstraShortestPath.findPathBetween(this, startScope, edge.getTarget()).getLength();
         return distanceStartTarget < distanceStartSource;
     }
 
@@ -351,14 +354,26 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
     public BnfRuleGraph copyWithoutBackwardEdges() {
         final BnfRuleGraph onlyForwardEdges = new BnfRuleGraph(name);
         vertexSet().forEach(onlyForwardEdges::addVertex);
-        getNodeEdges().stream()
+        edgeSet().stream()
                 .filter(edge -> edge.getSource() != edge.getTarget())
+                .filter(this::isForwardEdge)
                 .forEach(edge -> onlyForwardEdges.addEdge(edge.getSource(), edge.getTarget(), edge));
         return onlyForwardEdges;
     }
 
-    private boolean notConnectedByNodeEdges(final Scope start, final Scope end) {
+    private boolean notConnectedByEdges(final Scope start, final Scope end) {
         return DijkstraShortestPath.findPathBetween(copyWithoutBackwardEdges(), start, end) == null;
+    }
+
+    private boolean notConnectedByNodeEdges(final Scope start, final Scope end) {
+        final BnfRuleGraph copy = new BnfRuleGraph(name);
+        vertexSet().forEach(copy::addVertex);
+        edgeSet().stream()
+                .filter(edge -> edge.getSource() != edge.getTarget())
+                .filter(this::isForwardEdge)
+                .filter(edge -> edge instanceof NodeEdge)
+                .forEach(edge -> copy.addEdge(edge.getSource(), edge.getTarget(), edge));
+        return DijkstraShortestPath.findPathBetween(copy, start, end) == null;
     }
 
     /**

@@ -1,13 +1,14 @@
 package de.etgramlich.dsl.generator;
 
-import de.etgramlich.dsl.util.StringUtil;
-import de.etgramlich.dsl.util.SymbolTable;
 import de.etgramlich.dsl.graph.type.BnfRuleGraph;
-import de.etgramlich.dsl.graph.type.NodeType;
+import de.etgramlich.dsl.graph.type.Node;
 import de.etgramlich.dsl.graph.type.NodeEdge;
+import de.etgramlich.dsl.graph.type.NodeType;
 import de.etgramlich.dsl.graph.type.OptionalEdge;
 import de.etgramlich.dsl.graph.type.Scope;
-import de.etgramlich.dsl.graph.type.Node;
+import de.etgramlich.dsl.graph.type.ScopeEdge;
+import de.etgramlich.dsl.util.StringUtil;
+import de.etgramlich.dsl.util.SymbolTable;
 import org.apache.commons.lang3.StringUtils;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
@@ -119,9 +120,13 @@ public final class InterfaceBuilder {
             interfaces.add(currentInterface);
             symbolTable.addType(currentInterface.getName());
 
-            toVisitNext.addAll(graph.getPrecedingKeywords(currentScope).stream()
+            graph.getPrecedingKeywords(currentScope).stream()
                     .filter(scope -> !symbolTable.isType(scope.getName()))
-                    .collect(Collectors.toUnmodifiableSet()));
+                    .forEach(toVisitNext::add);
+            graph.incomingEdgesOf(currentScope).stream()
+                    .filter(edge -> edge instanceof OptionalEdge)
+                    .map(ScopeEdge::getSource)
+                    .forEach(toVisitNext::add);
             currentScope = toVisitNext.pollFirst();
         }
 
