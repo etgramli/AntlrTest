@@ -1,17 +1,24 @@
 package de.etgramlich.dsl.graph;
 
 import de.etgramlich.dsl.graph.type.BnfRuleGraph;
+import de.etgramlich.dsl.graph.type.NodeEdge;
+import de.etgramlich.dsl.graph.type.Scope;
+import de.etgramlich.dsl.graph.type.ScopeEdge;
 import de.etgramlich.dsl.parser.type.Alternatives;
 import de.etgramlich.dsl.parser.type.Bnf;
 import de.etgramlich.dsl.parser.type.BnfRule;
 import de.etgramlich.dsl.parser.type.Sequence;
 import de.etgramlich.dsl.parser.type.text.Keyword;
 import de.etgramlich.dsl.parser.type.text.NonTerminal;
+import de.etgramlich.dsl.parser.type.text.TextElement;
+import org.jgrapht.GraphPath;
+import org.jgrapht.alg.shortestpath.AllDirectedPaths;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
@@ -118,8 +125,8 @@ class ForestBuilderTest {
                                         NON_TERMINALS.get(1),
                                         NON_TERMINALS.get(2),
                                         NON_TERMINALS.get(1),
-                                        KEYWORDS.get(4))
-                                )))),
+                                        KEYWORDS.get(4)))))
+                ),
                 new BnfRule(NON_TERMINALS.get(1), new Alternatives(List.of(new Sequence(List.of(KEYWORDS.get(1)))))),
                 new BnfRule(NON_TERMINALS.get(2), new Alternatives(List.of(new Sequence(List.of(KEYWORDS.get(2))))))
         ));
@@ -130,10 +137,23 @@ class ForestBuilderTest {
         assertEquals(5, graph.length());
         assertEquals(5, graph.edgeSet().size());
         assertEquals(6, graph.vertexSet().size());
+
+        final List<GraphPath<Scope, ScopeEdge>> paths = new AllDirectedPaths<>(graph).getAllPaths(graph.getStartScope(), graph.getEndScope(), true, null);
+        assertEquals(1, paths.size());
+        final List<String> expected = List.of(KEYWORDS.get(0), KEYWORDS.get(1), KEYWORDS.get(2), KEYWORDS.get(1), KEYWORDS.get(4)).stream()
+                .map(TextElement::getName)
+                .collect(Collectors.toUnmodifiableList());
+        final List<String> actual = paths.get(0).getEdgeList().stream()
+                .filter(edge -> edge instanceof NodeEdge)
+                .map(edge -> (NodeEdge) edge)
+                .map(edge -> edge.getNode().getName())
+                .collect(Collectors.toUnmodifiableList());
+        assertEquals(expected, actual);
     }
 
     @Test
     void getMergedGraph_multipleRecursiveNonTerminals_allNonTerminalGetsReplaced() {
+        final List<TextElement> expected = List.of(KEYWORDS.get(0), KEYWORDS.get(5), KEYWORDS.get(6), KEYWORDS.get(2), KEYWORDS.get(5), KEYWORDS.get(6), KEYWORDS.get(4));
         final Bnf alternativesOneNodeEach = new Bnf(List.of(
                 START_RULE,
                 new BnfRule(NON_TERMINALS.get(0),
@@ -156,6 +176,15 @@ class ForestBuilderTest {
         assertEquals(7, graph.length());
         assertEquals(7, graph.edgeSet().size());
         assertEquals(8, graph.vertexSet().size());
+
+        final List<GraphPath<Scope, ScopeEdge>> paths = new AllDirectedPaths<>(graph).getAllPaths(graph.getStartScope(), graph.getEndScope(), true, null);
+        assertEquals(1, paths.size());
+        final List<String> actual = paths.get(0).getEdgeList().stream()
+                .filter(edge -> edge instanceof NodeEdge)
+                .map(edge -> (NodeEdge) edge)
+                .map(edge -> edge.getNode().getName())
+                .collect(Collectors.toUnmodifiableList());
+        assertEquals(expected.stream().map(TextElement::getName).collect(Collectors.toUnmodifiableList()), actual);
     }
 
     @Test
