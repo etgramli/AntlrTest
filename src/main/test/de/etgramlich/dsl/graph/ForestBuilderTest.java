@@ -30,13 +30,13 @@ class ForestBuilderTest {
     private static final int NUM_NON_TERMINALS = 8;
     private static final int NUM_KEYWORDS = 7;
     static {
-        List<NonTerminal> nts = new ArrayList<>(NUM_NON_TERMINALS);
+        final List<NonTerminal> nts = new ArrayList<>(NUM_NON_TERMINALS);
         for (int i = 0; i < NUM_NON_TERMINALS; ++i) {
             nts.add(new NonTerminal("ID_" + i));
         }
         NON_TERMINALS = Collections.unmodifiableList(nts);
 
-        List<Keyword> keywords = new ArrayList<>(NUM_KEYWORDS);
+        final List<Keyword> keywords = new ArrayList<>(NUM_KEYWORDS);
         for (int i = 0; i < NUM_KEYWORDS; ++i) {
             keywords.add(new Keyword("Key_" + i));
         }
@@ -64,6 +64,18 @@ class ForestBuilderTest {
 
         assertTrue(graph.isConsistent());
         assertFalse(graph.containsNonTerminals());
+
+        final List<GraphPath<Scope, ScopeEdge>> paths = new AllDirectedPaths<>(graph).getAllPaths(graph.getStartScope(), graph.getEndScope(), true, null);
+        assertEquals(1, paths.size());
+        final List<String> expected = List.of(KEYWORDS.get(0), KEYWORDS.get(1), KEYWORDS.get(2), KEYWORDS.get(3), KEYWORDS.get(4)).stream()
+                .map(TextElement::getName)
+                .collect(Collectors.toUnmodifiableList());
+        final List<String> actual = paths.get(0).getEdgeList().stream()
+                .filter(edge -> edge instanceof NodeEdge)
+                .map(edge -> (NodeEdge) edge)
+                .map(edge -> edge.getNode().getName())
+                .collect(Collectors.toUnmodifiableList());
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -88,6 +100,18 @@ class ForestBuilderTest {
         assertEquals(5, graph.length());
         assertEquals(5, graph.edgeSet().size());
         assertEquals(6, graph.vertexSet().size());
+
+        final List<GraphPath<Scope, ScopeEdge>> paths = new AllDirectedPaths<>(graph).getAllPaths(graph.getStartScope(), graph.getEndScope(), true, null);
+        assertEquals(1, paths.size());
+        final List<String> expected = List.of(KEYWORDS.get(0), KEYWORDS.get(1), KEYWORDS.get(2), KEYWORDS.get(3), KEYWORDS.get(4)).stream()
+                .map(TextElement::getName)
+                .collect(Collectors.toUnmodifiableList());
+        final List<String> actual = paths.get(0).getEdgeList().stream()
+                .filter(edge -> edge instanceof NodeEdge)
+                .map(edge -> (NodeEdge) edge)
+                .map(edge -> edge.getNode().getName())
+                .collect(Collectors.toUnmodifiableList());
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -112,6 +136,18 @@ class ForestBuilderTest {
         assertEquals(5, graph.length());
         assertEquals(5, graph.edgeSet().size());
         assertEquals(6, graph.vertexSet().size());
+
+        final List<GraphPath<Scope, ScopeEdge>> paths = new AllDirectedPaths<>(graph).getAllPaths(graph.getStartScope(), graph.getEndScope(), true, null);
+        assertEquals(1, paths.size());
+        final List<String> expected = List.of(KEYWORDS.get(0), KEYWORDS.get(1), KEYWORDS.get(2), KEYWORDS.get(1), KEYWORDS.get(4)).stream()
+                .map(TextElement::getName)
+                .collect(Collectors.toUnmodifiableList());
+        final List<String> actual = paths.get(0).getEdgeList().stream()
+                .filter(edge -> edge instanceof NodeEdge)
+                .map(edge -> (NodeEdge) edge)
+                .map(edge -> edge.getNode().getName())
+                .collect(Collectors.toUnmodifiableList());
+        assertEquals(expected, actual);
     }
 
     @Test
