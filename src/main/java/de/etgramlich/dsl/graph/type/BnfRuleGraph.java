@@ -19,6 +19,8 @@ import java.util.stream.Collectors;
  * Builds a graph according to the rules of a EBNF (has to care about optional elements and repetitions).
  */
 public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
+    private static final long serialVersionUID = 8785829155769370692L;
+
     /**
      * Scope representing the entry point of the rule.
      */
@@ -28,8 +30,6 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
      * Scope representing the end of the rule.
      */
     private Scope endScope;
-
-    private static final long serialVersionUID = 8785829155769370692L;
 
     /**
      * Name to identify graph by (LHS) bnf rule name.
@@ -54,11 +54,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
      * @return Non-negative integer.
      */
     public int length() {
-        if (isEmpty()) {
-            return 0;
-        } else {
-            return DijkstraShortestPath.findPathBetween(this, getStartScope(), getEndScope()).getLength();
-        }
+        return isEmpty() ? 0 : DijkstraShortestPath.findPathBetween(this, startScope, endScope).getLength();
     }
 
     /**
@@ -90,18 +86,12 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
      */
     public boolean isConsistent() {
         if (edgeSet().isEmpty() && vertexSet().isEmpty()) {
-            return true;
+            return startScope == null && endScope == null;
         }
-        if (startScope == null || !vertexSet().contains(startScope)) {
+        if (startScope == null || !vertexSet().contains(startScope) || inDegreeOf(startScope) > 0) {
             return false;
         }
-        if (endScope == null || !vertexSet().contains(endScope)) {
-            return false;
-        }
-        if (inDegreeOf(startScope) > 0) {
-            return false;
-        }
-        if (outDegreeOf(endScope) > 0) {
+        if (endScope == null || !vertexSet().contains(endScope) || outDegreeOf(endScope) > 0) {
             return false;
         }
         if (notConnectedByEdges(startScope, endScope)) {
