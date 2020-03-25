@@ -173,7 +173,7 @@ public final class InterfaceBuilder {
         final Set<Method> methods = new HashSet<>(graph.outGoingNodeEdges(scope).size());
         for (NodeEdge nodeEdge : graph.outGoingNodeEdges(scope)) {
             if (nodeEdge.getNode().getType().equals(NodeType.KEYWORD)) {
-                methods.add(fromNodeEdge(nodeEdge));
+                methods.addAll(fromNodeEdge(nodeEdge));
             } else {
                 throw new IllegalArgumentException("Method requires a Keyword Node! was: "
                         + nodeEdge.getNode().getType().toString());
@@ -182,15 +182,14 @@ public final class InterfaceBuilder {
         return Collections.unmodifiableSet(methods);
     }
 
-    private Method fromNodeEdge(final NodeEdge edge) {
+    private Set<Method> fromNodeEdge(final NodeEdge edge) {
         final Set<Scope> subsequent = graph.getSubsequentType(edge.getTarget());
-        if (subsequent.size() == 1) {
-            return new Method(subsequent.iterator().next().getName(), edge.getNode().getName(), getArgument(edge));
-        } else if (subsequent.isEmpty()) {
-            return new Method(edge.getTarget().getName(), edge.getNode().getName(), Collections.emptyList());
+        if (subsequent.isEmpty()) {
+            return Set.of(new Method(edge.getTarget().getName(), edge.getNode().getName(), Collections.emptyList()));
         } else {
-            throw new IllegalArgumentException("There must be at most one type scopes! "
-                    + "(found: " + subsequent.size() + ")");
+            return subsequent.stream()
+                    .map(scope -> new Method(scope.getName(), edge.getNode().getName(), getArgument(edge)))
+                    .collect(Collectors.toUnmodifiableSet());
         }
     }
 
@@ -219,7 +218,7 @@ public final class InterfaceBuilder {
      * @param anInterface Interface to be saved, must not be null.
      * @return Interface representation as String.
      */
-    protected String renderInterface(final Interface anInterface) {
+    String renderInterface(final Interface anInterface) {
         if (StringUtils.isBlank(anInterface.getName())) {
             throw new IllegalArgumentException("Interface name must not be blank!");
         }

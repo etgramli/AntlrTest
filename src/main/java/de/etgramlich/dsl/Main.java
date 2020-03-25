@@ -6,6 +6,7 @@ import de.etgramlich.dsl.parser.gen.bnf.BnfParser;
 import de.etgramlich.dsl.parser.listener.BnfListener;
 import de.etgramlich.dsl.generator.InterfaceBuilder;
 import de.etgramlich.dsl.graph.type.BnfRuleGraph;
+import de.etgramlich.dsl.util.StringUtil;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.apache.commons.cli.CommandLine;
@@ -41,11 +42,6 @@ public final class Main {
             Option.builder("h").required(false).hasArg(false).longOpt("help").desc("Prints this help text.").build();
 
     /**
-     * Save line separator for current system.
-     */
-    private static final String NEWLINE = System.lineSeparator();
-
-    /**
      * Syntax hint for help formatter.
      */
     private static final String CMD_SYNTAX = "java -jar antlr-test-x.x-jar-with-dependencies.jar";
@@ -53,15 +49,16 @@ public final class Main {
     /**
      * Header for help test.
      */
-    private static final String HEADER = "Generate interfaces from EBNF grammar" + NEWLINE + NEWLINE;
+    private static final String HEADER = "Generate interfaces from EBNF grammar"
+            + StringUtil.NEWLINE + StringUtil.NEWLINE;
 
     /**
      * Footer for help text.
      */
-    private static final String FOOTER = NEWLINE + "Report issues at https://github.com/etgramli/AntlrTest/";
+    private static final String FOOTER = StringUtil.NEWLINE + "Report issues at https://github.com/etgramli/AntlrTest/";
 
     /**
-     * Reads grammar from file and outputs java interfaces in the corresponding package directory in the provided
+     * Reads grammar from a file and outputs java interfaces in the corresponding package directory in the provided
      * target directory.
      * @param args Command line arguments to be parsed. Should not be empty.
      */
@@ -123,6 +120,6 @@ public final class Main {
         return Files.readAllLines(Paths.get(filepath)).stream()
                 .dropWhile(line -> !NON_TERMINAL_PATTERN.matcher(line).matches())
                 .filter(line -> !StringUtils.isBlank(line))
-                .collect(Collectors.joining(System.lineSeparator()));
+                .collect(Collectors.joining(StringUtil.NEWLINE));
     }
 }

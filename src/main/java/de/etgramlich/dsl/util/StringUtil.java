@@ -14,6 +14,12 @@ import java.util.stream.Collectors;
  * Contains additional methods to operate on Strings, that are not present in the Apache Commons library.
  */
 public final class StringUtil extends StringUtils {
+
+    /**
+     * Newline string for the current system.
+     */
+    public static final String NEWLINE = System.lineSeparator();
+
     /**
      * White space pattern.
      */
