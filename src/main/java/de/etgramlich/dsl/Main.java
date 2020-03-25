@@ -103,7 +103,8 @@ public final class Main {
             if (graphFilePath != null) {
                 graph.renderBnfRuleGraph(targetDirectory + File.separator + graphFilePath + ".gv");
             }
-            new InterfaceBuilder(targetDirectory, targetPackage).saveInterfaces(graph);
+            final InterfaceBuilder builder = new InterfaceBuilder(targetDirectory, targetPackage);
+            builder.saveInterfaces(builder.getInterfaces(graph));
         } catch (IOException e) {
             e.printStackTrace();
         }

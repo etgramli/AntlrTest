@@ -103,8 +103,9 @@ public final class InterfaceBuilder {
      * Save all interfaces for the scopes in the graph.
      *
      * @param graph BnfRuleGraph, must not be null and consistent.
+     * @return Set of Interfaces representing the graph, not null, may be empty.
      */
-    public void saveInterfaces(final BnfRuleGraph graph) {
+    public Set<Interface> getInterfaces(final BnfRuleGraph graph) {
         if (!graph.isConsistent()) {
             throw new IllegalArgumentException("Graph is not consistent!");
         }
@@ -116,7 +117,6 @@ public final class InterfaceBuilder {
         Scope currentScope = graph.getEndScope();
         while (currentScope != null) {
             final Interface currentInterface = getInterface(currentScope);
-            saveInterface(currentInterface.getName(), renderInterface(currentInterface));
             interfaces.add(currentInterface);
             symbolTable.addType(currentInterface.getName());
 
@@ -137,6 +137,7 @@ public final class InterfaceBuilder {
             throw new IllegalArgumentException("Not all scopes saved as interfaces: "
                     + String.join(", ", unsavedTypes));
         }
+        return interfaces;
     }
 
     private Set<String> typesToBeSaved(final Set<Interface> interfaces) {
@@ -241,6 +242,14 @@ public final class InterfaceBuilder {
         st.add("methods", anInterface.getMethods());
 
         return st.render();
+    }
+
+    /**
+     * Save the interfaces to files.
+     * @param interfaces Set of interfaces, must not be null.
+     */
+    public void saveInterfaces(final Set<Interface> interfaces) {
+        interfaces.forEach(anInterface -> saveInterface(anInterface.getName(), renderInterface(anInterface)));
     }
 
     private void saveInterface(final String interfaceName, final String javaInterface) {

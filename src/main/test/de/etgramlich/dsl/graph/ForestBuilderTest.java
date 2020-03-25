@@ -8,9 +8,12 @@ import de.etgramlich.dsl.parser.type.Alternatives;
 import de.etgramlich.dsl.parser.type.Bnf;
 import de.etgramlich.dsl.parser.type.BnfRule;
 import de.etgramlich.dsl.parser.type.Sequence;
+import de.etgramlich.dsl.parser.type.repetition.Precedence;
+import de.etgramlich.dsl.parser.type.repetition.ZeroOrMore;
 import de.etgramlich.dsl.parser.type.text.Keyword;
 import de.etgramlich.dsl.parser.type.text.NonTerminal;
 import de.etgramlich.dsl.parser.type.text.TextElement;
+import de.etgramlich.dsl.parser.type.text.Type;
 import org.jgrapht.GraphPath;
 import org.jgrapht.alg.shortestpath.AllDirectedPaths;
 import org.junit.jupiter.api.Test;
@@ -226,6 +229,52 @@ class ForestBuilderTest {
                 .map(edge -> ((NodeEdge) edge).getNode().getName())
                 .collect(Collectors.toUnmodifiableList());
         assertEquals(expected, actual);
+    }
+
+    @Test
+    void getMergedGraph_joi() {
+        final Bnf joi = new Bnf(List.of(
+            new BnfRule(new NonTerminal("joi"),
+                new Alternatives(List.of(new Sequence(List.of(new NonTerminal("component")))))),
+            new BnfRule(new NonTerminal("component"),
+                new Alternatives(List.of(
+                        new Sequence(List.of(
+                                new Precedence(new Alternatives(List.of(
+                                        new Sequence(List.of(new Keyword("'component'"))),
+                                        new Sequence(List.of(new Keyword("'singleton'")))))),
+                                new NonTerminal("componentName"),
+                                new NonTerminal("componentInterface"),
+                                new ZeroOrMore(new Alternatives(List.of(new Sequence(List.of(
+                                        new NonTerminal("componentInterface")))))),
+                                new NonTerminal("componentMethod"),
+                                new ZeroOrMore(new Alternatives(List.of(new Sequence(List.of(
+                                        new NonTerminal("componentMethod")))))),
+                                new ZeroOrMore(new Alternatives(List.of(new Sequence(List.of(
+                                        new NonTerminal("componentField"))))))
+                        ))))),
+            new BnfRule(
+                new NonTerminal("componentName"),
+                new Alternatives(List.of(new Sequence(List.of(new Type("String")))))),
+            new BnfRule(
+                new NonTerminal("componentInterface"),
+                new Alternatives(List.of(
+                        new Sequence(List.of(new Keyword("impl"), new Type("String")))))),
+            new BnfRule(
+                new NonTerminal("componentMethod"),
+                new Alternatives(List.of(
+                        new Sequence(List.of(new Keyword("method"), new Type("String")))))),
+            new BnfRule(
+                new NonTerminal("componentField"),
+                new Alternatives(List.of(
+                        new Sequence(List.of(new Keyword("field"), new Type("String"))))))));
+
+        final BnfRuleGraph graph = new ForestBuilder(joi).getMergedGraph();
+
+        assertFalse(graph.containsNonTerminals());
+        assertTrue(graph.isConsistent());
+        assertEquals(16, graph.vertexSet().size());
+        assertEquals(19, graph.edgeSet().size());
+        assertEquals(12, graph.length());
     }
 
     @Test

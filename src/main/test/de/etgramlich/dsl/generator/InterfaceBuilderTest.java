@@ -1,5 +1,19 @@
 package de.etgramlich.dsl.generator;
 
+import de.etgramlich.dsl.graph.ForestBuilder;
+import de.etgramlich.dsl.graph.type.BnfRuleGraph;
+import de.etgramlich.dsl.graph.type.Node;
+import de.etgramlich.dsl.graph.type.NodeEdge;
+import de.etgramlich.dsl.graph.type.NodeType;
+import de.etgramlich.dsl.parser.type.Alternatives;
+import de.etgramlich.dsl.parser.type.Bnf;
+import de.etgramlich.dsl.parser.type.BnfRule;
+import de.etgramlich.dsl.parser.type.Sequence;
+import de.etgramlich.dsl.parser.type.repetition.Precedence;
+import de.etgramlich.dsl.parser.type.repetition.ZeroOrMore;
+import de.etgramlich.dsl.parser.type.text.Keyword;
+import de.etgramlich.dsl.parser.type.text.NonTerminal;
+import de.etgramlich.dsl.parser.type.text.Type;
 import de.etgramlich.dsl.util.StringUtil;
 import org.junit.jupiter.api.Test;
 
@@ -8,6 +22,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -56,7 +71,7 @@ class InterfaceBuilderTest {
         final Iterator<String> parentIterator = parents.iterator();
         final Interface anInterface = new Interface("Test", parents, Collections.emptySet());
         final String expected = StringUtil.removeAllWhiteSpaces(
-                "package " + DUMMY_PACKAGE + ";" +StringUtil.NEWLINE +
+                "package " + DUMMY_PACKAGE + ";" + StringUtil.NEWLINE +
                 "interface Test extends " + parentIterator.next() + ", " + parentIterator.next() + "{ }");
 
         try {
@@ -90,7 +105,8 @@ class InterfaceBuilderTest {
                 " }");
 
         try {
-            final String interfaceString = StringUtil.removeAllWhiteSpaces(new InterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE).renderInterface(anInterface));
+            final InterfaceBuilder builder = new InterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE);
+            final String interfaceString = StringUtil.removeAllWhiteSpaces(builder.renderInterface(anInterface));
             assertTrue(interfaceString.equals(expectedA) || interfaceString.equals(expectedB));
         } catch (IOException e) {
             e.printStackTrace();
@@ -129,6 +145,78 @@ class InterfaceBuilderTest {
             final InterfaceBuilder builder = new InterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE);
             final String interfaceString = StringUtil.removeAllWhiteSpaces(builder.renderInterface(anInterface));
             assertTrue(interfaceString.equals(expectedA) || interfaceString.equals(expectedB));
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    void renderInterface_joi() {
+        final Bnf joi = new Bnf(List.of(
+                new BnfRule(new NonTerminal("joi"),
+                        new Alternatives(List.of(new Sequence(List.of(new NonTerminal("component")))))),
+                new BnfRule(new NonTerminal("component"),
+                        new Alternatives(List.of(
+                                new Sequence(List.of(
+                                        new Precedence(new Alternatives(List.of(
+                                                new Sequence(List.of(new Keyword("'component'"))),
+                                                new Sequence(List.of(new Keyword("'singleton'")))))),
+                                        new NonTerminal("componentName"),
+                                        new NonTerminal("componentInterface"),
+                                        new ZeroOrMore(new Alternatives(List.of(new Sequence(List.of(
+                                                new NonTerminal("componentInterface")))))),
+                                        new NonTerminal("componentMethod"),
+                                        new ZeroOrMore(new Alternatives(List.of(new Sequence(List.of(
+                                                new NonTerminal("componentMethod")))))),
+                                        new ZeroOrMore(new Alternatives(List.of(new Sequence(List.of(
+                                                new NonTerminal("componentField"))))))
+                                ))))),
+                new BnfRule(
+                        new NonTerminal("componentName"),
+                        new Alternatives(List.of(new Sequence(List.of(new Type("String")))))),
+                new BnfRule(
+                        new NonTerminal("componentInterface"),
+                        new Alternatives(List.of(
+                                new Sequence(List.of(new Keyword("impl"), new Type("String")))))),
+                new BnfRule(
+                        new NonTerminal("componentMethod"),
+                        new Alternatives(List.of(
+                                new Sequence(List.of(new Keyword("method"), new Type("String")))))),
+                new BnfRule(
+                        new NonTerminal("componentField"),
+                        new Alternatives(List.of(
+                                new Sequence(List.of(new Keyword("field"), new Type("String"))))))));
+        try {
+            final InterfaceBuilder ib = new InterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE);
+            final BnfRuleGraph graph = new ForestBuilder(joi).getMergedGraph();
+            final Set<Interface> interfaces = ib.getInterfaces(graph);
+            assertEquals(10, interfaces.size());
+
+            final Set<String> keywords = graph.edgeSet().stream()
+                    .filter(edge -> edge instanceof NodeEdge)
+                    .map(edge -> ((NodeEdge) edge).getNode())
+                    .filter(node -> node.getType().equals(NodeType.KEYWORD))
+                    .map(Node::getName)
+                    .collect(Collectors.toUnmodifiableSet());
+            final Set<String> methodNames = interfaces.stream()
+                    .flatMap(anInterface -> anInterface.getMethods().stream())
+                    .map(Method::getName)
+                    .collect(Collectors.toUnmodifiableSet());
+            assertEquals(keywords, methodNames);
+
+            final Set<String> types = graph.edgeSet().stream()
+                    .filter(edge -> edge instanceof NodeEdge)
+                    .map(edge -> ((NodeEdge) edge).getNode())
+                    .filter(node -> node.getType().equals(NodeType.TYPE))
+                    .map(Node::getName)
+                    .collect(Collectors.toUnmodifiableSet());
+            final Set<String> arguments = interfaces.stream()
+                    .flatMap(anInterface -> anInterface.getMethods().stream())
+                    .flatMap(method -> method.getArguments().stream())
+                    .map(Argument::getType)
+                    .collect(Collectors.toUnmodifiableSet());
+            assertEquals(types, arguments);
         } catch (IOException e) {
             e.printStackTrace();
             fail();
