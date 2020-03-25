@@ -147,13 +147,10 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
      * @return Set of Scopes, not null, may be empty.
      */
     public Set<Scope> getSubsequentType(final Scope scope) {
-        final Set<Scope> successors = new HashSet<>(getSuccessors(scope));
-        final Set<Scope> keywords = successors.stream()
-                .filter(s -> ((NodeEdge) getEdge(scope, s)).getNode().getType().equals(NodeType.TYPE))
-                .collect(Collectors.toSet());
-        successors.removeAll(keywords);
-        successors.forEach(s -> keywords.addAll(getSubsequentType(s)));
-        return Collections.unmodifiableSet(keywords);
+        final Map<Boolean, List<Scope>> typeMap = getSuccessors(scope).stream().collect(Collectors
+            .partitioningBy(s -> ((NodeEdge) getEdge(scope, s)).getNode().getType().equals(NodeType.TYPE)));
+        typeMap.get(Boolean.FALSE).forEach(edge -> typeMap.get(Boolean.TRUE).addAll(getSubsequentType(edge)));
+        return Set.copyOf(typeMap.get(Boolean.TRUE));
     }
 
     /**

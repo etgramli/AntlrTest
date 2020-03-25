@@ -54,3 +54,4 @@ src/main/java/de/etgramlich/antlr
 src/main/java/de/etgramlich/dsl/joi
 
 *.gv
+/src/main/java/de/etgramlich/dsl/alternativen/

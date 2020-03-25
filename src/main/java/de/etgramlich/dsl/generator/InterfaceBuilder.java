@@ -184,10 +184,14 @@ public final class InterfaceBuilder {
 
     private Method fromNodeEdge(final NodeEdge edge) {
         final Set<Scope> subsequent = graph.getSubsequentType(edge.getTarget());
-        if (subsequent.size() != 1) {
-            throw new IllegalArgumentException("There must be exactly one keyword scopes!");
+        if (subsequent.size() == 1) {
+            return new Method(subsequent.iterator().next().getName(), edge.getNode().getName(), getArgument(edge));
+        } else if (subsequent.isEmpty()) {
+            return new Method(edge.getTarget().getName(), edge.getNode().getName(), Collections.emptyList());
+        } else {
+            throw new IllegalArgumentException("There must be at most one type scopes! "
+                    + "(found: " + subsequent.size() + ")");
         }
-        return new Method(subsequent.iterator().next().getName(), edge.getNode().getName(), getArgument(edge));
     }
 
     private Argument getArgument(final NodeEdge nodeEdge) {
