@@ -25,7 +25,7 @@ public final class Interface {
     private final Set<Method> methods;
 
     /**
-     * Creates interface from name, List of super types and collection of methods.
+     * Creates an interface from name, List of super types and collection of methods.
      * @param name Name of the interface as string, must not be blank.
      * @param parents Collection of super types as sting, must noe be null, may be empty.
      * @param methods Collection of Methods, must not be null, may be empty.

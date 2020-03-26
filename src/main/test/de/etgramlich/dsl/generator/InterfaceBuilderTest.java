@@ -1,12 +1,11 @@
 package de.etgramlich.dsl.generator;
 
-import de.etgramlich.dsl.graph.ForestBuilder;
+import de.etgramlich.dsl.graph.GraphBuilder;
 import de.etgramlich.dsl.graph.type.BnfRuleGraph;
 import de.etgramlich.dsl.graph.type.Node;
 import de.etgramlich.dsl.graph.type.NodeEdge;
 import de.etgramlich.dsl.graph.type.NodeType;
 import de.etgramlich.dsl.parser.type.Alternatives;
-import de.etgramlich.dsl.parser.type.Bnf;
 import de.etgramlich.dsl.parser.type.BnfRule;
 import de.etgramlich.dsl.parser.type.Sequence;
 import de.etgramlich.dsl.parser.type.repetition.Precedence;
@@ -153,43 +152,24 @@ class InterfaceBuilderTest {
 
     @Test
     void renderInterface_joi() {
-        final Bnf joi = new Bnf(List.of(
-                new BnfRule(new NonTerminal("joi"),
-                        new Alternatives(List.of(new Sequence(List.of(new NonTerminal("component")))))),
-                new BnfRule(new NonTerminal("component"),
+        final BnfRuleGraph graph = new GraphBuilder(new BnfRule(new NonTerminal("joi"),
                         new Alternatives(List.of(
                                 new Sequence(List.of(
                                         new Precedence(new Alternatives(List.of(
                                                 new Sequence(List.of(new Keyword("'component'"))),
                                                 new Sequence(List.of(new Keyword("'singleton'")))))),
-                                        new NonTerminal("componentName"),
-                                        new NonTerminal("componentInterface"),
+                                        new Type("String"),
+                                        new Keyword("impl"), new Type("String"),
                                         new ZeroOrMore(new Alternatives(List.of(new Sequence(List.of(
-                                                new NonTerminal("componentInterface")))))),
-                                        new NonTerminal("componentMethod"),
+                                                new Keyword("impl"), new Type("String")))))),
+                                        new Keyword("method"), new Type("String"),
                                         new ZeroOrMore(new Alternatives(List.of(new Sequence(List.of(
-                                                new NonTerminal("componentMethod")))))),
+                                                new Keyword("method"), new Type("String")))))),
                                         new ZeroOrMore(new Alternatives(List.of(new Sequence(List.of(
-                                                new NonTerminal("componentField"))))))
-                                ))))),
-                new BnfRule(
-                        new NonTerminal("componentName"),
-                        new Alternatives(List.of(new Sequence(List.of(new Type("String")))))),
-                new BnfRule(
-                        new NonTerminal("componentInterface"),
-                        new Alternatives(List.of(
-                                new Sequence(List.of(new Keyword("impl"), new Type("String")))))),
-                new BnfRule(
-                        new NonTerminal("componentMethod"),
-                        new Alternatives(List.of(
-                                new Sequence(List.of(new Keyword("method"), new Type("String")))))),
-                new BnfRule(
-                        new NonTerminal("componentField"),
-                        new Alternatives(List.of(
-                                new Sequence(List.of(new Keyword("field"), new Type("String"))))))));
+                                                new Keyword("field"), new Type("String"))))))
+                                )))))).getGraph();
         try {
             final InterfaceBuilder ib = new InterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE);
-            final BnfRuleGraph graph = new ForestBuilder(joi).getMergedGraph();
             final Set<Interface> interfaces = ib.getInterfaces(graph);
             assertEquals(10, interfaces.size());
 
@@ -217,6 +197,39 @@ class InterfaceBuilderTest {
                     .map(Argument::getType)
                     .collect(Collectors.toUnmodifiableSet());
             assertEquals(types, arguments);
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    void getInterfaces() {
+    }
+
+    @Test
+    void getInterfacesToSave_junit() {
+        final BnfRuleGraph graph = new GraphBuilder(new BnfRule(new NonTerminal("joi"),
+                new Alternatives(List.of(
+                        new Sequence(List.of(
+                                new Precedence(new Alternatives(List.of(
+                                        new Sequence(List.of(new Keyword("'component'"))),
+                                        new Sequence(List.of(new Keyword("'singleton'")))))),
+                                new Type("String"),
+                                new Keyword("impl"), new Type("String"),
+                                new ZeroOrMore(new Alternatives(List.of(new Sequence(List.of(
+                                        new Keyword("impl"), new Type("String")))))),
+                                new Keyword("method"), new Type("String"),
+                                new ZeroOrMore(new Alternatives(List.of(new Sequence(List.of(
+                                        new Keyword("method"), new Type("String")))))),
+                                new ZeroOrMore(new Alternatives(List.of(new Sequence(List.of(
+                                        new Keyword("field"), new Type("String"))))))
+                        )))))).getGraph();
+        final Set<String> expectedInterfaces = Set.of("Scope_0", "Scope_4", "Scope_6", "Scope_9", "Scope_8", "Scope_11", "Scope_14", "Scope_13", "Scope_17", "Scope_16");
+        final InterfaceBuilder builder;
+        try {
+            builder = new InterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE);
+            assertEquals(expectedInterfaces, builder.getInterfacesToSave(graph));
         } catch (IOException e) {
             e.printStackTrace();
             fail();

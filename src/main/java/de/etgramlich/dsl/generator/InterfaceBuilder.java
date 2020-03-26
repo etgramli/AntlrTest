@@ -23,14 +23,16 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Deque;
 import java.util.ArrayDeque;
-import java.util.List;
 import java.util.Collections;
+import java.util.Deque;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Creates Java interfaces from a BnfRuleGraph and saves them to files.
@@ -70,11 +72,6 @@ public final class InterfaceBuilder {
     private final String packageDirectory;
 
     /**
-     * Graph to build interfaces from. Private methods need reference.
-     */
-    private BnfRuleGraph graph;
-
-    /**
      * Saves already saved interfaces, contains mapping from grammar keywords to java keywords.
      */
     private final SymbolTable symbolTable;
@@ -109,14 +106,13 @@ public final class InterfaceBuilder {
         if (!graph.isConsistent()) {
             throw new IllegalArgumentException("Graph is not consistent!");
         }
-        this.graph = graph;
 
         final Deque<Scope> toVisitNext = new ArrayDeque<>(graph.vertexSet().size());
         final Set<Interface> interfaces = new HashSet<>(graph.vertexSet().size());
 
         Scope currentScope = graph.getEndScope();
         while (currentScope != null) {
-            final Interface currentInterface = getInterface(currentScope);
+            final Interface currentInterface = getInterface(currentScope, graph);
             interfaces.add(currentInterface);
             symbolTable.addType(currentInterface.getName());
 
@@ -153,14 +149,17 @@ public final class InterfaceBuilder {
         return Collections.unmodifiableSet(types);
     }
 
-    private Interface getInterface(final Scope currentScope) {
-        return new Interface(currentScope.getName(), getParents(currentScope), getMethods(currentScope));
+    private Interface getInterface(final Scope currentScope, final BnfRuleGraph graph) {
+        return new Interface(
+                currentScope.getName(),
+                getParents(currentScope, graph).stream().map(Scope::getName).collect(Collectors.toUnmodifiableSet()),
+                getMethods(currentScope, graph));
     }
 
-    private Set<String> getParents(final Scope currentScope) {
-        return graph.incomingEdgesOf(currentScope).stream()
+    private Set<Scope> getParents(final Scope currentScope, final BnfRuleGraph graph) {
+        return graph.outgoingEdgesOf(currentScope).stream()
                 .filter(edge -> edge instanceof OptionalEdge)
-                .map(edge -> edge.getSource().getName())
+                .map(ScopeEdge::getTarget)
                 .collect(Collectors.toUnmodifiableSet());
     }
 
@@ -168,13 +167,14 @@ public final class InterfaceBuilder {
      * Converts a scope to Methods to be in the respective Interface.
      *
      * @param scope Scope to be converted to interface, to query its Methods.
+     * @param graph Graph with the EBNF representation.
      * @return List of Methods, not null, may be empty.
      */
-    private Set<Method> getMethods(final Scope scope) {
+    private Set<Method> getMethods(final Scope scope, final BnfRuleGraph graph) {
         final Set<Method> methods = new HashSet<>(graph.outGoingNodeEdges(scope).size());
         for (NodeEdge nodeEdge : graph.outGoingNodeEdges(scope)) {
             if (nodeEdge.getNode().getType().equals(NodeType.KEYWORD)) {
-                methods.addAll(fromNodeEdge(nodeEdge));
+                methods.addAll(fromNodeEdge(nodeEdge, graph));
             } else {
                 throw new IllegalArgumentException("Method requires a Keyword Node! was: "
                         + nodeEdge.getNode().getType().toString());
@@ -183,18 +183,18 @@ public final class InterfaceBuilder {
         return Collections.unmodifiableSet(methods);
     }
 
-    private Set<Method> fromNodeEdge(final NodeEdge edge) {
+    private Set<Method> fromNodeEdge(final NodeEdge edge, final BnfRuleGraph graph) {
         final Set<Scope> subsequent = graph.getSubsequentType(edge.getTarget());
         if (subsequent.isEmpty()) {
             return Set.of(new Method(edge.getTarget().getName(), edge.getNode().getName(), Collections.emptyList()));
         } else {
             return subsequent.stream()
-                    .map(scope -> new Method(scope.getName(), edge.getNode().getName(), getArgument(edge)))
+                    .map(scope -> new Method(scope.getName(), edge.getNode().getName(), getArgument(edge, graph)))
                     .collect(Collectors.toUnmodifiableSet());
         }
     }
 
-    private Argument getArgument(final NodeEdge nodeEdge) {
+    private Argument getArgument(final NodeEdge nodeEdge, final BnfRuleGraph graph) {
         if (nodeEdge == null) {
             throw new IllegalArgumentException("NodeEdge must not be null!");
         }
@@ -242,6 +242,36 @@ public final class InterfaceBuilder {
         st.add("methods", anInterface.getMethods());
 
         return st.render();
+    }
+
+    Set<String> getInterfacesToSave(final BnfRuleGraph graph) {
+        final Set<String> interfaces = new HashSet<>(Set.of(graph.getStartScope().getName()));
+        final Set<Scope> toVisitNext = Collections.synchronizedSet(new HashSet<>());
+        Scope currentScope = graph.getStartScope();
+        while (currentScope != null) {
+            final Map<Boolean, List<NodeEdge>> edgeTypes = graph.outGoingNodeEdges(currentScope).stream()
+                    .filter(edge -> edge.getNode().getType().equals(NodeType.KEYWORD))
+                    .map(ScopeEdge::getTarget)
+                    .flatMap(scope -> graph.outGoingNodeEdges(scope).stream())
+                    .collect(Collectors.partitioningBy(edge -> edge.getNode().getType().equals(NodeType.TYPE)));
+            final Stream<Scope> methodNoArgsStream = edgeTypes.get(Boolean.FALSE).stream().map(ScopeEdge::getSource);
+            final Stream<Scope> methodWithArgsStream = edgeTypes.get(Boolean.TRUE).stream().map(ScopeEdge::getTarget);
+
+            Stream.of(getParents(currentScope, graph).stream(), methodNoArgsStream, methodWithArgsStream)
+                    .flatMap(s -> s)
+                    .filter(scope -> !interfaces.contains(scope.getName()))
+                    .forEach(toVisitNext::add);
+
+            if (toVisitNext.iterator().hasNext()) {
+                currentScope = toVisitNext.iterator().next();
+                toVisitNext.remove(currentScope);
+                interfaces.add(currentScope.getName());
+            } else {
+                currentScope = null;
+            }
+        }
+
+        return Collections.unmodifiableSet(interfaces);
     }
 
     /**
