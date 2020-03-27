@@ -169,26 +169,15 @@ public final class InterfaceBuilder {
      * @return List of Methods, not null, may be empty.
      */
     private Set<Method> getMethods(final Scope scope, final BnfRuleGraph graph) {
-        final Set<Method> methods = new HashSet<>(graph.outGoingNodeEdges(scope).size());
-        for (NodeEdge nodeEdge : graph.outGoingNodeEdges(scope)) {
-            if (nodeEdge.getNode().getType().equals(NodeType.KEYWORD)) {
-                methods.addAll(fromNodeEdge(nodeEdge, graph));
-            } else {
-                throw new IllegalArgumentException("Method requires a Keyword Node! was: "
-                        + nodeEdge.getNode().getType().toString());
-            }
-        }
-        // Edges to scope itself
-        graph.outgoingEdgesOf(scope).stream()
-                .filter(edge -> edge instanceof NodeEdge).map(edge -> (NodeEdge) edge)
-                .filter(edge -> edge.getSource() == edge.getTarget())
+        return graph.outgoingEdgesOf(scope).stream()
+                .filter(edge -> edge instanceof NodeEdge)
+                .map(edge -> (NodeEdge) edge)
                 .filter(edge -> edge.getNode().getType().equals(NodeType.KEYWORD))
-                .map(edge -> new Method(edge.getTarget().getName(), edge.getNode().getName()))
-                .forEach(methods::add);
-        return Collections.unmodifiableSet(methods);
+                .flatMap(edge -> methodsFromNodeEdge(edge, graph).stream())
+                .collect(Collectors.toUnmodifiableSet());
     }
 
-    private Set<Method> fromNodeEdge(final NodeEdge edge, final BnfRuleGraph graph) {
+    private Set<Method> methodsFromNodeEdge(final NodeEdge edge, final BnfRuleGraph graph) {
         final Set<Scope> subsequent = graph.getSubsequentType(edge.getTarget());
         if (subsequent.isEmpty()) {
             return Set.of(new Method(edge.getTarget().getName(), edge.getNode().getName(), Collections.emptyList()));
