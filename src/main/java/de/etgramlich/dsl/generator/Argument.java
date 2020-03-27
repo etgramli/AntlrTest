@@ -44,4 +44,28 @@ public final class Argument {
     public String getName() {
         return name;
     }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Argument argument = (Argument) o;
+
+        if (!type.equals(argument.type)) {
+            return false;
+        }
+        return name.equals(argument.name);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = type.hashCode();
+        result = 31 * result + name.hashCode();
+        return result;
+    }
 }

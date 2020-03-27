@@ -81,9 +81,8 @@ public final class InterfaceBuilder {
      *
      * @param targetDirectory Target directory to contain all interfaces.
      * @param targetPackage   Package of the interfaces (a subfolder will be created in target directory).
-     * @throws IOException Throws exception if the target directory can not be created.
      */
-    public InterfaceBuilder(final String targetDirectory, final String targetPackage) throws IOException {
+    public InterfaceBuilder(final String targetDirectory, final String targetPackage) {
         if (StringUtils.isBlank(targetPackage)) {
             throw new IllegalArgumentException("Target package must not be blank!");
         }
@@ -92,7 +91,6 @@ public final class InterfaceBuilder {
         }
         this.targetPackage = targetPackage;
         packageDirectory = targetDirectory + File.separator + targetPackage.replace('.', File.separatorChar);
-        Files.createDirectories(Paths.get(packageDirectory));
         symbolTable = new SymbolTable();
     }
 
@@ -180,6 +178,13 @@ public final class InterfaceBuilder {
                         + nodeEdge.getNode().getType().toString());
             }
         }
+        // Edges to scope itself
+        graph.outgoingEdgesOf(scope).stream()
+                .filter(edge -> edge instanceof NodeEdge).map(edge -> (NodeEdge) edge)
+                .filter(edge -> edge.getSource() == edge.getTarget())
+                .filter(edge -> edge.getNode().getType().equals(NodeType.KEYWORD))
+                .map(edge -> new Method(edge.getTarget().getName(), edge.getNode().getName()))
+                .forEach(methods::add);
         return Collections.unmodifiableSet(methods);
     }
 
@@ -283,6 +288,14 @@ public final class InterfaceBuilder {
     }
 
     private void saveInterface(final String interfaceName, final String javaInterface) {
+        if (!Paths.get(packageDirectory).toFile().exists()) {
+            try {
+                Files.createDirectories(Paths.get(packageDirectory));
+            } catch (IOException e) {
+                System.err.println("Could not create target directory: " + packageDirectory);
+                e.printStackTrace();
+            }
+        }
         final String fullPath = packageDirectory + File.separator + interfaceName + DEFAULT_FILE_ENDING;
         try (OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(fullPath), StandardCharsets.UTF_8)) {
             out.write(javaInterface);
