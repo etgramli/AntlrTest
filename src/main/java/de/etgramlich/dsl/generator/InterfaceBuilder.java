@@ -28,7 +28,6 @@ import java.util.Collections;
 import java.util.Deque;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -203,8 +202,7 @@ public final class InterfaceBuilder {
             throw new IllegalArgumentException("Type of preceding node is not Type, but was: "
                     + follower.getType().toString());
         }
-
-        return new Argument(follower.getName(), follower.getName().toLowerCase(Locale.ENGLISH));
+        return new Argument(follower.getName(), StringUtil.firstCharToLowerCase(follower.getName()));
     }
 
     /**
@@ -224,6 +222,7 @@ public final class InterfaceBuilder {
         final ST st = ST_GROUP.getInstanceOf(INTERFACE_NAME);
         st.add("package", targetPackage);
         st.add("interfaceName", anInterface.getName());
+        st.add("methods", anInterface.getMethods());
 
         final List<String> parents = List.copyOf(anInterface.getParents());
         if (!parents.isEmpty()) {
@@ -232,8 +231,6 @@ public final class InterfaceBuilder {
                 st.add("parents", parents.subList(1, parents.size()));
             }
         }
-
-        st.add("methods", anInterface.getMethods());
 
         return st.render();
     }

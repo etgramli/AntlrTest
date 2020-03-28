@@ -370,4 +370,29 @@ class StringUtilTest {
 
         assertEquals(expected, StringUtil.removeAllWhiteSpaces(withBlank));
     }
+
+    @Test
+    void firstCharToLowerCase_allLowerCase_returnsSameString() {
+        final String expected = "lowercase";
+
+        assertEquals(expected, StringUtil.firstCharToLowerCase(expected));
+    }
+
+    @Test
+    void firstCharToLowerCase_firstCharacterUppercase_returnsSameStringWithFirstCharLowerCase() {
+        final String expected = "upperCase";
+        final String upperCase = "UpperCase";
+
+        assertEquals(expected, StringUtil.firstCharToLowerCase(upperCase));
+    }
+
+    @Test
+    void firstCharToLowerCase_emptyString_throwsException() {
+        assertThrows(IllegalArgumentException.class, () -> StringUtil.firstCharToLowerCase(StringUtil.EMPTY));
+    }
+
+    @Test
+    void firstCharToLowerCase_null_throwsException() {
+        assertThrows(IllegalArgumentException.class, () -> StringUtil.firstCharToLowerCase(null));
+    }
 }
