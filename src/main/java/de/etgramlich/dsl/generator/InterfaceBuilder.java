@@ -28,7 +28,6 @@ import java.util.Collections;
 import java.util.Deque;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -76,7 +75,7 @@ public final class InterfaceBuilder {
     private final SymbolTable symbolTable;
 
     /**
-     * Creates InterfaceBuilder with target (root) directory and package of the interfaces.
+     * Creates InterfaceBuilder with a target (root) directory and package of the interfaces.
      *
      * @param targetDirectory Target directory to contain all interfaces.
      * @param targetPackage   Package of the interfaces (a subfolder will be created in target directory).
@@ -94,7 +93,9 @@ public final class InterfaceBuilder {
     }
 
     /**
-     * Save all interfaces for the scopes in the graph.
+     * Generate interfaces for the scopes in the graph. There may be fewer interfaces than vertices in the graph, as
+     * edges with a node of Type following an edge of Keyword will be converted to an argument of a method, and the
+     * middle scope not being saved as an interface.
      *
      * @param graph BnfRuleGraph, must not be null and consistent.
      * @return Set of Interfaces representing the graph, not null, may be empty.
@@ -133,6 +134,11 @@ public final class InterfaceBuilder {
         return interfaces;
     }
 
+    /**
+     * Generate a set of types that occur in the set of interfaces as interface itself or as method argument type.
+     * @param interfaces Set of interfaces, must not be null.
+     * @return Set of string, not null.
+     */
     private Set<String> typesToBeSaved(final Set<Interface> interfaces) {
         final Set<String> types = new HashSet<>(interfaces.size());
         for (Interface anInterface : interfaces) {
@@ -161,7 +167,7 @@ public final class InterfaceBuilder {
     }
 
     /**
-     * Converts a scope to Methods to be in the respective Interface.
+     * Generate the methods associated to an interface for the given scope.
      *
      * @param scope Scope to be converted to interface, to query its Methods.
      * @param graph Graph with the EBNF representation.
@@ -176,6 +182,12 @@ public final class InterfaceBuilder {
                 .collect(Collectors.toUnmodifiableSet());
     }
 
+    /**
+     * Generate methods from a NodeEdge.
+     * @param edge NodeEdge, must not be null, must exist in the graph.
+     * @param graph BnfRuleGraph, must not be null, must contain edge.
+     * @return Set of Method, not null, not empty.
+     */
     private Set<Method> methodsFromNodeEdge(final NodeEdge edge, final BnfRuleGraph graph) {
         final Set<Scope> subsequent = graph.getSubsequentType(edge.getTarget());
         if (subsequent.isEmpty()) {
@@ -187,6 +199,12 @@ public final class InterfaceBuilder {
         }
     }
 
+    /**
+     * Generate an Argument from a NodeEdge.
+     * @param nodeEdge NodeEdge, must not be null, must exist in the graph.
+     * @param graph BnfRuleGraph, must not be null, must contain edge.
+     * @return New Argument object.
+     */
     private Argument getArgument(final NodeEdge nodeEdge, final BnfRuleGraph graph) {
         if (nodeEdge == null) {
             throw new IllegalArgumentException("NodeEdge must not be null!");
@@ -206,7 +224,7 @@ public final class InterfaceBuilder {
     }
 
     /**
-     * Saves a Java Interface with the given name and Methods.
+     * Render the passed interface as a Java Interface.
      *
      * @param anInterface Interface to be saved, must not be null.
      * @return Interface representation as String.
@@ -235,25 +253,27 @@ public final class InterfaceBuilder {
         return st.render();
     }
 
+    /**
+     * Generate a set of strings containing the names of the interface to be saved of the passed graph.
+     * @param graph BnfRuleGraph, must not be null.
+     * @return Set of String, not null, may be empty.
+     */
     Set<String> getInterfacesToSave(final BnfRuleGraph graph) {
         final Set<String> interfaces = new HashSet<>(Set.of(graph.getStartScope().getName()));
+
         final Set<Scope> toVisitNext = Collections.synchronizedSet(new HashSet<>());
         Scope currentScope = graph.getStartScope();
         while (currentScope != null) {
-            final Map<Boolean, List<NodeEdge>> edgeTypes = graph.outGoingNodeEdges(currentScope).stream()
+            Stream.of(graph.outGoingNodeEdges(currentScope).stream()
                     .filter(edge -> edge.getNode().getType().equals(NodeType.KEYWORD))
                     .map(ScopeEdge::getTarget)
                     .flatMap(scope -> graph.outGoingNodeEdges(scope).stream())
-                    .collect(Collectors.partitioningBy(edge -> edge.getNode().getType().equals(NodeType.TYPE)));
-            final Stream<Scope> methodNoArgsStream = edgeTypes.get(Boolean.FALSE).stream().map(ScopeEdge::getSource);
-            final Stream<Scope> methodWithArgsStream = edgeTypes.get(Boolean.TRUE).stream().map(ScopeEdge::getTarget);
-
-            Stream.of(getParents(currentScope, graph).stream(), methodNoArgsStream, methodWithArgsStream)
-                    .flatMap(s -> s)
+                    .map(edge -> edge.getNode().getType().equals(NodeType.TYPE) ? edge.getTarget() : edge.getSource()),
+                getParents(currentScope, graph).stream()).flatMap(stream -> stream)
                     .filter(scope -> !interfaces.contains(scope.getName()))
                     .forEach(toVisitNext::add);
 
-            if (toVisitNext.iterator().hasNext()) {
+            if (!toVisitNext.isEmpty()) {
                 currentScope = toVisitNext.iterator().next();
                 toVisitNext.remove(currentScope);
                 interfaces.add(currentScope.getName());
@@ -261,7 +281,6 @@ public final class InterfaceBuilder {
                 currentScope = null;
             }
         }
-
         return Collections.unmodifiableSet(interfaces);
     }
 
@@ -282,8 +301,8 @@ public final class InterfaceBuilder {
                 e.printStackTrace();
             }
         }
-        final String fullPath = packageDirectory + File.separator + interfaceName + DEFAULT_FILE_ENDING;
-        try (OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(fullPath), StandardCharsets.UTF_8)) {
+        final String filePath = packageDirectory + File.separator + interfaceName + DEFAULT_FILE_ENDING;
+        try (OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(filePath), StandardCharsets.UTF_8)) {
             out.write(javaInterface);
         } catch (FileNotFoundException e) {
             System.err.println("File not found!");
