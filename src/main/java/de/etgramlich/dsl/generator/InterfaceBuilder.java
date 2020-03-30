@@ -30,7 +30,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Creates Java interfaces from a BnfRuleGraph and saves them to files.
@@ -152,14 +151,14 @@ public final class InterfaceBuilder {
         return Collections.unmodifiableSet(types);
     }
 
-    private Interface getInterface(final Scope currentScope, final BnfRuleGraph graph) {
+    private static Interface getInterface(final Scope currentScope, final BnfRuleGraph graph) {
         return new Interface(
                 currentScope.getName(),
                 getParents(currentScope, graph).stream().map(Scope::getName).collect(Collectors.toUnmodifiableSet()),
                 getMethods(currentScope, graph));
     }
 
-    private Set<Scope> getParents(final Scope currentScope, final BnfRuleGraph graph) {
+    private static Set<Scope> getParents(final Scope currentScope, final BnfRuleGraph graph) {
         return graph.outgoingEdgesOf(currentScope).stream()
                 .filter(edge -> edge instanceof OptionalEdge)
                 .map(ScopeEdge::getTarget)
@@ -173,7 +172,7 @@ public final class InterfaceBuilder {
      * @param graph Graph with the EBNF representation.
      * @return List of Methods, not null, may be empty.
      */
-    private Set<Method> getMethods(final Scope scope, final BnfRuleGraph graph) {
+    private static Set<Method> getMethods(final Scope scope, final BnfRuleGraph graph) {
         return graph.outgoingEdgesOf(scope).stream()
                 .filter(edge -> edge instanceof NodeEdge)
                 .map(edge -> (NodeEdge) edge)
@@ -188,7 +187,7 @@ public final class InterfaceBuilder {
      * @param graph BnfRuleGraph, must not be null, must contain edge.
      * @return Set of Method, not null, not empty.
      */
-    private Set<Method> methodsFromNodeEdge(final NodeEdge edge, final BnfRuleGraph graph) {
+    private static Set<Method> methodsFromNodeEdge(final NodeEdge edge, final BnfRuleGraph graph) {
         final Set<Scope> subsequent = graph.getSubsequentType(edge.getTarget());
         if (subsequent.isEmpty()) {
             return Set.of(new Method(edge.getTarget().getName(), edge.getNode().getName(), Collections.emptyList()));
@@ -205,7 +204,7 @@ public final class InterfaceBuilder {
      * @param graph BnfRuleGraph, must not be null, must contain edge.
      * @return New Argument object.
      */
-    private Argument getArgument(final NodeEdge nodeEdge, final BnfRuleGraph graph) {
+    private static Argument getArgument(final NodeEdge nodeEdge, final BnfRuleGraph graph) {
         if (nodeEdge == null) {
             throw new IllegalArgumentException("NodeEdge must not be null!");
         }
@@ -251,37 +250,6 @@ public final class InterfaceBuilder {
         }
 
         return st.render();
-    }
-
-    /**
-     * Generate a set of strings containing the names of the interface to be saved of the passed graph.
-     * @param graph BnfRuleGraph, must not be null.
-     * @return Set of String, not null, may be empty.
-     */
-    Set<String> getInterfacesToSave(final BnfRuleGraph graph) {
-        final Set<String> interfaces = new HashSet<>(Set.of(graph.getStartScope().getName()));
-
-        final Set<Scope> toVisitNext = Collections.synchronizedSet(new HashSet<>());
-        Scope currentScope = graph.getStartScope();
-        while (currentScope != null) {
-            Stream.of(graph.outGoingNodeEdges(currentScope).stream()
-                    .filter(edge -> edge.getNode().getType().equals(NodeType.KEYWORD))
-                    .map(ScopeEdge::getTarget)
-                    .flatMap(scope -> graph.outGoingNodeEdges(scope).stream())
-                    .map(edge -> edge.getNode().getType().equals(NodeType.TYPE) ? edge.getTarget() : edge.getSource()),
-                getParents(currentScope, graph).stream()).flatMap(stream -> stream)
-                    .filter(scope -> !interfaces.contains(scope.getName()))
-                    .forEach(toVisitNext::add);
-
-            if (!toVisitNext.isEmpty()) {
-                currentScope = toVisitNext.iterator().next();
-                toVisitNext.remove(currentScope);
-                interfaces.add(currentScope.getName());
-            } else {
-                currentScope = null;
-            }
-        }
-        return Collections.unmodifiableSet(interfaces);
     }
 
     /**

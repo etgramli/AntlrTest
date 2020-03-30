@@ -5,6 +5,9 @@ import de.etgramlich.dsl.graph.type.BnfRuleGraph;
 import de.etgramlich.dsl.graph.type.Node;
 import de.etgramlich.dsl.graph.type.NodeEdge;
 import de.etgramlich.dsl.graph.type.NodeType;
+import de.etgramlich.dsl.graph.type.OptionalEdge;
+import de.etgramlich.dsl.graph.type.Scope;
+import de.etgramlich.dsl.graph.type.ScopeEdge;
 import de.etgramlich.dsl.parser.type.Alternatives;
 import de.etgramlich.dsl.parser.type.BnfRule;
 import de.etgramlich.dsl.parser.type.Sequence;
@@ -17,6 +20,7 @@ import de.etgramlich.dsl.util.StringUtil;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -28,6 +32,51 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class InterfaceBuilderTest {
     private static final String DUMMY_DIRECTORY = ".";
     private static final String DUMMY_PACKAGE = "com.dummy";
+
+    /**
+     * Generate a set of strings containing the names of the interface to be saved of the passed graph.
+     * @param graph BnfRuleGraph, must not be null.
+     * @return Set of String, not null, may be empty.
+     */
+    private static Set<String> getInterfacesToSave(final BnfRuleGraph graph) {
+        final Set<String> interfaces = new HashSet<>(Set.of(graph.getStartScope().getName()));
+
+        final Set<Scope> toVisitNext = Collections.synchronizedSet(new HashSet<>());
+        Scope currentScope = graph.getStartScope();
+
+        while (currentScope != null) {
+            Set<Scope> successorKeyword = graph.outGoingNodeEdges(currentScope).stream()
+                    .filter(edge -> edge.getNode().getType().equals(NodeType.KEYWORD))
+                    .map(ScopeEdge::getTarget)
+                    .collect(Collectors.toUnmodifiableSet());
+            for (Scope successor : successorKeyword) {
+                final Set<Scope> successorType = graph.outGoingNodeEdges(successor).stream()
+                        .filter(edge -> edge.getNode().getType().equals(NodeType.TYPE))
+                        .map(ScopeEdge::getTarget)
+                        .collect(Collectors.toUnmodifiableSet());
+                successorType.stream()
+                        .filter(scope -> !interfaces.contains(scope.getName()))
+                        .forEach(toVisitNext::add);
+                if (successorType.isEmpty() && !interfaces.contains(successor.getName())) {
+                    toVisitNext.add(successor);
+                }
+            }
+            graph.outgoingEdgesOf(currentScope).stream()
+                    .filter(edge -> edge instanceof OptionalEdge)
+                    .map(ScopeEdge::getTarget)
+                    .filter(scope -> !interfaces.contains(scope.getName()))
+                    .forEach(toVisitNext::add);
+
+            if (!toVisitNext.isEmpty()) {
+                currentScope = toVisitNext.iterator().next();
+                toVisitNext.remove(currentScope);
+                interfaces.add(currentScope.getName());
+            } else {
+                currentScope = null;
+            }
+        }
+        return Collections.unmodifiableSet(interfaces);
+    }
 
     @Test
     void renderInterface_interfaceWithOnlyName() {
@@ -208,6 +257,24 @@ class InterfaceBuilderTest {
     }
 
     @Test
+    void getInterfaces_alternative() {
+        final BnfRuleGraph graph = new GraphBuilder(new BnfRule(new NonTerminal("joi"),
+                new Alternatives(List.of(
+                        new Sequence(List.of(new Keyword("component"))),
+                        new Sequence(List.of(new Keyword("singleton"))),
+                        new Sequence(List.of(new Keyword("iface"))))))).getGraph();
+        final Set<String> expected = Set.of("Scope_0", "Scope_4");
+
+        final InterfaceBuilder builder = new InterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE);
+        assertEquals(expected, getInterfacesToSave(graph));
+
+        final Set<String> interfaces = builder.getInterfaces(graph).stream()
+                .map(Interface::getName)
+                .collect(Collectors.toUnmodifiableSet());
+        assertEquals(expected, interfaces);
+    }
+
+    @Test
     void getInterfaces_loop() {
         final BnfRuleGraph graph = new GraphBuilder(new BnfRule(new NonTerminal("joi"),
                 new Alternatives(List.of(
@@ -227,6 +294,23 @@ class InterfaceBuilderTest {
                         new Method("Scope_5", "iface"))),
                 new Interface("Scope_4", Collections.emptySet(), Collections.emptySet()));
         assertEquals(expected, interfaces);
+    }
+
+    @Test
+    void getInterfacesToSave_sequence() {
+        final BnfRuleGraph graph = new GraphBuilder(new BnfRule(new NonTerminal("sequence"),
+                new Alternatives(List.of(
+                        new Sequence(List.of(new Keyword("K_0"), new Keyword("K_1"), new Keyword("K_2")))
+                )))).getGraph();
+        final Set<String> expected = Set.of("Scope_0", "Scope_1", "Scope_2", "Scope_3");
+
+        final InterfaceBuilder builder = new InterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE);
+        assertEquals(expected, getInterfacesToSave(graph));
+
+        final Set<String> actual = builder.getInterfaces(graph).stream()
+                .map(Interface::getName)
+                .collect(Collectors.toUnmodifiableSet());
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -250,7 +334,13 @@ class InterfaceBuilderTest {
         final Set<String> expectedInterfaces =
                 Set.of("Scope_0", "Scope_4", "Scope_6", "Scope_9", "Scope_8", "Scope_11", "Scope_14", "Scope_13",
                         "Scope_17", "Scope_16");
+
         final InterfaceBuilder builder = new InterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE);
-        assertEquals(expectedInterfaces, builder.getInterfacesToSave(graph));
+        assertEquals(expectedInterfaces, getInterfacesToSave(graph));
+
+        final Set<String> actual = builder.getInterfaces(graph).stream()
+                .map(Interface::getName)
+                .collect(Collectors.toUnmodifiableSet());
+        assertEquals(expectedInterfaces, actual);
     }
 }
