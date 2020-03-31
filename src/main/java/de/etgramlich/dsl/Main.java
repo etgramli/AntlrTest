@@ -1,10 +1,12 @@
 package de.etgramlich.dsl;
 
+import de.etgramlich.dsl.generator.InterfaceBuilder;
+import de.etgramlich.dsl.generator.ScalaInterfaceBuilder;
 import de.etgramlich.dsl.graph.ForestBuilder;
 import de.etgramlich.dsl.parser.gen.bnf.BnfLexer;
 import de.etgramlich.dsl.parser.gen.bnf.BnfParser;
 import de.etgramlich.dsl.parser.listener.BnfListener;
-import de.etgramlich.dsl.generator.InterfaceBuilder;
+import de.etgramlich.dsl.generator.JavaInterfaceBuilder;
 import de.etgramlich.dsl.graph.type.BnfRuleGraph;
 import de.etgramlich.dsl.util.StringUtil;
 import org.antlr.v4.runtime.CharStreams;
@@ -67,12 +69,15 @@ public final class Main {
         final String targetDirectory;
         final String targetPackage;
         final String graphFilePath;
+        final boolean java;
 
         final Options options = new Options();
         options.addOption(HELP_OPTION);
         options.addRequiredOption("d", "directory", true, "Target directory for generated sources");
         options.addRequiredOption("p", "package", true, "Target package");
         options.addRequiredOption("g", "grammar", true, "Grammar file path");
+        options.addOption("j", "java", false, "Generate Java sources (default)");
+        options.addOption("c", "scala", false, "Generate Scala sources");
         options.addOption("s", "sketch-graph", true, "Writes DOT graph to file");
         try {
             if (testForHelp(args)) {
@@ -85,6 +90,10 @@ public final class Main {
             targetPackage = cmd.getOptionValue("p");
             grammar = prepareGrammar(cmd.getOptionValue("g"));
             graphFilePath = cmd.hasOption("s") ? cmd.getOptionValue("s") : null;
+            if (cmd.hasOption("j") && cmd.hasOption("c")) {
+                throw new IllegalArgumentException("Cannot generate both Java and Scala sources!");
+            }
+            java = !cmd.hasOption("c");
         } catch (ParseException e) {
             e.printStackTrace();
             System.err.println("Could not parse CMD arguments! Run with -h for help.");
@@ -99,11 +108,16 @@ public final class Main {
         listener.enterBnf(new BnfParser(new CommonTokenStream(new BnfLexer(CharStreams.fromString(grammar)))).bnf());
         final BnfRuleGraph graph = new ForestBuilder(listener.getBnf()).getMergedGraph();
 
+        final InterfaceBuilder builder;
         try {
             if (graphFilePath != null) {
                 graph.renderBnfRuleGraph(targetDirectory + File.separator + graphFilePath + ".gv");
             }
-            final InterfaceBuilder builder = new InterfaceBuilder(targetDirectory, targetPackage);
+            if (java) {
+                builder = new JavaInterfaceBuilder(targetDirectory, targetPackage);
+            } else {
+                builder = new ScalaInterfaceBuilder(targetDirectory, targetPackage);
+            }
             builder.saveInterfaces(builder.getInterfaces(graph));
         } catch (IOException e) {
             e.printStackTrace();
