@@ -1,0 +1,28 @@
+javaInterface(package,interfaceName,firstParent,parents,methods) ::= <<
+package <package>;
+
+interface <interfaceName> <firstParent:{firstParent| extends <firstParent>}><parents:{parent|, <parent>}> {
+    <methods:{method|<javaMethod(returnType=method.returnType,name=method.name,firstArgument=first(method.arguments),arguments=rest(method.arguments))>}>
+}
+
+>>
+
+javaMethod(returnType,name,firstArgument,arguments) ::= <<
+
+<returnType> <name>(<firstArgument:{<firstArgument|<firstArgument.type> <firstArgument.name>}><arguments:{argument|, <argument.type> <argument.name>}>);
+>>
+
+
+scalaTrait(package,interfaceName,firstParent,parents,methods) ::= <<
+package <package>;
+
+trait <interfaceName> <firstParent:{firstParent| extends <firstParent>}><parents:{parent| with <parent>}> {
+    <methods:{method|<scalaMethod(returnType=method.returnType,name=method.name,firstArgument=first(method.arguments),arguments=rest(method.arguments))>}>
+}
+
+>>
+
+scalaMethod(returnType,name,firstArgument,arguments) ::= <<
+
+def <name>(<firstArgument:{<firstArgument|<firstArgument.name> : <firstArgument.type>}><arguments:{argument|, <argument.name> : <argument.type>}>) : <returnType>
+>>

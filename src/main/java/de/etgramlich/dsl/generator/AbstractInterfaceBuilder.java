@@ -10,12 +10,15 @@ import de.etgramlich.dsl.graph.type.ScopeEdge;
 import de.etgramlich.dsl.util.StringUtil;
 import de.etgramlich.dsl.util.SymbolTable;
 import org.apache.commons.lang3.StringUtils;
+import org.stringtemplate.v4.STGroup;
+import org.stringtemplate.v4.STGroupFile;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -27,6 +30,24 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public abstract class AbstractInterfaceBuilder implements InterfaceBuilder {
+    /**
+     * File name of the scala interface template.
+     */
+    private static final String TEMPLATE_FILENAME = "interfaceTemplates.stg";
+
+    /**
+     * Loaded template file to be reused.
+     */
+    protected static final STGroup ST_GROUP;
+
+    static {
+        final URL templateFileUrl = Thread.currentThread().getContextClassLoader().getResource(TEMPLATE_FILENAME);
+        if (templateFileUrl == null) {
+            throw new RuntimeException("Template fie interfaceTemplates.stg could not be read!");
+        }
+        ST_GROUP = new STGroupFile(templateFileUrl);
+    }
+
     /**
      * Package to be used in interfaces.
      */
