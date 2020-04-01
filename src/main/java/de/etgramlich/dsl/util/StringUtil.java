@@ -133,15 +133,28 @@ public final class StringUtil extends StringUtils {
     }
 
     /**
-     * Creates a new CharSequence with the first character being lower case.
-     * @param charSequence CharSequence, must not be null, must not be empty.
+     * Creates a new String with the first character being lower case.
+     * @param charSequence CharSequence, must not be null, must not be blank.
      * @return New CharSequence.
      */
     public static String firstCharToLowerCase(final CharSequence charSequence) {
-        if (isEmpty(charSequence)) {
+        if (isBlank(charSequence)) {
             throw new IllegalArgumentException("Character sequence must not be empty!");
         }
         final String firstChar = String.valueOf(Character.toLowerCase(charSequence.charAt(0)));
+        return firstChar + charSequence.subSequence(1, charSequence.length());
+    }
+
+    /**
+     * Creates a new String with the first character being upper case.
+     * @param charSequence CharSequence, must not be blank.
+     * @return New CharSequence.
+     */
+    public static String firstCharToUpperCase(final CharSequence charSequence) {
+        if (isBlank(charSequence)) {
+            throw new IllegalArgumentException("Character sequence must not be blank!");
+        }
+        final String firstChar = String.valueOf(Character.toUpperCase(charSequence.charAt(0)));
         return firstChar + charSequence.subSequence(1, charSequence.length());
     }
 }

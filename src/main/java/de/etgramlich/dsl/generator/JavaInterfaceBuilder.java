@@ -38,7 +38,8 @@ public final class JavaInterfaceBuilder extends AbstractInterfaceBuilder {
     @Override
     String renderInterface(final Interface anInterface) {
         if (!StringUtil.startsWithUpperCase(anInterface.getName())) {
-            throw new IllegalArgumentException("Interface name must start with an upper case letter!");
+            throw new IllegalArgumentException("Interface name must start with an upper case letter! ("
+                    + anInterface.getName() + ")");
         }
 
         final ST st = ST_GROUP.getInstanceOf(INTERFACE_NAME)

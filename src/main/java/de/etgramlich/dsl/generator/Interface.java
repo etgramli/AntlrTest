@@ -12,7 +12,7 @@ public final class Interface {
     /**
      * Name of the interface.
      */
-    private final String name;
+    private String name;
 
     /**
      * Super types of the interfaces, may be empty.
@@ -51,6 +51,17 @@ public final class Interface {
      */
     public String getName() {
         return name;
+    }
+
+    /**
+     * Sets the name of the interface to the new one.
+     * @param newName String, must not be blank.
+     */
+    public void setName(final String newName) {
+        if (StringUtils.isBlank(newName)) {
+            throw new IllegalArgumentException("New name must not be blank!");
+        }
+        name = newName;
     }
 
     /**

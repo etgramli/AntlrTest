@@ -25,7 +25,9 @@ import java.nio.file.Paths;
 import java.util.ArrayDeque;
 import java.util.Collections;
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -113,14 +115,20 @@ public abstract class AbstractInterfaceBuilder implements InterfaceBuilder {
         final Deque<Scope> toVisitNext = new ArrayDeque<>(graph.vertexSet().size());
         final Set<Interface> interfaces = new HashSet<>(graph.vertexSet().size());
 
+        // Used to detect collision of readable scope names
+        final Map<String, String> scopeToReadable = new HashMap<>(graph.vertexSet().size());
         Scope currentScope = graph.getEndScope();
         while (currentScope != null) {
             final Interface currentInterface = getInterface(currentScope, graph);
+            if (scopeToReadable.containsValue(currentInterface.getName())) {
+                currentInterface.setName(currentInterface.getName() + currentScope.getName());
+            }
             interfaces.add(currentInterface);
+            scopeToReadable.put(currentScope.getName(), currentInterface.getName());
             symbolTable.addType(currentInterface.getName());
 
             graph.getPrecedingKeywords(currentScope).stream()
-                    .filter(scope -> !symbolTable.isType(scope.getName()))
+                    .filter(scope -> !scopeToReadable.containsKey(scope.getName()))
                     .forEach(toVisitNext::add);
             graph.incomingEdgesOf(currentScope).stream()
                     .filter(edge -> edge instanceof OptionalEdge)
@@ -129,13 +137,29 @@ public abstract class AbstractInterfaceBuilder implements InterfaceBuilder {
             currentScope = toVisitNext.pollFirst();
         }
 
-        return interfaces;
+        return interfaces.stream()
+                .map(anInterface -> replaceTypeNames(anInterface, scopeToReadable))
+                .collect(Collectors.toUnmodifiableSet());
+    }
+
+    private static Interface replaceTypeNames(final Interface anInterface, final Map<String, String> scopeToReadable) {
+        final Set<String> newParents = anInterface.getParents().stream()
+                .map(scopeToReadable::get)
+                .collect(Collectors.toUnmodifiableSet());
+
+        final Set<Method> newMethods = anInterface.getMethods().stream()
+                .map(m -> new Method(scopeToReadable.get(m.getReturnType()), m.getName(), m.getArguments()))
+                .collect(Collectors.toUnmodifiableSet());
+
+        return new Interface(anInterface.getName(), newParents, newMethods);
     }
 
     protected static Interface getInterface(final Scope currentScope, final BnfRuleGraph graph) {
         return new Interface(
-                currentScope.getName(),
-                getParents(currentScope, graph).stream().map(Scope::getName).collect(Collectors.toUnmodifiableSet()),
+                graph.getReadableString(currentScope),
+                getParents(currentScope, graph).stream()
+                        .map(Scope::getName)
+                        .collect(Collectors.toUnmodifiableSet()),
                 getMethods(currentScope, graph));
     }
 

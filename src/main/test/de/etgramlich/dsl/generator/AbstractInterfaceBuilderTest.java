@@ -34,7 +34,7 @@ class AbstractInterfaceBuilderTest {
      * @return Set of String, not null, may be empty.
      */
     private static Set<String> getInterfacesToSave(final BnfRuleGraph graph) {
-        final Set<String> interfaces = new HashSet<>(Set.of(graph.getStartScope().getName()));
+        final Set<String> interfaces = new HashSet<>(Set.of(graph.getReadableString(graph.getStartScope())));
 
         final Set<Scope> toVisitNext = Collections.synchronizedSet(new HashSet<>());
         Scope currentScope = graph.getStartScope();
@@ -50,7 +50,7 @@ class AbstractInterfaceBuilderTest {
                         .map(ScopeEdge::getTarget)
                         .collect(Collectors.toUnmodifiableSet());
                 successorType.stream()
-                        .filter(scope -> !interfaces.contains(scope.getName()))
+                        .filter(scope -> !interfaces.contains(graph.getReadableString(scope)))
                         .forEach(toVisitNext::add);
                 if (successorType.isEmpty() && !interfaces.contains(successor.getName())) {
                     toVisitNext.add(successor);
@@ -59,13 +59,13 @@ class AbstractInterfaceBuilderTest {
             graph.outgoingEdgesOf(currentScope).stream()
                     .filter(edge -> edge instanceof OptionalEdge)
                     .map(ScopeEdge::getTarget)
-                    .filter(scope -> !interfaces.contains(scope.getName()))
+                    .filter(scope -> !interfaces.contains(graph.getReadableString(scope)))
                     .forEach(toVisitNext::add);
 
             if (!toVisitNext.isEmpty()) {
                 currentScope = toVisitNext.iterator().next();
                 toVisitNext.remove(currentScope);
-                interfaces.add(currentScope.getName());
+                interfaces.add(graph.getReadableString(currentScope));
             } else {
                 currentScope = null;
             }
@@ -83,9 +83,9 @@ class AbstractInterfaceBuilderTest {
         final Set<Interface> interfaces = new JavaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE).getInterfaces(graph);
         assertEquals(2, interfaces.size());
 
-        final String secondScopeName = "Scope_3";
+        final String secondScopeName = "EndScope";
         final Set<Interface> expected = Set.of(
-                new Interface("Scope_0", Collections.emptySet(), Set.of(
+                new Interface("BeginScope", Collections.emptySet(), Set.of(
                         new Method(secondScopeName, "component"),
                         new Method(secondScopeName, "singleton"))),
                 new Interface(secondScopeName, Collections.emptySet(), Collections.emptySet()));
@@ -103,13 +103,13 @@ class AbstractInterfaceBuilderTest {
 
         final Set<Interface> interfaces = new JavaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE).getInterfaces(graph);
         final Set<Interface> expected = Set.of(
-                new Interface("Scope_0", Collections.emptySet(), Set.of(
-                        new Method("Scope_1", "component"))),
-                new Interface("Scope_1", Collections.emptySet(), Set.of(
-                        new Method("Scope_2", "singleton"))),
-                new Interface("Scope_2", Collections.emptySet(), Set.of(
-                        new Method("Scope_3", "iface"))),
-                new Interface("Scope_3", Collections.emptySet(), Collections.emptySet()));
+                new Interface("BeginScope", Collections.emptySet(), Set.of(
+                        new Method("SingletonScope", "component"))),
+                new Interface("SingletonScope", Collections.emptySet(), Set.of(
+                        new Method("IfaceScope", "singleton"))),
+                new Interface("IfaceScope", Collections.emptySet(), Set.of(
+                        new Method("EndScope", "iface"))),
+                new Interface("EndScope", Collections.emptySet(), Collections.emptySet()));
         assertEquals(expected, interfaces);
     }
 
@@ -120,7 +120,7 @@ class AbstractInterfaceBuilderTest {
                         new Sequence(List.of(new Keyword("component"))),
                         new Sequence(List.of(new Keyword("singleton"))),
                         new Sequence(List.of(new Keyword("iface"))))))).getGraph();
-        final Set<String> expected = Set.of("Scope_0", "Scope_4");
+        final Set<String> expected = Set.of("BeginScope", "EndScope");
 
         final JavaInterfaceBuilder builder = new JavaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE);
         assertEquals(expected, getInterfacesToSave(graph));
@@ -144,12 +144,12 @@ class AbstractInterfaceBuilderTest {
         assertEquals(3, interfaces.size());
 
         final Set<Interface> expected = Set.of(
-                new Interface("Scope_0", Set.of("Scope_5"), Collections.emptySet()),
-                new Interface("Scope_5", Set.of("Scope_4"), Set.of(
-                        new Method("Scope_5", "component"),
-                        new Method("Scope_5", "singleton"),
-                        new Method("Scope_5", "iface"))),
-                new Interface("Scope_4", Collections.emptySet(), Collections.emptySet()));
+                new Interface("BeginScope", Set.of("ComponentIfaceSingletonScope"), Collections.emptySet()),
+                new Interface("ComponentIfaceSingletonScope", Set.of("EndScope"), Set.of(
+                        new Method("ComponentIfaceSingletonScope", "component"),
+                        new Method("ComponentIfaceSingletonScope", "singleton"),
+                        new Method("ComponentIfaceSingletonScope", "iface"))),
+                new Interface("EndScope", Collections.emptySet(), Collections.emptySet()));
         assertEquals(expected, interfaces);
     }
 
@@ -159,7 +159,7 @@ class AbstractInterfaceBuilderTest {
                 new Alternatives(List.of(
                         new Sequence(List.of(new Keyword("K_0"), new Keyword("K_1"), new Keyword("K_2")))
                 )))).getGraph();
-        final Set<String> expected = Set.of("Scope_0", "Scope_1", "Scope_2", "Scope_3");
+        final Set<String> expected = Set.of("BeginScope", "K_1Scope", "K_2Scope", "EndScope");
 
         final JavaInterfaceBuilder builder = new JavaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE);
         assertEquals(expected, getInterfacesToSave(graph));
@@ -188,16 +188,25 @@ class AbstractInterfaceBuilderTest {
                                 new ZeroOrMore(new Alternatives(List.of(new Sequence(List.of(
                                         new Keyword("field"), new Type("String"))))))
                         )))))).getGraph();
-        final Set<String> expectedInterfaces =
-                Set.of("Scope_0", "Scope_4", "Scope_6", "Scope_9", "Scope_8", "Scope_11", "Scope_14", "Scope_13",
-                        "Scope_17", "Scope_16");
 
-        final JavaInterfaceBuilder builder = new JavaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE);
-        assertEquals(expectedInterfaces, getInterfacesToSave(graph));
+        final Set<Interface> interfaces = new JavaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE).getInterfaces(graph);
 
-        final Set<String> actual = builder.getInterfaces(graph).stream()
-                .map(Interface::getName)
-                .collect(Collectors.toUnmodifiableSet());
-        assertEquals(expectedInterfaces, actual);
+        final Interface begin = interfaces.stream().filter(i -> i.getName().equals("BeginScope")).findAny().get();
+        Set<Method> methods = Set.of(
+                new Method("ImplScopeScope4", "component", new Argument("String", "string")),
+                new Method("ImplScopeScope4", "singleton", new Argument("String", "string"))
+        );
+        assertEquals(methods, begin.getMethods());
+        assertEquals(Collections.emptySet(), begin.getParents());
+
+        final Interface methodInterface = interfaces.stream().filter(i -> i.getName().equals("MethodScope")).findAny().get();
+        methods = Set.of(new Method("MethodScope", "method", new Argument("String", "string")));
+        assertEquals(methods, methodInterface.getMethods());
+        assertEquals(1, methodInterface.getParents().size());
+
+        final Interface fieldInterface = interfaces.stream().filter(i -> i.getName().equals("FieldScope")).findAny().get();
+        methods = Set.of(new Method("FieldScope", "field", new Argument("String", "string")));
+        assertEquals(methods, fieldInterface.getMethods());
+        assertEquals(Set.of("EndScope"), fieldInterface.getParents());
     }
 }

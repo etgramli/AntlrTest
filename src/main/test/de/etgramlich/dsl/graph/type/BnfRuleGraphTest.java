@@ -220,4 +220,93 @@ class BnfRuleGraphTest {
         assertEquals(Set.of(edge0, edge1, edge3, edge4),
                      unfinished.getDanglingScopeEdges(unfinished.getStartScope()));
     }
+
+    @Test
+    void getReadableString_startScope_returnsBeginScope() {
+        assertEquals("BeginScope", SEQUENCE_GRAPH.getReadableString(SEQUENCE_GRAPH.getStartScope()));
+        assertEquals("BeginScope", SEQUENCE_GRAPH.getReadableString(SCOPES.get(0)));
+    }
+
+    @Test
+    void getReadableString_endScope_returnsEndScope() {
+        assertEquals("EndScope", SEQUENCE_GRAPH.getReadableString(SEQUENCE_GRAPH.getEndScope()));
+        assertEquals("EndScope", SEQUENCE_GRAPH.getReadableString(SCOPES.get(2)));
+    }
+
+    @Test
+    void getReadableString_sequence() {
+        final BnfRuleGraph graph = new BnfRuleGraph("sequence");
+        final Scope firstScope = new Scope("FirstScope");
+        final Scope secondScope = new Scope("SecondScope");
+        final Scope thirdScope = new Scope("ThirdScope");
+        final NodeEdge firstEdge = new NodeEdge(new Node("firstNodeEdge", NodeType.KEYWORD));
+        final NodeEdge secondEdge = new NodeEdge(new Node("secondNodeEdge", NodeType.KEYWORD));
+        graph.addVertex(firstScope);
+        graph.addVertex(secondScope);
+        graph.addVertex(thirdScope);
+        graph.addEdge(firstScope, secondScope, firstEdge);
+        graph.addEdge(secondScope, thirdScope, secondEdge);
+
+        assertEquals("FirstNodeEdgeScope", graph.getReadableString(firstScope));
+        assertEquals(thirdScope.getName(), graph.getReadableString(thirdScope));
+
+        graph.setStartScope(firstScope);
+        graph.setEndScope(thirdScope);
+        assertEquals("BeginScope", graph.getReadableString(firstScope));
+        assertEquals("SecondNodeEdgeScope", graph.getReadableString(secondScope));
+        assertEquals("EndScope", graph.getReadableString(thirdScope));
+    }
+
+    @Test
+    void getReadableString_alternative() {
+        final BnfRuleGraph graph = new BnfRuleGraph("alternative");
+        final Scope firstScope = new Scope("FirstScope");
+        final Scope secondScope = new Scope("SecondScope");
+        final Scope thirdScope = new Scope("ThirdScope");
+        final NodeEdge firstEdge = new NodeEdge(new Node("firstNodeEdge", NodeType.KEYWORD));
+        final NodeEdge firstParallelEdge = new NodeEdge(new Node("firstParallelNodeEdge", NodeType.KEYWORD));
+        final NodeEdge secondParallelEdge = new NodeEdge(new Node("secondParallelNodeEdge", NodeType.KEYWORD));
+        final NodeEdge thirdParallelEdge = new NodeEdge(new Node("thirdParallelNodeEdge", NodeType.KEYWORD));
+        graph.addVertex(firstScope);
+        graph.addVertex(secondScope);
+        graph.addVertex(thirdScope);
+        graph.addEdge(firstScope, secondScope, firstEdge);
+        graph.addEdge(secondScope, thirdScope, firstParallelEdge);
+        graph.addEdge(secondScope, thirdScope, secondParallelEdge);
+        graph.addEdge(secondScope, thirdScope, thirdParallelEdge);
+        graph.setStartScope(firstScope);
+        graph.setEndScope(thirdScope);
+
+        assertEquals("BeginScope", graph.getReadableString(firstScope));
+        assertEquals("EndScope", graph.getReadableString(thirdScope));
+        final Set<String> expectedStrings = Set.of(
+                "FirstParallelNodeEdgeSecondParallelNodeEdgeThirdParallelNodeEdgeScope",
+                "FirstParallelNodeEdgeThirdParallelNodeEdgeSecondParallelNodeEdgeScope",
+                "SecondParallelNodeEdgeFirstParallelNodeEdgeThirdParallelNodeEdgeScope",
+                "SecondParallelNodeEdgeThirdParallelNodeEdgeFirstParallelNodeEdgeScope",
+                "ThirdParallelNodeEdgeFirstParallelNodeEdgeSecondParallelNodeEdgeScope",
+                "ThirdParallelNodeEdgeSecondParallelNodeEdgeFirstParallelNodeEdgeScope");
+        assertTrue(expectedStrings.contains(graph.getReadableString(secondScope)));
+    }
+
+    @Test
+    void getReadableString_loop() {
+        final BnfRuleGraph graph = new BnfRuleGraph("sequence");
+        final Scope firstScope = new Scope("FirstScope");
+        final Scope secondScope = new Scope("SecondScope");
+        final Scope thirdScope = new Scope("ThirdScope");
+        final NodeEdge loopEdge = new NodeEdge(new Node("loopNodeEdge", NodeType.KEYWORD));
+        graph.addVertex(firstScope);
+        graph.addVertex(secondScope);
+        graph.addVertex(thirdScope);
+        graph.addEdge(firstScope, secondScope, new OptionalEdge());
+        graph.addEdge(secondScope, thirdScope, new OptionalEdge());
+        graph.addEdge(secondScope, secondScope, loopEdge);
+        graph.setStartScope(firstScope);
+        graph.setEndScope(thirdScope);
+
+        assertEquals("BeginScope", graph.getReadableString(firstScope));
+        assertEquals("EndScope", graph.getReadableString(thirdScope));
+        assertEquals("LoopNodeEdgeScope", graph.getReadableString(secondScope));
+    }
 }

@@ -395,4 +395,29 @@ class StringUtilTest {
     void firstCharToLowerCase_null_throwsException() {
         assertThrows(IllegalArgumentException.class, () -> StringUtil.firstCharToLowerCase(null));
     }
+
+    @Test
+    void firstCharToUpperCase_emptyString_throwsException() {
+        assertThrows(IllegalArgumentException.class, () -> StringUtil.firstCharToUpperCase(StringUtil.EMPTY));
+    }
+
+    @Test
+    void firstCharToUpperCase_null_throwsException() {
+        assertThrows(IllegalArgumentException.class, () -> StringUtil.firstCharToUpperCase(null));
+    }
+
+    @Test
+    void firstCharToUpperCase_allUpperCase_returnsSameString() {
+        final String expected = "UPPERCASE";
+
+        assertEquals(expected, StringUtil.firstCharToUpperCase(expected));
+    }
+
+    @Test
+    void firstCharToUpperCase_firstCharacterLowercase_returnsSameStringWithFirstCharUperCase() {
+        final String expected = "UpperCase";
+        final String upperCase = "upperCase";
+
+        assertEquals(expected, StringUtil.firstCharToUpperCase(upperCase));
+    }
 }

@@ -1,5 +1,6 @@
 package de.etgramlich.dsl.graph.type;
 
+import de.etgramlich.dsl.util.StringUtil;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DirectedPseudograph;
 import org.jgrapht.nio.dot.DOTExporter;
@@ -411,6 +412,35 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
     public void renderBnfRuleGraph(final String path) throws IOException {
         try (PrintWriter fileWriter = new PrintWriter(path, StandardCharsets.UTF_8)) {
             fileWriter.println(toString());
+        }
+    }
+
+    /**
+     * Generates a readable name for the provided scope.
+     * @param scope Scope, must not be null, must be present in the graph.
+     * @return String, not null, may be empty.
+     */
+    public String getReadableString(final Scope scope) {
+        if (scope == getStartScope()) {
+            return "BeginScope";
+        }
+        if (scope == getEndScope()) {
+            return "EndScope";
+        }
+        final Set<String> nodeEdgeKeywordNames = outgoingEdgesOf(scope).stream()
+                .filter(edge -> edge instanceof NodeEdge)
+                .map(edge -> (NodeEdge) edge)
+                .filter(edge -> edge.getNode().getType().equals(NodeType.KEYWORD))
+                .map(edge -> edge.getNode().getName())
+                .collect(Collectors.toUnmodifiableSet());
+        if (!nodeEdgeKeywordNames.isEmpty()) {
+            return nodeEdgeKeywordNames.stream()
+                    .map(StringUtil::firstCharToUpperCase)
+                    .sorted()
+                    .collect(Collectors.joining())
+                    + "Scope";
+        } else {
+            return scope.getName();
         }
     }
 

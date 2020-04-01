@@ -33,8 +33,11 @@ public final class Method {
      * @param arguments List of Arguments, must not be empty.
      */
     public Method(final String returnType, final String name, final List<Argument> arguments) {
-        if (StringUtils.isAnyBlank(returnType, name)) {
-            throw new IllegalArgumentException("Method name and return type must not be blank!");
+        if (StringUtils.isBlank(returnType)) {
+            throw new IllegalArgumentException("Return type must not be blank!");
+        }
+        if (StringUtils.isBlank(name)) {
+            throw new IllegalArgumentException("Method name must not be blank!");
         }
         this.returnType = returnType;
         this.name = name;
