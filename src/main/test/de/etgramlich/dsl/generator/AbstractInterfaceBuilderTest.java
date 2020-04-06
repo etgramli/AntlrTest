@@ -88,7 +88,9 @@ class AbstractInterfaceBuilderTest {
                 new Interface("BeginScope", Collections.emptySet(), Set.of(
                         new Method(secondScopeName, "component"),
                         new Method(secondScopeName, "singleton"))),
-                new Interface(secondScopeName, Collections.emptySet(), Collections.emptySet()));
+                new Interface(secondScopeName, Collections.emptySet(), Set.of(
+                        new Method("void", "end")
+                )));
         assertEquals(expected, interfaces);
     }
 
@@ -109,7 +111,9 @@ class AbstractInterfaceBuilderTest {
                         new Method("IfaceScope", "singleton"))),
                 new Interface("IfaceScope", Collections.emptySet(), Set.of(
                         new Method("EndScope", "iface"))),
-                new Interface("EndScope", Collections.emptySet(), Collections.emptySet()));
+                new Interface("EndScope", Collections.emptySet(), Set.of(
+                        new Method("void", "end")
+                )));
         assertEquals(expected, interfaces);
     }
 
@@ -149,7 +153,9 @@ class AbstractInterfaceBuilderTest {
                         new Method("ComponentIfaceSingletonScope", "component"),
                         new Method("ComponentIfaceSingletonScope", "singleton"),
                         new Method("ComponentIfaceSingletonScope", "iface"))),
-                new Interface("EndScope", Collections.emptySet(), Collections.emptySet()));
+                new Interface("EndScope", Collections.emptySet(), Set.of(
+                        new Method("void", "end")
+                )));
         assertEquals(expected, interfaces);
     }
 

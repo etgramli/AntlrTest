@@ -151,7 +151,8 @@ class ScalaInterfaceBuilderTest {
                 .flatMap(anInterface -> anInterface.getMethods().stream())
                 .map(Method::getName)
                 .collect(Collectors.toUnmodifiableSet());
-        assertEquals(keywords, methodNames);
+        assertTrue(methodNames.containsAll(keywords));
+        assertTrue(methodNames.contains("end"));
 
         final Set<String> types = graph.edgeSet().stream()
                 .filter(edge -> edge instanceof NodeEdge)

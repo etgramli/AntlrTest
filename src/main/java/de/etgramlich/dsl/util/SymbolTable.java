@@ -87,6 +87,13 @@ public final class SymbolTable {
         return customTypes.add(type);
     }
 
+    public boolean replaceType(final String oldCustomType, final String newCustomType) {
+        if (!customTypes.remove(oldCustomType)) {
+            throw new IllegalArgumentException("Type is not a custom type! " + oldCustomType);
+        }
+        return addType(newCustomType);
+    }
+
     /**
      * Returns the java equivalent of the passed argument.
      * @param keyword String, must not be null.

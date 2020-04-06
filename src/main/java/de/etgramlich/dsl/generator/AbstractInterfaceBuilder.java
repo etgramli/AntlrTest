@@ -142,25 +142,34 @@ public abstract class AbstractInterfaceBuilder implements InterfaceBuilder {
                 .collect(Collectors.toUnmodifiableSet());
     }
 
-    private static Interface replaceTypeNames(final Interface anInterface, final Map<String, String> scopeToReadable) {
+    private Interface replaceTypeNames(final Interface anInterface, final Map<String, String> scopeToReadable) {
         final Set<String> newParents = anInterface.getParents().stream()
                 .map(scopeToReadable::get)
                 .collect(Collectors.toUnmodifiableSet());
 
-        final Set<Method> newMethods = anInterface.getMethods().stream()
-                .map(m -> new Method(scopeToReadable.get(m.getReturnType()), m.getName(), m.getArguments()))
-                .collect(Collectors.toUnmodifiableSet());
+        final Set<Method> methods = new HashSet<>();
+        for (Method m : anInterface.getMethods()) {
+            if (scopeToReadable.containsKey(m.getReturnType())) {
+                methods.add(new Method(scopeToReadable.get(m.getReturnType()), m.getName(), m.getArguments()));
+            } else {
+                methods.add(m);
+            }
+        }
 
-        return new Interface(anInterface.getName(), newParents, newMethods);
+        return new Interface(anInterface.getName(), newParents, methods);
     }
 
     protected static Interface getInterface(final Scope currentScope, final BnfRuleGraph graph) {
-        return new Interface(
-                graph.getReadableString(currentScope),
-                getParents(currentScope, graph).stream()
-                        .map(Scope::getName)
-                        .collect(Collectors.toUnmodifiableSet()),
-                getMethods(currentScope, graph));
+        final Set<String> parents = getParents(currentScope, graph).stream()
+                .map(Scope::getName)
+                .collect(Collectors.toUnmodifiableSet());
+        final Set<Method> methods;
+        if (currentScope == graph.getEndScope()) {
+            methods = Set.of(new Method("void", "end"));
+        } else {
+            methods = getMethods(currentScope, graph);
+        }
+        return new Interface(graph.getReadableString(currentScope), parents, methods);
     }
 
     protected static Set<Scope> getParents(final Scope currentScope, final BnfRuleGraph graph) {
