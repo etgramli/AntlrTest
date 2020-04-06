@@ -272,9 +272,9 @@ class ForestBuilderTest {
 
         assertFalse(graph.containsNonTerminals());
         assertTrue(graph.isConsistent());
-        assertEquals(16, graph.vertexSet().size());
-        assertEquals(19, graph.edgeSet().size());
-        assertEquals(12, graph.length());
+        assertEquals(15, graph.vertexSet().size());
+        assertEquals(18, graph.edgeSet().size());
+        assertEquals(11, graph.length());
     }
 
     @Test

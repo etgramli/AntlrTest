@@ -295,6 +295,28 @@ public final class GraphBuilder {
     }
 
     /**
+     * Removed scopes with only one ingoing OptionalEdge and only one outgoing OptionalEdge and thus would only produce
+     * an intermediate interface with no methods.
+     */
+    public void removeSuperfluousScopes() {
+        final Set<Scope> toRemove = graph.vertexSet().stream()
+                .filter(scope -> graph.inDegreeOf(scope) == 1 && graph.outDegreeOf(scope) == 1)
+                .filter(scope -> graph.incomingEdgesOf(scope).iterator().next() instanceof OptionalEdge)
+                .filter(scope -> graph.outgoingEdgesOf(scope).iterator().next() instanceof OptionalEdge)
+                .collect(Collectors.toUnmodifiableSet());
+        for (Scope scope : toRemove) {
+            Scope source = graph.incomingEdgesOf(scope).iterator().next().getSource();
+            Scope target = graph.outgoingEdgesOf(scope).iterator().next().getTarget();
+            graph.removeVertex(scope);
+            graph.addEdge(source, target, new OptionalEdge());
+        }
+
+        if (!graph.isConsistent()) {
+            throw new InvalidGraphException("Graph not consistent after scope removal!");
+        }
+    }
+
+    /**
      * Returns a copy of the graph.
      * @return BnfRuleGraph, not null.
      */

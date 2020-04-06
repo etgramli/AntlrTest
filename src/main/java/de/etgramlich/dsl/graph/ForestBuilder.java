@@ -76,6 +76,7 @@ public final class ForestBuilder {
         while (gb.getGraph().containsNonTerminals()) {
             gb.replaceNonTerminals(forest);
         }
+        gb.removeSuperfluousScopes();
         return gb.getGraph();
     }
 
