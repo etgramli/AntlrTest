@@ -28,6 +28,7 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -143,9 +144,7 @@ public abstract class AbstractInterfaceBuilder implements InterfaceBuilder {
     }
 
     private Interface replaceTypeNames(final Interface anInterface, final Map<String, String> scopeToReadable) {
-        final Set<String> newParents = anInterface.getParents().stream()
-                .map(scopeToReadable::get)
-                .collect(Collectors.toUnmodifiableSet());
+        final String newParent = scopeToReadable.get(anInterface.getParent());
 
         final Set<Method> methods = new HashSet<>();
         for (Method m : anInterface.getMethods()) {
@@ -156,27 +155,36 @@ public abstract class AbstractInterfaceBuilder implements InterfaceBuilder {
             }
         }
 
-        return new Interface(anInterface.getName(), newParents, methods);
+        return new Interface(anInterface.getName(), newParent, methods);
     }
 
     protected static Interface getInterface(final Scope currentScope, final BnfRuleGraph graph) {
-        final Set<String> parents = getParents(currentScope, graph).stream()
-                .map(Scope::getName)
-                .collect(Collectors.toUnmodifiableSet());
+        final Optional<Scope> parentScope = getParent(currentScope, graph);
+        final String parentName = parentScope.isEmpty() ? null : parentScope.get().getName();
+
         final Set<Method> methods;
         if (currentScope == graph.getEndScope()) {
             methods = Set.of(new Method("void", "end"));
         } else {
             methods = getMethods(currentScope, graph);
         }
-        return new Interface(graph.getReadableString(currentScope), parents, methods);
+        return new Interface(graph.getReadableString(currentScope), parentName, methods);
     }
 
-    protected static Set<Scope> getParents(final Scope currentScope, final BnfRuleGraph graph) {
-        return graph.outgoingEdgesOf(currentScope).stream()
+    protected static Optional<Scope> getParent(final Scope currentScope, final BnfRuleGraph graph) {
+        final Set<Scope> parents = graph.outgoingEdgesOf(currentScope).stream()
                 .filter(edge -> edge instanceof OptionalEdge)
                 .map(ScopeEdge::getTarget)
                 .collect(Collectors.toUnmodifiableSet());
+        if (parents.size() > 1) {
+            throw new IllegalArgumentException("Must not have more than one parent, multiple inheritance is not allowed! (found "
+                    + parents.size() + ")");
+        }
+        if (parents.iterator().hasNext()) {
+            return Optional.of(parents.iterator().next());
+        } else {
+            return Optional.empty();
+        }
     }
 
     /**

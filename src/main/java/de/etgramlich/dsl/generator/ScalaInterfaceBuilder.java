@@ -3,9 +3,6 @@ package de.etgramlich.dsl.generator;
 import de.etgramlich.dsl.util.StringUtil;
 import org.stringtemplate.v4.ST;
 
-import java.util.List;
-
-
 public final class ScalaInterfaceBuilder extends AbstractInterfaceBuilder {
     /**
      * Default file ending for scala source files.
@@ -38,9 +35,8 @@ public final class ScalaInterfaceBuilder extends AbstractInterfaceBuilder {
                 .add("interfaceName", anInterface.getName())
                 .add("methods", anInterface.getMethods());
 
-        final List<String> parents = List.copyOf(anInterface.getParents());
-        if (!parents.isEmpty()) {
-            st.add("firstParent", parents.get(0)).add("parents", parents.subList(1, parents.size()));
+        if (anInterface.getParent() != null) {
+            st.add("parent", anInterface.getParent());
         }
 
         return st.render();

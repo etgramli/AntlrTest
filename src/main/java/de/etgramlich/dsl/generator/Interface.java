@@ -3,6 +3,7 @@ package de.etgramlich.dsl.generator;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -15,9 +16,9 @@ public final class Interface {
     private String name;
 
     /**
-     * Super types of the interfaces, may be empty.
+     * Super type of the interfaces, may be null.
      */
-    private final Set<String> parents;
+    private final String parent;
 
     /**
      * Methods of the interface, may be empty.
@@ -27,21 +28,21 @@ public final class Interface {
     /**
      * Creates an interface from name, List of super types and collection of methods.
      * @param name Name of the interface as string, must not be blank.
-     * @param parents Collection of super types as sting, must noe be null, may be empty.
+     * @param parent Super type as sting, may be null, if not mus not be blank.
      * @param methods Collection of Methods, must not be null, may be empty.
      */
-    public Interface(final String name, final Collection<String> parents, final Collection<Method> methods) {
+    public Interface(final String name, final String parent, final Collection<Method> methods) {
         if (StringUtils.isBlank(name)) {
             throw new IllegalArgumentException("Interface name must not be blank!");
         }
-        if (parents == null) {
-            throw new IllegalArgumentException("Parents must not be null!");
+        if (parent != null && StringUtils.isBlank(parent)) {
+            throw new IllegalArgumentException("Parent must be null or not blank!");
         }
         if (methods == null) {
             throw new IllegalArgumentException("Methods must not be null!");
         }
         this.name = name;
-        this.parents = Set.copyOf(parents);
+        this.parent = parent;
         this.methods = Set.copyOf(methods);
     }
 
@@ -76,8 +77,8 @@ public final class Interface {
      * Returns (Set of) super types.
      * @return Collection, not null, may be empty.
      */
-    public Set<String> getParents() {
-        return parents;
+    public String getParent() {
+        return parent;
     }
 
     @Override
@@ -94,7 +95,7 @@ public final class Interface {
         if (!name.equals(that.name)) {
             return false;
         }
-        if (!parents.equals(that.parents)) {
+        if (!Objects.equals(parent, that.parent)) {
             return false;
         }
         return methods.equals(that.methods);
@@ -103,7 +104,7 @@ public final class Interface {
     @Override
     public int hashCode() {
         int result = name.hashCode();
-        result = 31 * result + parents.hashCode();
+        result = 31 * result + (parent != null ? parent.hashCode() : 0);
         result = 31 * result + methods.hashCode();
         return result;
     }

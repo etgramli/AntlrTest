@@ -85,10 +85,10 @@ class AbstractInterfaceBuilderTest {
 
         final String secondScopeName = "EndScope";
         final Set<Interface> expected = Set.of(
-                new Interface("BeginScope", Collections.emptySet(), Set.of(
+                new Interface("BeginScope", null, Set.of(
                         new Method(secondScopeName, "component"),
                         new Method(secondScopeName, "singleton"))),
-                new Interface(secondScopeName, Collections.emptySet(), Set.of(
+                new Interface(secondScopeName, null, Set.of(
                         new Method("void", "end")
                 )));
         assertEquals(expected, interfaces);
@@ -105,13 +105,13 @@ class AbstractInterfaceBuilderTest {
 
         final Set<Interface> interfaces = new JavaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE).getInterfaces(graph);
         final Set<Interface> expected = Set.of(
-                new Interface("BeginScope", Collections.emptySet(), Set.of(
+                new Interface("BeginScope", null, Set.of(
                         new Method("SingletonScope", "component"))),
-                new Interface("SingletonScope", Collections.emptySet(), Set.of(
+                new Interface("SingletonScope", null, Set.of(
                         new Method("IfaceScope", "singleton"))),
-                new Interface("IfaceScope", Collections.emptySet(), Set.of(
+                new Interface("IfaceScope", null, Set.of(
                         new Method("EndScope", "iface"))),
-                new Interface("EndScope", Collections.emptySet(), Set.of(
+                new Interface("EndScope", null, Set.of(
                         new Method("void", "end")
                 )));
         assertEquals(expected, interfaces);
@@ -148,12 +148,12 @@ class AbstractInterfaceBuilderTest {
         assertEquals(3, interfaces.size());
 
         final Set<Interface> expected = Set.of(
-                new Interface("BeginScope", Set.of("ComponentIfaceSingletonScope"), Collections.emptySet()),
-                new Interface("ComponentIfaceSingletonScope", Set.of("EndScope"), Set.of(
+                new Interface("BeginScope", "ComponentIfaceSingletonScope", Collections.emptySet()),
+                new Interface("ComponentIfaceSingletonScope", "EndScope", Set.of(
                         new Method("ComponentIfaceSingletonScope", "component"),
                         new Method("ComponentIfaceSingletonScope", "singleton"),
                         new Method("ComponentIfaceSingletonScope", "iface"))),
-                new Interface("EndScope", Collections.emptySet(), Set.of(
+                new Interface("EndScope", null, Set.of(
                         new Method("void", "end")
                 )));
         assertEquals(expected, interfaces);
@@ -203,16 +203,16 @@ class AbstractInterfaceBuilderTest {
                 new Method("ImplScopeScope4", "singleton", new Argument("String", "string"))
         );
         assertEquals(methods, begin.getMethods());
-        assertEquals(Collections.emptySet(), begin.getParents());
+        assertNull(begin.getParent());
 
         final Interface methodInterface = interfaces.stream().filter(i -> i.getName().equals("MethodScope")).findAny().get();
         methods = Set.of(new Method("MethodScope", "method", new Argument("String", "string")));
         assertEquals(methods, methodInterface.getMethods());
-        assertEquals(1, methodInterface.getParents().size());
+        assertNotNull(methodInterface.getParent());
 
         final Interface fieldInterface = interfaces.stream().filter(i -> i.getName().equals("FieldScope")).findAny().get();
         methods = Set.of(new Method("FieldScope", "field", new Argument("String", "string")));
         assertEquals(methods, fieldInterface.getMethods());
-        assertEquals(Set.of("EndScope"), fieldInterface.getParents());
+        assertEquals("EndScope", fieldInterface.getParent());
     }
 }
