@@ -33,7 +33,7 @@ class ScalaInterfaceBuilderTest {
         final Interface anInterface = new Interface("Test", null, Collections.emptySet());
         final String expected = StringUtil.removeAllWhiteSpaces(
                 "package " + DUMMY_PACKAGE + ";" + StringUtil.NEWLINE +
-                        " trait Test { }");
+                        " abstract class Test { }");
         final ScalaInterfaceBuilder builder = new ScalaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE);
         assertEquals(expected, StringUtil.removeAllWhiteSpaces(builder.renderInterface(anInterface)));
     }
@@ -44,7 +44,7 @@ class ScalaInterfaceBuilderTest {
         final Interface anInterface = new Interface("Test", parent, Collections.emptySet());
         final String expected = StringUtil.removeAllWhiteSpaces(
                 "package " + DUMMY_PACKAGE + ";" + StringUtil.NEWLINE +
-                        " trait Test extends " + parent + "{ }");
+                        " abstract class Test extends " + parent + "{ }");
         final ScalaInterfaceBuilder builder = new ScalaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE);
         assertEquals(expected, StringUtil.removeAllWhiteSpaces(builder.renderInterface(anInterface)));
     }
@@ -59,13 +59,13 @@ class ScalaInterfaceBuilderTest {
         final Interface anInterface = new Interface("Test", null, methods);
         final String expectedA = StringUtil.removeAllWhiteSpaces(
                 "package " + DUMMY_PACKAGE + ";" + StringUtil.NEWLINE +
-                        " trait Test {" +
+                        " abstract class Test {" +
                         "def getX() : int" +
                         "def getY() : int" +
                         " }");
         final String expectedB = StringUtil.removeAllWhiteSpaces(
                 "package " + DUMMY_PACKAGE + ";" + StringUtil.NEWLINE +
-                        " trait Test {" +
+                        " abstract class Test {" +
                         "def getY() : int" +
                         "def getX() : int" +
                         " }");
@@ -90,13 +90,13 @@ class ScalaInterfaceBuilderTest {
         final Interface anInterface = new Interface("Test", null, methods);
         final String expectedA = StringUtil.removeAllWhiteSpaces(
                 "package " + DUMMY_PACKAGE + ";" + StringUtil.NEWLINE +
-                        " trait Test {" +
+                        " abstract class Test {" +
                         "def getX(a : int, b : int) : int" +
                         "def getY(a : int, b : int) : int" +
                         " }");
         final String expectedB = StringUtil.removeAllWhiteSpaces(
                 "package " + DUMMY_PACKAGE + ";" + StringUtil.NEWLINE +
-                        "trait Test {" +
+                        "abstract class Test {" +
                         "def getY(a : int, b : int) : int" +
                         "def getX(a : int, b : int) : int" +
                         " }");

@@ -16,7 +16,7 @@ javaMethod(returnType,name,firstArgument,arguments) ::= <<
 scalaTrait(package,interfaceName,parent,methods) ::= <<
 package <package>;
 
-trait <interfaceName> <parent:{parent| extends <parent>}> {
+abstract class <interfaceName> <parent:{parent| extends <parent>}> {
     <methods:{method|<scalaMethod(returnType=method.returnType,name=method.name,firstArgument=first(method.arguments),arguments=rest(method.arguments))>}>
 }
 

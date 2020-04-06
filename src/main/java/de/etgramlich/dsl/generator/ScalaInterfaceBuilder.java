@@ -3,6 +3,11 @@ package de.etgramlich.dsl.generator;
 import de.etgramlich.dsl.util.StringUtil;
 import org.stringtemplate.v4.ST;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 public final class ScalaInterfaceBuilder extends AbstractInterfaceBuilder {
     /**
      * Default file ending for scala source files.
@@ -33,12 +38,24 @@ public final class ScalaInterfaceBuilder extends AbstractInterfaceBuilder {
         final ST st = ST_GROUP.getInstanceOf(INTERFACE_NAME)
                 .add("package", getTargetPackage())
                 .add("interfaceName", anInterface.getName())
-                .add("methods", anInterface.getMethods());
+                .add("methods", replaceVoidReturnType(anInterface.getMethods()));
 
         if (anInterface.getParent() != null) {
             st.add("parent", anInterface.getParent());
         }
 
         return st.render();
+    }
+
+    private static Set<Method> replaceVoidReturnType(final Collection<Method> methods) {
+        final Set<Method> methodSet = new HashSet<>(methods.size());
+        for (Method method : methods) {
+            if (method.getReturnType().equals("void")) {
+                methodSet.add(new Method("Unit", method.getName(), method.getArguments()));
+            } else {
+                methodSet.add(method);
+            }
+        }
+        return Collections.unmodifiableSet(methodSet);
     }
 }
