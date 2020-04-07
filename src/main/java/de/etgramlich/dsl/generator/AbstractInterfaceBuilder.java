@@ -177,7 +177,7 @@ public abstract class AbstractInterfaceBuilder implements InterfaceBuilder {
                 .map(ScopeEdge::getTarget)
                 .collect(Collectors.toUnmodifiableSet());
         if (parents.size() > 1) {
-            throw new IllegalArgumentException("Must not have more than one parent, multiple inheritance is not allowed! (found "
+            throw new IllegalArgumentException("Must only have one parent, multiple inheritance is not allowed! (found "
                     + parents.size() + ")");
         }
         if (parents.iterator().hasNext()) {
