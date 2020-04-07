@@ -17,6 +17,7 @@ import de.etgramlich.dsl.util.StringUtil;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -30,7 +31,7 @@ class JavaInterfaceBuilderTest {
 
     @Test
     void renderInterface_interfaceWithOnlyName() {
-        final Interface anInterface = new Interface("Test", null, Collections.emptySet());
+        final Interface anInterface = new Interface("Test", Collections.emptySet(), Collections.emptySet());
         final String expected = StringUtil.removeAllWhiteSpaces(
                 "package " + DUMMY_PACKAGE + ";" + StringUtil.NEWLINE +
                         " interface Test { }");
@@ -40,11 +41,23 @@ class JavaInterfaceBuilderTest {
 
     @Test
     void renderInterface_interfaceWithOneParent() {
-        final String parent = "SuperInterface";
-        final Interface anInterface = new Interface("Test", parent, Collections.emptySet());
+        final Set<String> parents = Set.of("SuperInterface");
+        final Interface anInterface = new Interface("Test", parents, Collections.emptySet());
         final String expected = StringUtil.removeAllWhiteSpaces(
                 "package " + DUMMY_PACKAGE + ";" + StringUtil.NEWLINE +
-                        " interface Test extends " + parent + "{ }");
+                        " interface Test extends " + parents.iterator().next() + "{ }");
+        final JavaInterfaceBuilder builder = new JavaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE);
+        assertEquals(expected, StringUtil.removeAllWhiteSpaces(builder.renderInterface(anInterface)));
+    }
+
+    @Test
+    void renderInterface_interfaceWithMultipleParents() {
+        final Set<String> parents = Set.of("SuperInterface", "OtherParent");
+        final Iterator<String> parentIterator = parents.iterator();
+        final Interface anInterface = new Interface("Test", parents, Collections.emptySet());
+        final String expected = StringUtil.removeAllWhiteSpaces(
+                "package " + DUMMY_PACKAGE + ";" + StringUtil.NEWLINE +
+                "interface Test extends " + parentIterator.next() + ", " + parentIterator.next() + "{ }");
         final JavaInterfaceBuilder builder = new JavaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE);
         assertEquals(expected, StringUtil.removeAllWhiteSpaces(builder.renderInterface(anInterface)));
     }
@@ -56,7 +69,7 @@ class JavaInterfaceBuilderTest {
                 new Method("int", "getY")
         );
 
-        final Interface anInterface = new Interface("Test", null, methods);
+        final Interface anInterface = new Interface("Test", Collections.emptySet(), methods);
         final String expectedA = StringUtil.removeAllWhiteSpaces(
                 "package " + DUMMY_PACKAGE + ";" + StringUtil.NEWLINE +
                 " interface Test {" +
@@ -87,7 +100,7 @@ class JavaInterfaceBuilderTest {
                 ))
         );
 
-        final Interface anInterface = new Interface("Test", null, methods);
+        final Interface anInterface = new Interface("Test", Collections.emptySet(), methods);
         final String expectedA = StringUtil.removeAllWhiteSpaces(
                 "package " + DUMMY_PACKAGE + ";" + StringUtil.NEWLINE +
                 " interface Test {" +

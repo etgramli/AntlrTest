@@ -1,12 +1,11 @@
 package de.etgramlich.dsl.generator;
 
 import de.etgramlich.dsl.util.StringUtil;
-import org.stringtemplate.v4.ST;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.HashSet;
 
 public final class ScalaInterfaceBuilder extends AbstractInterfaceBuilder {
     /**
@@ -35,16 +34,12 @@ public final class ScalaInterfaceBuilder extends AbstractInterfaceBuilder {
             throw new IllegalArgumentException("Interface name must start with an upper case letter!");
         }
 
-        final ST st = ST_GROUP.getInstanceOf(INTERFACE_NAME)
+        return ST_GROUP.getInstanceOf(INTERFACE_NAME)
                 .add("package", getTargetPackage())
                 .add("interfaceName", anInterface.getName())
-                .add("methods", replaceVoidReturnType(anInterface.getMethods()));
-
-        if (anInterface.getParent() != null) {
-            st.add("parent", anInterface.getParent());
-        }
-
-        return st.render();
+                .add("methods", replaceVoidReturnType(anInterface.getMethods()))
+                .add("parents", anInterface.getParents())
+                .render();
     }
 
     private static Set<Method> replaceVoidReturnType(final Collection<Method> methods) {

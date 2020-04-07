@@ -1,7 +1,7 @@
-javaInterface(package,interfaceName,parent,methods) ::= <<
+javaInterface(package,interfaceName,parents,methods) ::= <<
 package <package>;
 
-interface <interfaceName> <parent:{parent|extends <parent> }>{<methods:{method|<javaMethod(returnType=method.returnType,name=method.name,firstArgument=first(method.arguments),arguments=rest(method.arguments))>}>
+interface <interfaceName> <if(parents)>extends <parents;separator=", "> <endif>{<methods:{method|<javaMethod(returnType=method.returnType,name=method.name,firstArgument=first(method.arguments),arguments=rest(method.arguments))>}>
 }
 
 >>
@@ -12,10 +12,10 @@ javaMethod(returnType,name,firstArgument,arguments) ::= <<
 >>
 
 
-scalaTrait(package,interfaceName,parent,methods) ::= <<
+scalaTrait(package,interfaceName,parents,methods) ::= <<
 package <package>;
 
-abstract class <interfaceName> <parent:{parent|extends <parent> }>{<methods:{method|<scalaMethod(returnType=method.returnType,name=method.name,firstArgument=first(method.arguments),arguments=rest(method.arguments))>}>
+trait <interfaceName> <if(parents)>extends <parents;separator=" with "> <endif>{<methods:{method|<scalaMethod(returnType=method.returnType,name=method.name,firstArgument=first(method.arguments),arguments=rest(method.arguments))>}>
 }
 
 >>

@@ -1,7 +1,6 @@
 package de.etgramlich.dsl.generator;
 
 import de.etgramlich.dsl.util.StringUtil;
-import org.stringtemplate.v4.ST;
 
 /**
  * Creates Java interfaces from a BnfRuleGraph and saves them to files.
@@ -40,15 +39,11 @@ public final class JavaInterfaceBuilder extends AbstractInterfaceBuilder {
                     + anInterface.getName() + ")");
         }
 
-        final ST st = ST_GROUP.getInstanceOf(INTERFACE_NAME)
+        return ST_GROUP.getInstanceOf(INTERFACE_NAME)
                 .add("package", getTargetPackage())
                 .add("interfaceName", anInterface.getName())
-                .add("methods", anInterface.getMethods());
-
-        if (anInterface.getParent() != null) {
-            st.add("parent", anInterface.getParent());
-        }
-
-        return st.render();
+                .add("methods", anInterface.getMethods())
+                .add("parents", anInterface.getParents())
+                .render();
     }
 }
