@@ -159,7 +159,7 @@ public abstract class AbstractInterfaceBuilder implements InterfaceBuilder {
         return new Interface(anInterface.getName(), newParents, methods);
     }
 
-    protected static Interface getInterface(final Scope currentScope, final BnfRuleGraph graph) {
+    protected final Interface getInterface(final Scope currentScope, final BnfRuleGraph graph) {
         final Set<String> parents = getParents(currentScope, graph).stream()
                 .map(Scope::getName)
                 .collect(Collectors.toUnmodifiableSet());
@@ -186,7 +186,7 @@ public abstract class AbstractInterfaceBuilder implements InterfaceBuilder {
      * @param graph Graph with the EBNF representation.
      * @return List of Methods, not null, may be empty.
      */
-    private static Set<Method> getMethods(final Scope scope, final BnfRuleGraph graph) {
+    private Set<Method> getMethods(final Scope scope, final BnfRuleGraph graph) {
         return graph.outgoingEdgesOf(scope).stream()
                 .filter(edge -> edge instanceof NodeEdge)
                 .map(edge -> (NodeEdge) edge)
@@ -201,7 +201,7 @@ public abstract class AbstractInterfaceBuilder implements InterfaceBuilder {
      * @param graph BnfRuleGraph, must not be null, must contain edge.
      * @return Set of Method, not null, not empty.
      */
-    private static Set<Method> methodsFromNodeEdge(final NodeEdge edge, final BnfRuleGraph graph) {
+    private Set<Method> methodsFromNodeEdge(final NodeEdge edge, final BnfRuleGraph graph) {
         final Set<Scope> subsequent = graph.getSubsequentType(edge.getTarget());
         if (subsequent.isEmpty()) {
             return Set.of(new Method(edge.getTarget().getName(), edge.getNode().getName(), Collections.emptyList()));
@@ -218,7 +218,7 @@ public abstract class AbstractInterfaceBuilder implements InterfaceBuilder {
      * @param graph BnfRuleGraph, must not be null, must contain edge.
      * @return New Argument object.
      */
-    private static Argument getArgument(final NodeEdge nodeEdge, final BnfRuleGraph graph) {
+    private Argument getArgument(final NodeEdge nodeEdge, final BnfRuleGraph graph) {
         if (nodeEdge == null) {
             throw new IllegalArgumentException("NodeEdge must not be null!");
         }
@@ -233,7 +233,11 @@ public abstract class AbstractInterfaceBuilder implements InterfaceBuilder {
             throw new IllegalArgumentException("Type of preceding node is not Type, but was: "
                     + follower.getType().toString());
         }
-        return new Argument(follower.getName(), StringUtil.firstCharToLowerCase(follower.getName()));
+        String argumentName = StringUtil.firstCharToLowerCase(follower.getName());
+        if (!symbolTable.isValidName(argumentName)) {
+            argumentName = "a" + StringUtil.firstCharToUpperCase(argumentName);
+        }
+        return new Argument(follower.getName(), argumentName);
     }
 
     @Override
