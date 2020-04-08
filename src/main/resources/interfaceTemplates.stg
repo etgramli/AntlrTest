@@ -1,7 +1,7 @@
 javaInterface(package,interfaceName,parents,methods) ::= <<
 package <package>;
 
-interface <interfaceName> <if(parents)>extends <parents;separator=", "> <endif>{<methods:{method|<javaMethod(returnType=method.returnType,name=method.name,firstArgument=first(method.arguments),arguments=rest(method.arguments))>}>
+public interface <interfaceName> <if(parents)>extends <parents;separator=", "> <endif>{<methods:{method|<javaMethod(returnType=method.returnType,name=method.name,firstArgument=first(method.arguments),arguments=rest(method.arguments))>}>
 }
 
 >>

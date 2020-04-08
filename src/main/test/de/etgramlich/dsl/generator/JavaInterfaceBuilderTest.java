@@ -34,7 +34,7 @@ class JavaInterfaceBuilderTest {
         final Interface anInterface = new Interface("Test", Collections.emptySet(), Collections.emptySet());
         final String expected = StringUtil.removeAllWhiteSpaces(
                 "package " + DUMMY_PACKAGE + ";" + StringUtil.NEWLINE +
-                        " interface Test { }");
+                        " public interface Test { }");
         final JavaInterfaceBuilder builder = new JavaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE);
         assertEquals(expected, StringUtil.removeAllWhiteSpaces(builder.renderInterface(anInterface)));
     }
@@ -45,7 +45,7 @@ class JavaInterfaceBuilderTest {
         final Interface anInterface = new Interface("Test", parents, Collections.emptySet());
         final String expected = StringUtil.removeAllWhiteSpaces(
                 "package " + DUMMY_PACKAGE + ";" + StringUtil.NEWLINE +
-                        " interface Test extends " + parents.iterator().next() + "{ }");
+                        " public interface Test extends " + parents.iterator().next() + "{ }");
         final JavaInterfaceBuilder builder = new JavaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE);
         assertEquals(expected, StringUtil.removeAllWhiteSpaces(builder.renderInterface(anInterface)));
     }
@@ -57,7 +57,7 @@ class JavaInterfaceBuilderTest {
         final Interface anInterface = new Interface("Test", parents, Collections.emptySet());
         final String expected = StringUtil.removeAllWhiteSpaces(
                 "package " + DUMMY_PACKAGE + ";" + StringUtil.NEWLINE +
-                "interface Test extends " + parentIterator.next() + ", " + parentIterator.next() + "{ }");
+                "public interface Test extends " + parentIterator.next() + ", " + parentIterator.next() + "{ }");
         final JavaInterfaceBuilder builder = new JavaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE);
         assertEquals(expected, StringUtil.removeAllWhiteSpaces(builder.renderInterface(anInterface)));
     }
@@ -72,13 +72,13 @@ class JavaInterfaceBuilderTest {
         final Interface anInterface = new Interface("Test", Collections.emptySet(), methods);
         final String expectedA = StringUtil.removeAllWhiteSpaces(
                 "package " + DUMMY_PACKAGE + ";" + StringUtil.NEWLINE +
-                " interface Test {" +
+                " public interface Test {" +
                     "int getX();" +
                     "int getY();" +
                 " }");
         final String expectedB = StringUtil.removeAllWhiteSpaces(
                 "package " + DUMMY_PACKAGE + ";" + StringUtil.NEWLINE +
-                " interface Test {" +
+                " public interface Test {" +
                     "int getY();" +
                     "int getX();" +
                 " }");
@@ -103,13 +103,13 @@ class JavaInterfaceBuilderTest {
         final Interface anInterface = new Interface("Test", Collections.emptySet(), methods);
         final String expectedA = StringUtil.removeAllWhiteSpaces(
                 "package " + DUMMY_PACKAGE + ";" + StringUtil.NEWLINE +
-                " interface Test {" +
+                " public interface Test {" +
                     "int getX(int a, int b);" +
                     "int getY(int a, int b);" +
                 " }");
         final String expectedB = StringUtil.removeAllWhiteSpaces(
                 "package " + DUMMY_PACKAGE + ";" + StringUtil.NEWLINE +
-                "interface Test {" +
+                "public interface Test {" +
                     "int getY(int a, int b);" +
                     "int getX(int a, int b);" +
                 " }");
