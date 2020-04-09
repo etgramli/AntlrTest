@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.stream.Collectors;
 
 public final class ScalaInterfaceBuilder extends AbstractInterfaceBuilder {
     /**
@@ -43,14 +44,9 @@ public final class ScalaInterfaceBuilder extends AbstractInterfaceBuilder {
     }
 
     private static Set<Method> replaceVoidReturnType(final Collection<Method> methods) {
-        final Set<Method> methodSet = new HashSet<>(methods.size());
-        for (Method method : methods) {
-            if (method.getReturnType().equals("void")) {
-                methodSet.add(new Method("Unit", method.getName(), method.getArguments()));
-            } else {
-                methodSet.add(method);
-            }
-        }
-        return Collections.unmodifiableSet(methodSet);
+        return methods.stream()
+                .map(method -> method.getReturnType().equals("void")
+                        ? new Method("Unit", method.getName(), method.getArguments()) : method)
+                .collect(Collectors.toUnmodifiableSet());
     }
 }

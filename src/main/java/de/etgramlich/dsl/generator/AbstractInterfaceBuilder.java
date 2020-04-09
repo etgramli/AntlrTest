@@ -117,8 +117,8 @@ public abstract class AbstractInterfaceBuilder implements InterfaceBuilder {
 
         // Used to detect collision of readable scope names
         final Map<String, String> scopeToReadable = new HashMap<>(graph.vertexSet().size());
-        Scope currentScope = graph.getEndScope();
-        while (currentScope != null) {
+
+        for (Scope currentScope = graph.getEndScope(); currentScope != null; currentScope = toVisitNext.pollFirst()) {
             final Interface currentInterface = getInterface(currentScope, graph);
             if (scopeToReadable.containsValue(currentInterface.getName())) {
                 currentInterface.setName(currentInterface.getName() + currentScope.getName());
@@ -134,7 +134,6 @@ public abstract class AbstractInterfaceBuilder implements InterfaceBuilder {
                     .filter(edge -> edge instanceof OptionalEdge)
                     .map(ScopeEdge::getSource)
                     .forEach(toVisitNext::add);
-            currentScope = toVisitNext.pollFirst();
         }
 
         return interfaces.stream()
@@ -146,15 +145,10 @@ public abstract class AbstractInterfaceBuilder implements InterfaceBuilder {
         final Set<String> newParents = anInterface.getParents().stream()
                 .map(scopeToReadable::get)
                 .collect(Collectors.toUnmodifiableSet());
-
-        final Set<Method> methods = new HashSet<>();
-        for (Method m : anInterface.getMethods()) {
-            if (scopeToReadable.containsKey(m.getReturnType())) {
-                methods.add(new Method(scopeToReadable.get(m.getReturnType()), m.getName(), m.getArguments()));
-            } else {
-                methods.add(m);
-            }
-        }
+        final Set<Method> methods = anInterface.getMethods().stream()
+                .map(m -> scopeToReadable.containsKey(m.getReturnType())
+                        ? new Method(scopeToReadable.get(m.getReturnType()), m.getName(), m.getArguments()) : m)
+                .collect(Collectors.toUnmodifiableSet());
 
         return new Interface(anInterface.getName(), newParents, methods);
     }
@@ -163,12 +157,9 @@ public abstract class AbstractInterfaceBuilder implements InterfaceBuilder {
         final Set<String> parents = getParents(currentScope, graph).stream()
                 .map(Scope::getName)
                 .collect(Collectors.toUnmodifiableSet());
-        final Set<Method> methods;
-        if (currentScope == graph.getEndScope()) {
-            methods = Set.of(new Method("void", "end"));
-        } else {
-            methods = getMethods(currentScope, graph);
-        }
+        final Set<Method> methods = currentScope == graph.getEndScope()
+                ? Set.of(new Method("void", "end")) : getMethods(currentScope, graph);
+
         return new Interface(graph.getReadableString(currentScope), parents, methods);
     }
 
@@ -225,10 +216,11 @@ public abstract class AbstractInterfaceBuilder implements InterfaceBuilder {
         if (!nodeEdge.getNode().getType().equals(NodeType.KEYWORD)) {
             throw new IllegalArgumentException("Preceding node type must be KEYWORD!");
         }
-        if (graph.getOutGoingNodes(nodeEdge.getTarget()).size() > 1) {
+        final Set<Node> outgoingNodes = graph.getOutGoingNodes(nodeEdge.getTarget());
+        if (outgoingNodes.size() > 1) {
             throw new IllegalArgumentException("Type node must be followed by exactly one Type node edge!");
         }
-        final Node follower = graph.getOutGoingNodes(nodeEdge.getTarget()).iterator().next();
+        final Node follower = outgoingNodes.iterator().next();
         if (!follower.getType().equals(NodeType.TYPE)) {
             throw new IllegalArgumentException("Type of preceding node is not Type, but was: "
                     + follower.getType().toString());
