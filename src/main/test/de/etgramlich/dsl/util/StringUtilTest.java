@@ -151,58 +151,6 @@ class StringUtilTest {
     }
 
     @Test
-    void removeDuplicates_emptyList_returnsEmptyList() {
-        final List<String> original = Collections.emptyList();
-
-        final List<String> noDuplicates = StringUtil.removeDuplicates(original);
-        assertNotSame(noDuplicates, original);
-        assertEquals(original, noDuplicates);
-    }
-
-    @Test
-    void removeDuplicates_hasDuplicates_returnsListWithNoDuplicateElements() {
-        final List<String> expected = List.of(
-                "First",
-                "Second",
-                "Third",
-                "4",
-                "Fünf"
-        );
-        final List<String> original = List.of(
-                "First",
-                "Second",
-                "Second",
-                "Second",
-                "Third",
-                "First",
-                "4",
-                "Fünf",
-                "Third",
-                "4",
-                "First"
-        );
-
-        final List<String> noDuplicates = StringUtil.removeDuplicates(original);
-        assertNotSame(noDuplicates, original);
-        assertEquals(expected, noDuplicates);
-    }
-
-    @Test
-    void removeDuplicates_hasNoDuplicates_returnsListWithSameElements() {
-        final List<String> original = List.of(
-                "First",
-                "Second",
-                "Third",
-                "4",
-                "Fünf"
-        );
-
-        final List<String> noDuplicates = StringUtil.removeDuplicates(original);
-        assertNotSame(noDuplicates, original);
-        assertEquals(original, noDuplicates);
-    }
-
-    @Test
     void isAllBlank_noBlankLines_returnsFalse() {
         final List<String> lines = List.of(
                 "First line",

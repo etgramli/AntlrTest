@@ -3,10 +3,11 @@ package de.etgramlich.dsl.util;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 
+import java.nio.CharBuffer;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.Collections;
-import java.util.Collection;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -55,15 +56,6 @@ public final class StringUtil extends StringUtils {
     }
 
     /**
-     * Removes duplicate lines from the list.
-     * @param lines List of Strings, must not be null.
-     * @return List of Strings, not null.
-     */
-    public static List<String> removeDuplicates(final List<String> lines) {
-        return lines.stream().distinct().collect(Collectors.toList());
-    }
-
-    /**
      * Determines if all Strings in the collection are blank.
      * @param lines Collection of String, must not be null.
      * @return True if all Strings are blank.
@@ -99,11 +91,7 @@ public final class StringUtil extends StringUtils {
         if (cs == null || cs.length == 0) {
             return false;
         }
-        return toCharList(cs).stream().filter(c -> !isNumeric(c)).findAny().isEmpty();
-    }
-
-    private static List<Character> toCharList(final char... cs) {
-        return new String(cs).chars().mapToObj(c -> (char) c).collect(Collectors.toList());
+        return CharBuffer.wrap(cs).chars().mapToObj(c -> (char) c).allMatch(StringUtil::isNumeric);
     }
 
     /**

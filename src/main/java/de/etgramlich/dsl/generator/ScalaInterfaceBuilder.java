@@ -3,9 +3,7 @@ package de.etgramlich.dsl.generator;
 import de.etgramlich.dsl.util.StringUtil;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Set;
-import java.util.HashSet;
 import java.util.stream.Collectors;
 
 public final class ScalaInterfaceBuilder extends AbstractInterfaceBuilder {
