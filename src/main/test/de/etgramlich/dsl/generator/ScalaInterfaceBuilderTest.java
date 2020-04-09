@@ -35,7 +35,7 @@ class ScalaInterfaceBuilderTest {
         final String expected = StringUtil.removeAllWhiteSpaces(
                 "package " + DUMMY_PACKAGE + ";" + StringUtil.NEWLINE +
                         " trait Test { }");
-        final ScalaInterfaceBuilder builder = new ScalaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE);
+        final ScalaInterfaceBuilder builder = new ScalaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE, null);
         assertEquals(expected, StringUtil.removeAllWhiteSpaces(builder.renderInterface(anInterface)));
     }
 
@@ -46,7 +46,7 @@ class ScalaInterfaceBuilderTest {
         final String expected = StringUtil.removeAllWhiteSpaces(
                 "package " + DUMMY_PACKAGE + ";" + StringUtil.NEWLINE +
                         " trait Test extends " + parents.iterator().next() + "{ }");
-        final ScalaInterfaceBuilder builder = new ScalaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE);
+        final ScalaInterfaceBuilder builder = new ScalaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE, null);
         assertEquals(expected, StringUtil.removeAllWhiteSpaces(builder.renderInterface(anInterface)));
     }
 
@@ -58,7 +58,7 @@ class ScalaInterfaceBuilderTest {
         final String expected = StringUtil.removeAllWhiteSpaces(
                 "package " + DUMMY_PACKAGE + ";" + StringUtil.NEWLINE +
                         "trait Test extends " + parentIterator.next() + " with " + parentIterator.next() + "{ }");
-        final ScalaInterfaceBuilder builder = new ScalaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE);
+        final ScalaInterfaceBuilder builder = new ScalaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE, null);
         assertEquals(expected, StringUtil.removeAllWhiteSpaces(builder.renderInterface(anInterface)));
     }
 
@@ -82,7 +82,7 @@ class ScalaInterfaceBuilderTest {
                         "def getY() : int" +
                         "def getX() : int" +
                         " }");
-        final ScalaInterfaceBuilder builder = new ScalaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE);
+        final ScalaInterfaceBuilder builder = new ScalaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE, null);
         final String interfaceString = StringUtil.removeAllWhiteSpaces(builder.renderInterface(anInterface));
         assertTrue(interfaceString.equals(expectedA) || interfaceString.equals(expectedB));
     }
@@ -113,7 +113,7 @@ class ScalaInterfaceBuilderTest {
                         "def getY(a : int, b : int) : int" +
                         "def getX(a : int, b : int) : int" +
                         " }");
-        final ScalaInterfaceBuilder builder = new ScalaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE);
+        final ScalaInterfaceBuilder builder = new ScalaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE, null);
         final String interfaceString = StringUtil.removeAllWhiteSpaces(builder.renderInterface(anInterface));
         assertTrue(interfaceString.equals(expectedA) || interfaceString.equals(expectedB));
     }
@@ -137,7 +137,7 @@ class ScalaInterfaceBuilderTest {
                                         new Keyword("field"), new Type("String"))))))
                         )))))).getGraph();
 
-        final ScalaInterfaceBuilder ib = new ScalaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE);
+        final ScalaInterfaceBuilder ib = new ScalaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE, null);
         final Set<Interface> interfaces = ib.getInterfaces(graph);
         assertEquals(10, interfaces.size());
 

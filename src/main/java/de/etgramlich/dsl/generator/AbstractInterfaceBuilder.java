@@ -66,13 +66,19 @@ public abstract class AbstractInterfaceBuilder implements InterfaceBuilder {
     private final String fileEnding;
 
     /**
+     * Return type of the end method.
+     */
+    private final String returnType;
+
+    /**
      * Saves already saved interfaces, contains mapping from grammar keywords to java keywords.
      */
     private final SymbolTable symbolTable;
 
     protected AbstractInterfaceBuilder(final String targetDirectory,
                                        final String targetPackage,
-                                       final String fileEnding) {
+                                       final String fileEnding,
+                                       final String returnType) {
         if (StringUtils.isBlank(targetDirectory)) {
             throw new IllegalArgumentException("Target directory must not be blank!");
         }
@@ -82,9 +88,13 @@ public abstract class AbstractInterfaceBuilder implements InterfaceBuilder {
         if (StringUtil.isBlank(fileEnding)) {
             throw new IllegalArgumentException("File ending must not be blank!");
         }
+        if (returnType != null && StringUtil.isBlank(returnType)) {
+            throw new IllegalArgumentException("Return type must be null or not be blank! (was: " + returnType + ")");
+        }
         this.targetPackage = targetPackage;
         this.packageDirectory = targetDirectory + File.separator + targetPackage.replace('.', File.separatorChar);
         this.fileEnding = fileEnding;
+        this.returnType = returnType;
         this.symbolTable = new SymbolTable();
     }
 
@@ -159,7 +169,8 @@ public abstract class AbstractInterfaceBuilder implements InterfaceBuilder {
                 .map(Scope::getName)
                 .collect(Collectors.toUnmodifiableSet());
         final Set<Method> methods = currentScope == graph.getEndScope()
-                ? Set.of(new Method("void", "end")) : getMethods(currentScope, graph);
+                ? Set.of(new Method(returnType == null ? "void" : returnType, "end"))
+                : getMethods(currentScope, graph);
 
         return new Interface(graph.getReadableString(currentScope), parents, methods);
     }

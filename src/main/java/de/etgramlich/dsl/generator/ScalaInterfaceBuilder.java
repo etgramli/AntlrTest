@@ -22,9 +22,10 @@ public final class ScalaInterfaceBuilder extends AbstractInterfaceBuilder {
      *
      * @param targetDirectory Target directory to contain all interfaces.
      * @param targetPackage   Package of the interfaces (a subfolder will be created in target directory).
+     * @param returnType Return type of ht´the end method, may be null, otherwise must not be blank.
      */
-    public ScalaInterfaceBuilder(final String targetDirectory, final String targetPackage) {
-        super(targetDirectory, targetPackage, DEFAULT_FILE_ENDING);
+    public ScalaInterfaceBuilder(final String targetDirectory, final String targetPackage, final String returnType) {
+        super(targetDirectory, targetPackage, DEFAULT_FILE_ENDING, returnType);
     }
 
     @Override

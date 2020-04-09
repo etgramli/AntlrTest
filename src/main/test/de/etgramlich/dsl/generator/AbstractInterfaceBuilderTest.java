@@ -82,7 +82,7 @@ class AbstractInterfaceBuilderTest {
                         new Sequence(List.of(new Keyword("component"))),
                         new Sequence(List.of(new Keyword("singleton"))))))).getGraph();
 
-        final Set<Interface> interfaces = new JavaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE).getInterfaces(graph);
+        final Set<Interface> interfaces = new JavaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE, null).getInterfaces(graph);
         assertEquals(2, interfaces.size());
 
         final String secondScopeName = "EndScope";
@@ -105,7 +105,7 @@ class AbstractInterfaceBuilderTest {
                                 new Keyword("singleton"),
                                 new Keyword("iface"))))))).getGraph();
 
-        final Set<Interface> interfaces = new JavaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE).getInterfaces(graph);
+        final Set<Interface> interfaces = new JavaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE, null).getInterfaces(graph);
         final Set<Interface> expected = Set.of(
                 new Interface("BeginScope", Collections.emptySet(), Set.of(
                         new Method("SingletonScope", "component"))),
@@ -130,7 +130,7 @@ class AbstractInterfaceBuilderTest {
 
         assertEquals(expected, getInterfacesToSave(graph));
 
-        final Set<String> actual = new JavaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE).getInterfaces(graph).stream()
+        final Set<String> actual = new JavaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE, null).getInterfaces(graph).stream()
                 .map(Interface::getName)
                 .collect(Collectors.toUnmodifiableSet());
         assertEquals(expected, actual);
@@ -145,7 +145,7 @@ class AbstractInterfaceBuilderTest {
                                 new Sequence(List.of(new Keyword("singleton"))),
                                 new Sequence(List.of(new Keyword("iface")))))))))))).getGraph();
 
-        final Set<Interface> interfaces = new JavaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE).getInterfaces(graph);
+        final Set<Interface> interfaces = new JavaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE, null).getInterfaces(graph);
         assertEquals(3, interfaces.size());
 
         final Set<Interface> expected = Set.of(
@@ -170,7 +170,7 @@ class AbstractInterfaceBuilderTest {
 
         assertEquals(expected, getInterfacesToSave(graph));
 
-        final Set<String> actual = new JavaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE).getInterfaces(graph).stream()
+        final Set<String> actual = new JavaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE, null).getInterfaces(graph).stream()
                 .map(Interface::getName)
                 .collect(Collectors.toUnmodifiableSet());
         assertEquals(expected, actual);
@@ -195,7 +195,7 @@ class AbstractInterfaceBuilderTest {
                                         new Keyword("field"), new Type("String"))))))
                         )))))).getGraph();
 
-        final Set<Interface> interfaces = new JavaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE).getInterfaces(graph);
+        final Set<Interface> interfaces = new JavaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE, null).getInterfaces(graph);
 
         final Interface begin = interfaces.stream().filter(i -> i.getName().equals("BeginScope")).findAny().get();
         Set<Method> methods = Set.of(

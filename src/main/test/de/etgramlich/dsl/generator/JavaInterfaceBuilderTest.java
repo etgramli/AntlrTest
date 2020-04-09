@@ -35,7 +35,7 @@ class JavaInterfaceBuilderTest {
         final String expected = StringUtil.removeAllWhiteSpaces(
                 "package " + DUMMY_PACKAGE + ";" + StringUtil.NEWLINE +
                         " public interface Test { }");
-        final JavaInterfaceBuilder builder = new JavaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE);
+        final JavaInterfaceBuilder builder = new JavaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE, null);
         assertEquals(expected, StringUtil.removeAllWhiteSpaces(builder.renderInterface(anInterface)));
     }
 
@@ -46,7 +46,7 @@ class JavaInterfaceBuilderTest {
         final String expected = StringUtil.removeAllWhiteSpaces(
                 "package " + DUMMY_PACKAGE + ";" + StringUtil.NEWLINE +
                         " public interface Test extends " + parents.iterator().next() + "{ }");
-        final JavaInterfaceBuilder builder = new JavaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE);
+        final JavaInterfaceBuilder builder = new JavaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE, null);
         assertEquals(expected, StringUtil.removeAllWhiteSpaces(builder.renderInterface(anInterface)));
     }
 
@@ -58,7 +58,7 @@ class JavaInterfaceBuilderTest {
         final String expected = StringUtil.removeAllWhiteSpaces(
                 "package " + DUMMY_PACKAGE + ";" + StringUtil.NEWLINE +
                 "public interface Test extends " + parentIterator.next() + ", " + parentIterator.next() + "{ }");
-        final JavaInterfaceBuilder builder = new JavaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE);
+        final JavaInterfaceBuilder builder = new JavaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE, null);
         assertEquals(expected, StringUtil.removeAllWhiteSpaces(builder.renderInterface(anInterface)));
     }
 
@@ -82,7 +82,7 @@ class JavaInterfaceBuilderTest {
                     "int getY();" +
                     "int getX();" +
                 " }");
-        final JavaInterfaceBuilder builder = new JavaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE);
+        final JavaInterfaceBuilder builder = new JavaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE, null);
         final String interfaceString = StringUtil.removeAllWhiteSpaces(builder.renderInterface(anInterface));
         assertTrue(interfaceString.equals(expectedA) || interfaceString.equals(expectedB));
     }
@@ -113,7 +113,7 @@ class JavaInterfaceBuilderTest {
                     "int getY(int a, int b);" +
                     "int getX(int a, int b);" +
                 " }");
-        final JavaInterfaceBuilder builder = new JavaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE);
+        final JavaInterfaceBuilder builder = new JavaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE, null);
         final String interfaceString = StringUtil.removeAllWhiteSpaces(builder.renderInterface(anInterface));
         assertTrue(interfaceString.equals(expectedA) || interfaceString.equals(expectedB));
     }
@@ -137,7 +137,7 @@ class JavaInterfaceBuilderTest {
                                                 new Keyword("field"), new Type("String"))))))
                                 )))))).getGraph();
 
-        final JavaInterfaceBuilder ib = new JavaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE);
+        final JavaInterfaceBuilder ib = new JavaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE, null);
         final Set<Interface> interfaces = ib.getInterfaces(graph);
         assertEquals(10, interfaces.size());
 

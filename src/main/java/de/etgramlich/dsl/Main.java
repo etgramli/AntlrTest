@@ -70,6 +70,7 @@ public final class Main {
         final String targetPackage;
         final String graphFilePath;
         final boolean java;
+        final String returnType;
 
         final Options options = new Options();
         options.addOption(HELP_OPTION);
@@ -79,6 +80,7 @@ public final class Main {
         options.addOption("j", "java", false, "Generate Java sources (default)");
         options.addOption("c", "scala", false, "Generate Scala sources");
         options.addOption("s", "sketch-graph", true, "Writes DOT graph to file");
+        options.addOption("r", "return-type", true, "Determines the return type of the end method");
         try {
             if (testForHelp(args)) {
                 final HelpFormatter formatter = new HelpFormatter();
@@ -94,6 +96,16 @@ public final class Main {
                 throw new IllegalArgumentException("Cannot generate both Java and Scala sources!");
             }
             java = !cmd.hasOption("c");
+            if (cmd.hasOption("r")) {
+                returnType = cmd.getOptionValue("r");
+                if (StringUtil.isBlank(returnType)) {
+                    throw new IllegalArgumentException("Return type must not be blank!");
+                } else if (StringUtil.startsWithLowerCase(returnType)) {
+                    throw new IllegalArgumentException("Return type must start with a uppercase letter!");
+                }
+            } else {
+                returnType = null;
+            }
         } catch (ParseException e) {
             e.printStackTrace();
             System.err.println("Could not parse CMD arguments! Run with -h for help.");
@@ -114,9 +126,9 @@ public final class Main {
                 graph.renderBnfRuleGraph(targetDirectory + File.separator + graphFilePath + ".gv");
             }
             if (java) {
-                builder = new JavaInterfaceBuilder(targetDirectory, targetPackage);
+                builder = new JavaInterfaceBuilder(targetDirectory, targetPackage, returnType);
             } else {
-                builder = new ScalaInterfaceBuilder(targetDirectory, targetPackage);
+                builder = new ScalaInterfaceBuilder(targetDirectory, targetPackage, returnType);
             }
             builder.saveInterfaces(builder.getInterfaces(graph));
         } catch (IOException e) {

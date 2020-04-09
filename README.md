@@ -12,6 +12,7 @@ Short option | Long option | Expected argument | Required | Example | Descriptio
 -p        | --package      | package           | True  | com.myname.project     | Java package in that the interfaces will be located (a subdirectory will be created in the output directory).
 -g        | --grammar      | file              | True  | /home/user/grammar.bnf | EBNF grammar in text file to generate interfaces from.
 -s        | --sketch-graph | file              | False | graphName              | Writes DOT graph to the file with the given name in the target directory. The graph can be visualized with the following [website](https://dreampuf.github.io/GraphvizOnline/).
+-r        | --return-type  | string            | False | Expr                   | Determines the return type of the end method.
 
 ## Use dependency
 You can use this project as a dependency using maven. [Link](https://github.com/etgramli/AntlrTest/packages)
