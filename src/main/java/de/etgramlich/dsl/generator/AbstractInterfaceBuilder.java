@@ -233,11 +233,27 @@ public abstract class AbstractInterfaceBuilder implements InterfaceBuilder {
             throw new IllegalArgumentException("Type of preceding node is not Type, but was: "
                     + follower.getType().toString());
         }
-        String argumentName = StringUtil.firstCharToLowerCase(follower.getName());
-        if (!symbolTable.isValidName(argumentName)) {
-            argumentName = "a" + StringUtil.firstCharToUpperCase(argumentName);
+        final String nextType = follower.getName();
+        return new Argument(nextType, getArgumentName(nextType));
+    }
+
+    private String getArgumentName(final String typeName) {
+        final String suggested = StringUtil.firstCharToLowerCase(typeName);
+        if (!symbolTable.isValidName(suggested)) {
+            final String suggestedUpperCase = StringUtil.firstCharToUpperCase(suggested);
+            switch (suggestedUpperCase.charAt(0)) {
+                case 'A':
+                case 'E':
+                case 'I':
+                case 'O':
+                case 'U':
+                    return "an" + suggestedUpperCase;
+                default:
+                    return "a" + suggestedUpperCase;
+            }
+        } else {
+            return suggested;
         }
-        return new Argument(follower.getName(), argumentName);
     }
 
     @Override

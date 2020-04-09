@@ -49,11 +49,13 @@ class AbstractInterfaceBuilderTest {
                         .filter(edge -> edge.getNode().getType().equals(NodeType.TYPE))
                         .map(ScopeEdge::getTarget)
                         .collect(Collectors.toUnmodifiableSet());
-                successorType.stream()
-                        .filter(scope -> !interfaces.contains(graph.getReadableString(scope)))
-                        .forEach(toVisitNext::add);
+
                 if (successorType.isEmpty() && !interfaces.contains(successor.getName())) {
                     toVisitNext.add(successor);
+                } else {
+                    successorType.stream()
+                            .filter(scope -> !interfaces.contains(graph.getReadableString(scope)))
+                            .forEach(toVisitNext::add);
                 }
             }
             graph.outgoingEdgesOf(currentScope).stream()
@@ -126,13 +128,12 @@ class AbstractInterfaceBuilderTest {
                         new Sequence(List.of(new Keyword("iface"))))))).getGraph();
         final Set<String> expected = Set.of("BeginScope", "EndScope");
 
-        final JavaInterfaceBuilder builder = new JavaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE);
         assertEquals(expected, getInterfacesToSave(graph));
 
-        final Set<String> interfaces = builder.getInterfaces(graph).stream()
+        final Set<String> actual = new JavaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE).getInterfaces(graph).stream()
                 .map(Interface::getName)
                 .collect(Collectors.toUnmodifiableSet());
-        assertEquals(expected, interfaces);
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -167,10 +168,9 @@ class AbstractInterfaceBuilderTest {
                 )))).getGraph();
         final Set<String> expected = Set.of("BeginScope", "K_1Scope", "K_2Scope", "EndScope");
 
-        final JavaInterfaceBuilder builder = new JavaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE);
         assertEquals(expected, getInterfacesToSave(graph));
 
-        final Set<String> actual = builder.getInterfaces(graph).stream()
+        final Set<String> actual = new JavaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE).getInterfaces(graph).stream()
                 .map(Interface::getName)
                 .collect(Collectors.toUnmodifiableSet());
         assertEquals(expected, actual);
