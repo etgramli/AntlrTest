@@ -98,8 +98,26 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
         if (notConnectedByEdges(startScope, endScope)) {
             return false;
         }
+        if (edgeSet().stream()
+                .filter(scopeEdge -> scopeEdge instanceof OptionalEdge)
+                .anyMatch(scopeEdge -> scopeEdge.getSource() == scopeEdge.getTarget())) {
+            return false;
+        }
         return edgeSet().stream()
                 .noneMatch(edge -> !vertexSet().contains(edge.getSource()) || !vertexSet().contains(edge.getTarget()));
+    }
+
+    @Override
+    public ScopeEdge addEdge(final Scope sourceVertex, final Scope targetVertex) {
+        throw new UnsupportedOperationException("No edge supplier available! You must supply an already created edge.");
+    }
+
+    @Override
+    public boolean addEdge(final Scope sourceVertex, final Scope targetVertex, final ScopeEdge scopeEdge) {
+        if (scopeEdge instanceof OptionalEdge && sourceVertex == targetVertex) {
+            throw new IllegalArgumentException("For an OptionalEdge the source and target vertices must be different!");
+        }
+        return super.addEdge(sourceVertex, targetVertex, scopeEdge);
     }
 
     /**
@@ -123,7 +141,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
      * @return List of Scopes.
      */
     public Set<Scope> getSuccessors(final Scope scope) {
-        return outGoingNodeEdges(scope).stream()
+        return outGoingNodeEdges(scope, false).stream()
                 .map(ScopeEdge::getTarget)
                 .collect(Collectors.toUnmodifiableSet());
     }
@@ -153,7 +171,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
                         .partitioningBy(s -> ((NodeEdge) getEdge(scope, s)).getNode().getType().equals(NodeType.TYPE)));
         final Set<Scope> types = new HashSet<>(typeMap.get(Boolean.TRUE));
         typeMap.get(Boolean.FALSE).stream()
-                .flatMap(s -> outGoingNodeEdges(s).stream())
+                .flatMap(s -> outGoingNodeEdges(s, false).stream())
                 .filter(edge -> edge.getNode().getType().equals(NodeType.TYPE))
                 .map(ScopeEdge::getTarget)
                 .forEach(types::add);
@@ -189,27 +207,58 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
 
     /**
      * Returns the outgoing nodes, that are connected by a NodeEdge to the given scope.
-     *
-     * @param scope Scope, must not be null.
-     * @return List of nodes.
+     * @param scope Scope, must not be null and be present in the graph.
+     * @param selfEdges True if edges from and to the same scope should be included.
+     * @return Set of nodes, not null, may be empty.
      */
-    public Set<Node> getOutGoingNodes(final Scope scope) {
-        return outGoingNodeEdges(scope).stream()
+    public Set<Node> getOutGoingNodes(final Scope scope, final boolean selfEdges) {
+        return outGoingNodeEdges(scope, selfEdges).stream()
                 .map(NodeEdge::getNode)
                 .collect(Collectors.toUnmodifiableSet());
     }
 
     /**
+     * Returns the outgoing nodes, that are connected by a NodeEdge to the given scope (edges with same source and
+     * target not included).
+     * @param scope Scope, must not be null and be present in the graph.
+     * @return Set of nodes, not null, may be empty.
+     */
+    public Set<Node> getOutGoingNodes(final Scope scope) {
+        return getOutGoingNodes(scope, false);
+    }
+
+    /**
      * Returns the outgoing NodeEdges of the provided scope.
-     *
+     * @param scope Scope, must not be null and exist in the graph.
+     * @param selfEdges True if edges from and to the same node should be included.
+     * @return Set of NodeEdges, may be empty.
+     */
+    public Set<NodeEdge> outGoingNodeEdges(final Scope scope, final boolean selfEdges) {
+        return outgoingEdgesOf(scope).stream()
+                .filter(scopeEdge -> scopeEdge instanceof NodeEdge)
+                .map(scopeEdge -> ((NodeEdge) scopeEdge))
+                .filter(edge -> selfEdges || edge.getSource() != edge.getTarget())
+                .collect(Collectors.toUnmodifiableSet());
+    }
+
+    /**
+     * Returns the outgoing NodeEdges of the provided scope (edges from and to same node not included).
      * @param scope Scope, must not be null and exist in the graph.
      * @return Set of NodeEdges, may be empty.
      */
     public Set<NodeEdge> outGoingNodeEdges(final Scope scope) {
+        return outGoingNodeEdges(scope, false);
+    }
+
+    /**
+     * Query the OptionalEdges that have the scope as source.
+     * @param scope Scope, must not be null, must be present in the graph.
+     * @return Set, not null, may be empty.
+     */
+    public Set<OptionalEdge> outGoingOptionalEdges(final Scope scope) {
         return outgoingEdgesOf(scope).stream()
-                .filter(edge -> edge.getSource() != edge.getTarget())
-                .filter(scopeEdge -> scopeEdge instanceof NodeEdge)
-                .map(scopeEdge -> ((NodeEdge) scopeEdge))
+                .filter(scopeEdge -> scopeEdge instanceof OptionalEdge)
+                .map(scopeEdge -> (OptionalEdge) scopeEdge)
                 .collect(Collectors.toUnmodifiableSet());
     }
 

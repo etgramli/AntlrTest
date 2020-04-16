@@ -158,7 +158,8 @@ public abstract class AbstractInterfaceBuilder implements InterfaceBuilder {
                 .collect(Collectors.toUnmodifiableSet());
         final Set<Method> methods = anInterface.getMethods().stream()
                 .map(m -> scopeToReadable.containsKey(m.getReturnType())
-                        ? new Method(scopeToReadable.get(m.getReturnType()), m.getName(), m.getArguments()) : m)
+                        ? new Method(scopeToReadable.get(m.getReturnType()), m.getName(), m.getArguments())
+                        : m)
                 .collect(Collectors.toUnmodifiableSet());
 
         return new Interface(anInterface.getName(), newParents, methods);
@@ -176,8 +177,7 @@ public abstract class AbstractInterfaceBuilder implements InterfaceBuilder {
     }
 
     protected static Set<Scope> getParents(final Scope currentScope, final BnfRuleGraph graph) {
-        return graph.outgoingEdgesOf(currentScope).stream()
-                .filter(edge -> edge instanceof OptionalEdge)
+        return graph.outGoingOptionalEdges(currentScope).stream()
                 .map(ScopeEdge::getTarget)
                 .collect(Collectors.toUnmodifiableSet());
     }
