@@ -1,26 +1,26 @@
 javaInterface(package,interfaceName,parents,methods) ::= <<
 package <package>;
 
-public interface <interfaceName> <if(parents)>extends <parents;separator=", "> <endif>{<methods:{method|<javaMethod(returnType=method.returnType,name=method.name,firstArgument=first(method.arguments),arguments=rest(method.arguments))>}>
+public interface <interfaceName> <if(parents)>extends <parents;separator=", "> <endif>{<methods:{method|<javaMethod(returnType=method.returnType,name=method.name,arguments=method.arguments)>}>
 }
 
 >>
 
-javaMethod(returnType,name,firstArgument,arguments) ::= <<
+javaMethod(returnType,name,arguments) ::= <<
 
-    <returnType> <name>(<firstArgument:{<firstArgument|<firstArgument.type> <firstArgument.name>}><arguments:{argument|, <argument.type> <argument.name>}>);
+    <returnType> <name>(<arguments:{argument|<argument.type> <argument.name>};separator=", ">);
 >>
 
 
 scalaTrait(package,interfaceName,parents,methods) ::= <<
 package <package>;
 
-trait <interfaceName> <if(parents)>extends <parents;separator=" with "> <endif>{<methods:{method|<scalaMethod(returnType=method.returnType,name=method.name,firstArgument=first(method.arguments),arguments=rest(method.arguments))>}>
+trait <interfaceName> <if(parents)>extends <parents;separator=" with "> <endif>{<methods:{method|<scalaMethod(returnType=method.returnType,name=method.name,arguments=method.arguments)>}>
 }
 
 >>
 
-scalaMethod(returnType,name,firstArgument,arguments) ::= <<
+scalaMethod(returnType,name,arguments) ::= <<
 
-    def <name>(<firstArgument:{<firstArgument|<firstArgument.name>: <firstArgument.type>}><arguments:{argument|, <argument.name>: <argument.type>}>): <returnType>
+    def <name>(<arguments:{argument|<argument.name>: <argument.type>};separator=", ">): <returnType>
 >>

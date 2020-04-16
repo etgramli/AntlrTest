@@ -343,22 +343,21 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
         if (!vertexSet().contains(root)) {
             return Collections.emptySet();
         } else {
-            return getDanglingNodesOf(root).stream()
+            return getDanglingNodesOf(root, new HashSet<>()).stream()
                     .flatMap(scope -> incomingEdgesOf(scope).stream())
                     .collect(Collectors.toUnmodifiableSet());
         }
     }
 
-    private Set<Scope> getDanglingNodesOf(final Scope scope) {
-        final Set<Scope> dangling = new HashSet<>(getSuccessors(scope).size());
+    private Set<Scope> getDanglingNodesOf(final Scope scope, final Set<Scope> danglingScopes) {
         for (Scope successor : getSuccessors(scope)) {
             if (outDegreeOf(successor) > 0) {
-                dangling.addAll(getDanglingNodesOf(successor));
+                getDanglingNodesOf(successor, danglingScopes);
             } else {
-                dangling.add(successor);
+                danglingScopes.add(successor);
             }
         }
-        return dangling;
+        return danglingScopes;
     }
 
     /**
