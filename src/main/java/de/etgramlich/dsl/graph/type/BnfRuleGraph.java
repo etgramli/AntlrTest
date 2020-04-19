@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Builds a graph according to the rules of a EBNF (has to care about optional elements and repetitions).
@@ -86,23 +87,35 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
      * @return True if the graph is consistent or empty.
      */
     public boolean isConsistent() {
+        // Empty Graph is valid
         if (edgeSet().isEmpty() && vertexSet().isEmpty()) {
             return startScope == null && endScope == null;
         }
+        // Graph must have one start scope with no ingoing edges
         if (startScope == null || !vertexSet().contains(startScope) || inDegreeOf(startScope) > 0) {
             return false;
         }
+        // Graph must have one end scope with no outgoing edges
         if (endScope == null || !vertexSet().contains(endScope) || outDegreeOf(endScope) > 0) {
             return false;
         }
+        // Start and end scope must be connected
         if (notConnectedByEdges(startScope, endScope)) {
             return false;
         }
-        if (edgeSet().stream()
-                .filter(scopeEdge -> scopeEdge instanceof OptionalEdge)
-                .anyMatch(scopeEdge -> scopeEdge.getSource() == scopeEdge.getTarget())) {
+        final Set<OptionalEdge> optionalEdges = getOptionalEdges();
+        // OptionalEdges with same source and target not allowed
+        if (optionalEdges.stream().anyMatch(optionalEdge -> optionalEdge.getSource() == optionalEdge.getTarget())) {
             return false;
         }
+        // No two optional edges between the same source and target allowed
+        final Stream<Map.Entry<Scope, List<OptionalEdge>>> optionalSources = optionalEdges.stream()
+                .collect(Collectors.groupingBy(ScopeEdge::getSource))
+                .entrySet().stream();
+        if (optionalSources.anyMatch(entry -> entry.getValue().size() != Set.copyOf(entry.getValue()).size())) {
+            return false;
+        }
+
         return edgeSet().stream()
                 .noneMatch(edge -> !vertexSet().contains(edge.getSource()) || !vertexSet().contains(edge.getTarget()));
     }
@@ -118,6 +131,13 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
             throw new IllegalArgumentException("For an OptionalEdge the source and target vertices must be different!");
         }
         return super.addEdge(sourceVertex, targetVertex, scopeEdge);
+    }
+
+    private Set<OptionalEdge> getOptionalEdges() {
+        return edgeSet().stream()
+                .filter(scopeEdge -> scopeEdge instanceof OptionalEdge)
+                .map(scopeEdge -> (OptionalEdge) scopeEdge)
+                .collect(Collectors.toUnmodifiableSet());
     }
 
     /**

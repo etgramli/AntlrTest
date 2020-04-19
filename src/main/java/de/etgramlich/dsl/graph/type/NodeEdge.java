@@ -47,6 +47,13 @@ public final class NodeEdge extends ScopeEdge {
 
         NodeEdge nodeEdge = (NodeEdge) o;
 
+        if (getSource() != nodeEdge.getSource()) {
+            return false;
+        }
+        if (getTarget() != nodeEdge.getTarget()) {
+            return false;
+        }
+
         return node.equals(nodeEdge.node);
     }
 

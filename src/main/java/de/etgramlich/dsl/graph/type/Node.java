@@ -68,8 +68,6 @@ public final class Node implements Serializable {
 
     @Override
     public int hashCode() {
-        int result = name.hashCode();
-        result = 31 * result + type.hashCode();
-        return result;
+        return 31 * name.hashCode() + type.hashCode();
     }
 }
