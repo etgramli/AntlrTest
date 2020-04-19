@@ -77,8 +77,73 @@ class BnfRuleGraphTest {
 
     @Test
     void isConsistent_emptyGraph_returnsTrue() {
-        BnfRuleGraph graph = new BnfRuleGraph(StringUtils.EMPTY);
+        assertTrue(new BnfRuleGraph(StringUtils.EMPTY).isConsistent());
+    }
 
+    @Test
+    void isConsistent_singleScope_returnsTrue() {
+        final BnfRuleGraph graph = new BnfRuleGraph(StringUtils.EMPTY);
+        final Scope scope = graph.addVertex();
+        graph.setStartScope(scope);
+        graph.setEndScope(scope);
+        assertTrue(graph.isConsistent());
+    }
+
+    @Test
+    void isConsistent_noStartScopeSet_returnsFalse() {
+        final BnfRuleGraph graph = new BnfRuleGraph(StringUtils.EMPTY);
+        final Scope scope = graph.addVertex();
+        graph.setEndScope(scope);
+        assertFalse(graph.isConsistent());
+    }
+
+    @Test
+    void isConsistent_noEndScopeSet_returnsFalse() {
+        final BnfRuleGraph graph = new BnfRuleGraph(StringUtils.EMPTY);
+        final Scope scope = graph.addVertex();
+        graph.setStartScope(scope);
+        assertFalse(graph.isConsistent());
+    }
+
+    @Test
+    void isConsistent_startScopeHasIngoingEdge_returnsFalse() {
+        final BnfRuleGraph graph = new BnfRuleGraph(StringUtils.EMPTY);
+        final Scope scope = graph.addVertex();
+        final Scope second = graph.addVertex();
+        graph.addEdge(scope, second, new OptionalEdge());
+        graph.setStartScope(second);
+        assertFalse(graph.isConsistent());
+    }
+
+    @Test
+    void isConsistent_endScopeHasOutgoingEdge_returnsFalse() {
+        final BnfRuleGraph graph = new BnfRuleGraph(StringUtils.EMPTY);
+        final Scope scope = graph.addVertex();
+        final Scope second = graph.addVertex();
+        graph.addEdge(scope, second, new OptionalEdge());
+        graph.setEndScope(scope);
+        assertFalse(graph.isConsistent());
+    }
+
+    @Test
+    void isConsistent_startAndEndScopeNotConnected_returnsFalse() {
+        final BnfRuleGraph graph = new BnfRuleGraph(StringUtils.EMPTY);
+        final Scope scope = graph.addVertex();
+        final Scope second = graph.addVertex();
+        graph.setStartScope(scope);
+        graph.setEndScope(second);
+        assertFalse(graph.isConsistent());
+    }
+
+    @Test
+    void isConsistent_parallelOptionalEdges_returnsTrue() {
+        final BnfRuleGraph graph = new BnfRuleGraph(StringUtils.EMPTY);
+        final Scope scope = graph.addVertex();
+        final Scope second = graph.addVertex();
+        graph.addEdge(scope, second, new OptionalEdge());
+        graph.addEdge(scope, second, new OptionalEdge());
+        graph.setStartScope(scope);
+        graph.setEndScope(second);
         assertTrue(graph.isConsistent());
     }
 
