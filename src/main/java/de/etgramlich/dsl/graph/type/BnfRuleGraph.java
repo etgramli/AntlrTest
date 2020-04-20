@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -97,6 +98,21 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
         // Graph must have one end scope with no outgoing edges
         if (endScope == null || !vertexSet().contains(endScope) || outDegreeOf(endScope) > 0) {
             return false;
+        }
+
+        // Test for TYPE edge followed by TYPE edge
+        final Set<Scope> typeEdgeTargets = edgeSet().stream()
+                .filter(edge -> edge instanceof NodeEdge)
+                .map(edge -> (NodeEdge) edge)
+                .filter(edge -> edge.getNode().getType().equals(NodeType.TYPE))
+                .map(ScopeEdge::getTarget)
+                .collect(Collectors.toUnmodifiableSet());
+        for (Scope target : typeEdgeTargets) {
+            final Optional<NodeEdge> typeEdge = outGoingNodeEdges(target, true).stream()
+                    .filter(edge -> edge.getNode().getType().equals(NodeType.TYPE)).findAny();
+            if (typeEdge.isPresent()) {
+                return false;
+            }
         }
 
         return !notConnectedByEdges(startScope, endScope);
