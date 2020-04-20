@@ -11,26 +11,8 @@ public final class SymbolTable {
     /**
      * Set of primitive Java types.
      */
-    private static final Set<String> JAVA_TYPES = Set.of(
-            "boolean",
-            "Boolean",
-            "byte",
-            "short",
-            "int",
-            "long",
-            "float",
-            "double",
-            "char",
-            "Character",
-            "String",
-            "Number",
-            "Byte",
-            "Short",
-            "Integer",
-            "Long",
-            "Float",
-            "Double"
-    );
+    private static final Set<String> JAVA_TYPES = Set.of("boolean", "Boolean", "byte", "short", "int", "long", "float",
+            "double", "char", "Character", "String", "Number", "Byte", "Short", "Integer", "Long", "Float", "Double");
 
     /**
      * Set of Scala language keywords.
