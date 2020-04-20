@@ -139,11 +139,13 @@ public abstract class AbstractInterfaceBuilder implements InterfaceBuilder {
 
             graph.getPrecedingKeywords(currentScope).stream()
                     .filter(scope -> !scopeToReadable.containsKey(scope.getName()))
+                    .filter(scope -> !toVisitNext.contains(scope))
                     .forEach(toVisitNext::add);
             graph.incomingEdgesOf(currentScope).stream()
                     .filter(edge -> edge instanceof OptionalEdge)
                     .map(ScopeEdge::getSource)
                     .filter(scope -> !scopeToReadable.containsKey(scope.getName()))
+                    .filter(scope -> !toVisitNext.contains(scope))
                     .forEach(toVisitNext::add);
         }
 
