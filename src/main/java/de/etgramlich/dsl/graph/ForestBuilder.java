@@ -11,6 +11,7 @@ import org.jgrapht.graph.DirectedPseudograph;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -59,7 +60,7 @@ public final class ForestBuilder {
                 .collect(Collectors.toUnmodifiableSet());
         final String notDefinedNonTerminals = forest.stream()
                 .flatMap(graph -> graph.getNonTerminalNodes().stream())
-                .map(Node::getName).filter(name -> !ruleNames.contains(name))
+                .map(Node::getName).filter(Predicate.not(ruleNames::contains))
                 .collect(Collectors.joining(", "));
         if (!StringUtils.isBlank(notDefinedNonTerminals)) {
             throw new IllegalArgumentException("Bnf does not contain all rules to replace non-terminals: "

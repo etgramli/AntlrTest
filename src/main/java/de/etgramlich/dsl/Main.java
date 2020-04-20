@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -145,8 +146,8 @@ public final class Main {
 
     private static String prepareGrammar(final String filepath) throws IOException {
         return Files.readAllLines(Paths.get(filepath)).stream()
-                .dropWhile(line -> !NON_TERMINAL_PATTERN.matcher(line).matches())
-                .filter(line -> !StringUtils.isBlank(line))
+                .dropWhile(Predicate.not(line -> NON_TERMINAL_PATTERN.matcher(line).matches()))
+                .filter(Predicate.not(StringUtils::isBlank))
                 .collect(Collectors.joining(StringUtil.NEWLINE));
     }
 }

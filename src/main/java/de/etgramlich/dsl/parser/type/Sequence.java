@@ -1,6 +1,7 @@
 package de.etgramlich.dsl.parser.type;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * Represents a sequence of elements from BNF as Java type.
@@ -37,7 +38,7 @@ public final class Sequence implements BnfType {
 
     @Override
     public boolean isTerminal() {
-        return elements.stream().filter(element -> !element.isTerminal()).findAny().isEmpty();
+        return elements.stream().filter(Predicate.not(BnfType::isTerminal)).findAny().isEmpty();
     }
 
     @Override

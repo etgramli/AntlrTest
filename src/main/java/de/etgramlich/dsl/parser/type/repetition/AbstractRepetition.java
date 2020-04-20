@@ -3,7 +3,10 @@ package de.etgramlich.dsl.parser.type.repetition;
 import de.etgramlich.dsl.parser.type.Alternatives;
 import de.etgramlich.dsl.parser.type.BnfType;
 import de.etgramlich.dsl.parser.type.Element;
+import de.etgramlich.dsl.parser.type.Sequence;
 import de.etgramlich.dsl.util.StringUtil;
+
+import java.util.function.Predicate;
 
 /**
  * Represents an element containing alternatives from BNF as Java type.
@@ -31,8 +34,7 @@ public abstract class AbstractRepetition implements Element, BnfType {
 
     @Override
     public final boolean isTerminal() {
-        return alternatives.getSequences().stream()
-                .filter(alternative -> !alternative.isTerminal()).findAny().isEmpty();
+        return alternatives.getSequences().stream().filter(Predicate.not(Sequence::isTerminal)).findAny().isEmpty();
     }
 
     @Override

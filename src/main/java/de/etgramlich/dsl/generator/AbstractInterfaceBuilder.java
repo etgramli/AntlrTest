@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public abstract class AbstractInterfaceBuilder implements InterfaceBuilder {
@@ -138,14 +139,14 @@ public abstract class AbstractInterfaceBuilder implements InterfaceBuilder {
             symbolTable.addType(currentInterface.getName());
 
             graph.getPrecedingKeywords(currentScope).stream()
-                    .filter(scope -> !scopeToReadable.containsKey(scope.getName()))
-                    .filter(scope -> !toVisitNext.contains(scope))
+                    .filter(Predicate.not(scope -> scopeToReadable.containsKey(scope.getName())))
+                    .filter(Predicate.not(toVisitNext::contains))
                     .forEach(toVisitNext::add);
             graph.incomingEdgesOf(currentScope).stream()
                     .filter(edge -> edge instanceof OptionalEdge)
                     .map(ScopeEdge::getSource)
-                    .filter(scope -> !scopeToReadable.containsKey(scope.getName()))
-                    .filter(scope -> !toVisitNext.contains(scope))
+                    .filter(Predicate.not(scope -> scopeToReadable.containsKey(scope.getName())))
+                    .filter(Predicate.not(toVisitNext::contains))
                     .forEach(toVisitNext::add);
         }
 

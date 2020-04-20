@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -54,14 +55,14 @@ class AbstractInterfaceBuilderTest {
                     toVisitNext.add(successor);
                 } else {
                     successorType.stream()
-                            .filter(scope -> !interfaces.contains(graph.getReadableString(scope)))
+                            .filter(Predicate.not(scope -> interfaces.contains(graph.getReadableString(scope))))
                             .forEach(toVisitNext::add);
                 }
             }
             graph.outgoingEdgesOf(currentScope).stream()
                     .filter(edge -> edge instanceof OptionalEdge)
                     .map(ScopeEdge::getTarget)
-                    .filter(scope -> !interfaces.contains(graph.getReadableString(scope)))
+                    .filter(Predicate.not(scope -> interfaces.contains(graph.getReadableString(scope))))
                     .forEach(toVisitNext::add);
 
             if (!toVisitNext.isEmpty()) {

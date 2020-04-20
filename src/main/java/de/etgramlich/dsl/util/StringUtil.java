@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -34,7 +35,7 @@ public final class StringUtil extends StringUtils {
      * @return List of String, may be empty.
      */
     public static List<String> stripBlankLines(final List<String> lines) {
-        return lines.stream().filter(s -> !isBlank(s)).collect(Collectors.toList());
+        return lines.stream().filter(Predicate.not(StringUtils::isBlank)).collect(Collectors.toList());
     }
 
     /**
@@ -44,8 +45,8 @@ public final class StringUtil extends StringUtils {
      * @return List of Sting, not null, may be empty.
      */
     public static List<String> trimBlankLines(final List<String> lines) {
-        Optional<String> begin = lines.stream().filter(s -> !isBlank(s)).findFirst();
-        Optional<String> end = Lists.reverse(lines).stream().filter(s -> !isBlank(s)).findFirst();
+        Optional<String> begin = lines.stream().filter(Predicate.not(StringUtils::isBlank)).findFirst();
+        Optional<String> end = Lists.reverse(lines).stream().filter(Predicate.not(StringUtils::isBlank)).findFirst();
 
         if (begin.isEmpty() && end.isEmpty()) { // Only blank lines
             return Collections.emptyList();

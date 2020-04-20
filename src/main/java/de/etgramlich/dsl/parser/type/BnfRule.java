@@ -2,6 +2,8 @@ package de.etgramlich.dsl.parser.type;
 
 import de.etgramlich.dsl.parser.type.text.NonTerminal;
 
+import java.util.function.Predicate;
+
 /**
  * Represents a BNF rule as Java type.
  */
@@ -63,7 +65,7 @@ public final class BnfRule implements BnfType {
 
     @Override
     public boolean isTerminal() {
-        return rhs.getSequences().stream().filter(alternative -> !alternative.isTerminal()).findAny().isEmpty();
+        return rhs.getSequences().stream().filter(Predicate.not(Sequence::isTerminal)).findAny().isEmpty();
     }
 
     /**
