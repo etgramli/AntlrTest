@@ -65,4 +65,7 @@ public abstract class TextElement implements Element, BnfType {
     public int hashCode() {
         return name.hashCode();
     }
+
+    @Override
+    public abstract String toString();
 }

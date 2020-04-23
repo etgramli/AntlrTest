@@ -39,4 +39,10 @@ public abstract class ScopeEdge extends DefaultEdge {
     Map<String, Attribute> getAttributeMap() {
         return Map.of("label", new DefaultAttribute<>(getClass().getSimpleName(), AttributeType.STRING));
     }
+
+    @Override
+    public abstract int hashCode();
+
+    @Override
+    public abstract boolean equals(Object obj);
 }

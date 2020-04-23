@@ -59,10 +59,6 @@ public final class GraphBuilder {
         graph.setStartScope(lastAddedScope);
 
         processAlternatives(rule.getRhs());
-
-        if (!graph.isConsistent()) {
-            throw new InvalidGraphException("Graph is not consistent after build!");
-        }
     }
 
     private Set<NodeEdge> processAlternatives(final Alternatives alternatives) {

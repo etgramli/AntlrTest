@@ -16,4 +16,9 @@ public final class Type extends TextElement {
     public boolean isTerminal() {
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "Type(" + getName() + ")";
+    }
 }

@@ -4,6 +4,7 @@ import de.etgramlich.dsl.graph.type.BnfRuleGraph;
 import de.etgramlich.dsl.graph.type.Node;
 import de.etgramlich.dsl.parser.type.Bnf;
 import de.etgramlich.dsl.parser.type.BnfRule;
+import de.etgramlich.dsl.util.exception.InvalidGraphException;
 import org.apache.commons.lang3.StringUtils;
 import org.jgrapht.alg.cycle.CycleDetector;
 import org.jgrapht.graph.DirectedPseudograph;
@@ -78,7 +79,11 @@ public final class ForestBuilder {
             gb.replaceNonTerminals(forest);
         }
         gb.removeSuperfluousScopes();
-        return gb.getGraph();
+        final BnfRuleGraph graph = gb.getGraph();
+        if (!graph.isConsistent()) {
+            throw new InvalidGraphException("Graph not valid after merge!");
+        }
+        return graph;
     }
 
     /**

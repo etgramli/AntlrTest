@@ -16,4 +16,9 @@ public final class NonTerminal extends TextElement {
     public boolean isTerminal() {
         return false;
     }
+
+    @Override
+    public String toString() {
+        return "NonTerminal(" + getName() + ")";
+    }
 }

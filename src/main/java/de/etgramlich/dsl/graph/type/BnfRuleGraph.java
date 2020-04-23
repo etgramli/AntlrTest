@@ -1,6 +1,9 @@
 package de.etgramlich.dsl.graph.type;
 
+import com.google.common.collect.Lists;
 import de.etgramlich.dsl.util.StringUtil;
+import de.etgramlich.dsl.util.exception.InvalidGraphException;
+import org.jgrapht.GraphPath;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DirectedPseudograph;
 import org.jgrapht.nio.dot.DOTExporter;
@@ -87,35 +90,55 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
      * @return True if the graph is consistent or empty.
      */
     public boolean isConsistent() {
-        // Empty Graph is valid
-        if (edgeSet().isEmpty() && vertexSet().isEmpty()) {
+        if (isEmpty()) {
             return startScope == null && endScope == null;
         }
-        // Graph must have one start scope with no ingoing edges
         if (startScope == null || !vertexSet().contains(startScope) || inDegreeOf(startScope) > 0) {
             return false;
         }
-        // Graph must have one end scope with no outgoing edges
         if (endScope == null || !vertexSet().contains(endScope) || outDegreeOf(endScope) > 0) {
             return false;
         }
+        if (!allTypeNodesHavePrecedingKeywordNode()) {
+            return false;
+        }
+        return !notConnectedByEdges(startScope, endScope);
+    }
 
-        // Test for TYPE edge followed by TYPE edge
-        final Set<Scope> typeEdgeTargets = edgeSet().stream()
+    private boolean allTypeNodesHavePrecedingKeywordNode() {
+        return edgeSet().stream()
                 .filter(edge -> edge instanceof NodeEdge)
                 .map(edge -> (NodeEdge) edge)
-                .filter(edge -> edge.getNode().getType().equals(NodeType.TYPE))
-                .map(ScopeEdge::getTarget)
-                .collect(Collectors.toUnmodifiableSet());
-        for (Scope target : typeEdgeTargets) {
-            final Optional<NodeEdge> typeEdge = outGoingNodeEdges(target, true).stream()
-                    .filter(edge -> edge.getNode().getType().equals(NodeType.TYPE)).findAny();
-            if (typeEdge.isPresent()) {
-                return false;
+                .filter(nodeEdge -> nodeEdge.getNode().getType().equals(NodeType.TYPE))
+                .map(ScopeEdge::getSource)
+                .allMatch(this::precededByTypesThenKeyword);
+    }
+
+    private boolean precededByTypesThenKeyword(final Scope scope) {
+        return precedingKeywordEdge(scope).isPresent();
+    }
+
+    private Optional<NodeEdge> precedingKeywordEdge(final Scope scope) {
+        final GraphPath<Scope, ScopeEdge> path = DijkstraShortestPath.findPathBetween(this, startScope, scope);
+        final List<ScopeEdge> edgesReversed = Lists.reverse(path.getEdgeList());
+
+        path: for (ScopeEdge edge : edgesReversed) {
+            if (edge instanceof NodeEdge) {
+                NodeEdge nodeEdge = (NodeEdge) edge;
+                switch (nodeEdge.getNode().getType()) {
+                    case TYPE:
+                        continue;
+                    case KEYWORD:
+                        return Optional.of(nodeEdge);
+                    case NON_TERMINAL:
+                    default:
+                        break path;
+                }
+            } else {
+                break path;
             }
         }
-
-        return !notConnectedByEdges(startScope, endScope);
+        return Optional.empty();
     }
 
     @Override
@@ -190,6 +213,37 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
     }
 
     /**
+     * Determines the scope after a sequence of NodeEdges which types are TYPE.
+     * @param scope Scope, not null, must be present in the graph.
+     * @return A scope present in the graph.
+     */
+    public Scope getScopeAfterTypeEdges(final Scope scope) {
+        return getLastTypeEdgeInSequence(scope).getTarget();
+    }
+
+    private NodeEdge getLastTypeEdgeInSequence(final Scope scope) {
+        Scope currentScope = scope;
+        NodeEdge lastEdge = null;
+        Set<NodeEdge> successors;
+        while (true) {
+            successors = outGoingNodeEdges(currentScope, false);
+            switch (successors.size()) {
+                case 0:
+                    return lastEdge;
+                case 1:
+                    if (!successors.iterator().next().getNode().getType().equals(NodeType.TYPE)) {
+                        return lastEdge;
+                    }
+                    lastEdge = successors.iterator().next();
+                    currentScope = lastEdge.getTarget();
+                    break;
+                default:
+                    throw new InvalidGraphException("One TYPE edge must have at most one successor NodeEdge!");
+            }
+        }
+    }
+
+    /**
      * Returns all scopes connected by any type of edge ingoing to this scope.
      *
      * @param scope Scope, not null, must be present in the graph.
@@ -261,6 +315,17 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
         return outGoingNodeEdges(scope, false);
     }
 
+    /**
+     * Returns an unmodifiable set of outgoing NodeEdges of the specified type.
+     * @param scope Scope, must not be null and present in the graph.
+     * @param type Type of the desired NodeEdges.
+     * @return Unmodifiable set, not null, may be empty.
+     */
+    public Set<NodeEdge> outGoingNodeEdges(final Scope scope, final NodeType type) {
+        return outGoingNodeEdges(scope).stream()
+                .filter(nodeEdge -> nodeEdge.getNode().getType().equals(type))
+                .collect(Collectors.toUnmodifiableSet());
+    }
     /**
      * Query the OptionalEdges that have the scope as source.
      * @param scope Scope, must not be null, must be present in the graph.

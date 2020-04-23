@@ -1,7 +1,6 @@
 package de.etgramlich.dsl.generator;
 
 import de.etgramlich.dsl.graph.type.BnfRuleGraph;
-import de.etgramlich.dsl.graph.type.Node;
 import de.etgramlich.dsl.graph.type.NodeEdge;
 import de.etgramlich.dsl.graph.type.NodeType;
 import de.etgramlich.dsl.graph.type.OptionalEdge;
@@ -23,10 +22,12 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -212,54 +213,64 @@ public abstract class AbstractInterfaceBuilder implements InterfaceBuilder {
         if (subsequent.isEmpty()) {
             return Set.of(new Method(edge.getTarget().getName(), edge.getNode().getName(), Collections.emptyList()));
         } else {
+            final String returnType = graph.getScopeAfterTypeEdges(edge.getTarget()).getName();
             return subsequent.stream()
-                    .map(scope -> new Method(scope.getName(), edge.getNode().getName(), getArgument(edge, graph)))
+                    .map(scope -> new Method(returnType, edge.getNode().getName(), getArguments(edge, graph)))
                     .collect(Collectors.toUnmodifiableSet());
         }
     }
 
     /**
-     * Generate an Argument from a NodeEdge.
-     * @param nodeEdge NodeEdge, must not be null, must exist in the graph.
-     * @param graph BnfRuleGraph, must not be null, must contain edge.
-     * @return New Argument object.
+     * Generates arguments for a method represented by the given edge in the graph.
+     * @param nodeEdge Edge representing the method (must be of type Keyword), must be present in the graph.
+     * @param graph Valid BnfRuleGraph, must not be null.
+     * @return List of Arguments, may be empty.
      */
-    private Argument getArgument(final NodeEdge nodeEdge, final BnfRuleGraph graph) {
+    private List<Argument> getArguments(final NodeEdge nodeEdge, final BnfRuleGraph graph) {
         if (nodeEdge == null) {
             throw new IllegalArgumentException("NodeEdge must not be null!");
         }
+        if (!graph.containsEdge(nodeEdge)) {
+            throw new IllegalArgumentException("NodeEdge must be present in the graph!");
+        }
         if (!nodeEdge.getNode().getType().equals(NodeType.KEYWORD)) {
-            throw new IllegalArgumentException("Preceding node type must be KEYWORD!");
+            throw new IllegalArgumentException("NodeEdge must be of type KEYWORD!");
         }
-        final Set<Node> outgoingNodes = graph.getOutGoingNodes(nodeEdge.getTarget());
-        if (outgoingNodes.size() > 1) {
-            throw new IllegalArgumentException("Type node must be followed by exactly one Type node edge!");
+
+        final List<Argument> arguments = new ArrayList<>();
+        Set<NodeEdge> outgoingTypeEdges = graph.outGoingNodeEdges(nodeEdge.getTarget(), NodeType.TYPE);
+        if (outgoingTypeEdges.size() > 1) {
+            throw new IllegalArgumentException("The KEYWORD edge must be followed by exactly one edge!");
         }
-        final Node follower = outgoingNodes.iterator().next();
-        if (!follower.getType().equals(NodeType.TYPE)) {
-            throw new IllegalArgumentException("Type of preceding node is not Type, but was: "
-                    + follower.getType().toString());
+
+        while (!outgoingTypeEdges.isEmpty()) {
+            if (outgoingTypeEdges.size() > 1) {
+                throw new IllegalArgumentException("TYPE edge must be followed by exactly one TYPE edge!");
+            }
+
+            final String nextType = outgoingTypeEdges.iterator().next().getNode().getName();
+            arguments.add(new Argument(nextType, getArgumentName(nextType)));
+
+            outgoingTypeEdges = graph.outGoingNodeEdges(outgoingTypeEdges.iterator().next().getTarget(), NodeType.TYPE);
         }
-        final String nextType = follower.getName();
-        return new Argument(nextType, getArgumentName(nextType));
+        return arguments;
     }
 
     private String getArgumentName(final String typeName) {
         final String suggested = StringUtil.firstCharToLowerCase(typeName);
-        if (!symbolTable.isValidName(suggested)) {
-            final String suggestedUpperCase = StringUtil.firstCharToUpperCase(suggested);
-            switch (suggestedUpperCase.charAt(0)) {
-                case 'A':
-                case 'E':
-                case 'I':
-                case 'O':
-                case 'U':
-                    return "an" + suggestedUpperCase;
-                default:
-                    return "a" + suggestedUpperCase;
-            }
-        } else {
+        if (symbolTable.isValidName(suggested)) {
             return suggested;
+        }
+        final String suggestedUpperCase = StringUtil.firstCharToUpperCase(suggested);
+        switch (suggestedUpperCase.charAt(0)) {
+            case 'A':
+            case 'E':
+            case 'I':
+            case 'O':
+            case 'U':
+                return "an" + suggestedUpperCase;
+            default:
+                return "a" + suggestedUpperCase;
         }
     }
 

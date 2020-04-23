@@ -16,4 +16,9 @@ public final class Keyword extends TextElement {
     public boolean isTerminal() {
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "Keyword(" + getName() + ")";
+    }
 }

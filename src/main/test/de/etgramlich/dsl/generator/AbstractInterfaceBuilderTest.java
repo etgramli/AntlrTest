@@ -18,7 +18,9 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -178,6 +180,24 @@ class AbstractInterfaceBuilderTest {
     }
 
     @Test
+    void getInterfacesToSave_multipleMethodArguments() {
+        final BnfRuleGraph graph = new GraphBuilder(new BnfRule(new NonTerminal("sequence"),
+                new Alternatives(List.of(
+                        new Sequence(List.of(new Keyword("customMethod"), new Type("String"), new Type("Double")))
+                )))).getGraph();
+
+        final Set<Interface> interfaces = new JavaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE, null).getInterfaces(graph);
+        assertEquals(Set.of("BeginScope", "EndScope"), interfaces.stream().map(Interface::getName).collect(Collectors.toUnmodifiableSet()));
+
+        final Method expected = new Method("EndScope", "customMethod", List.of(new Argument("String", "string"), new Argument("Double", "aDouble")));
+        final Optional<Interface> optionalBeginInterface = interfaces.stream().filter(anInterface -> anInterface.getName().equals("BeginScope")).findAny();
+        assertTrue(optionalBeginInterface.isPresent());
+        final Iterator<Method> methodIterator = optionalBeginInterface.get().getMethods().iterator();
+        assertTrue(methodIterator.hasNext());
+        assertEquals(expected, methodIterator.next());
+    }
+
+    @Test
     void getInterfacesToSave_joi() {
         final BnfRuleGraph graph = new GraphBuilder(new BnfRule(new NonTerminal("joi"),
                 new Alternatives(List.of(
@@ -198,7 +218,9 @@ class AbstractInterfaceBuilderTest {
 
         final Set<Interface> interfaces = new JavaInterfaceBuilder(DUMMY_DIRECTORY, DUMMY_PACKAGE, null).getInterfaces(graph);
 
-        final Interface begin = interfaces.stream().filter(i -> i.getName().equals("BeginScope")).findAny().get();
+        final Optional<Interface> optionalBeginInterface = interfaces.stream().filter(i -> i.getName().equals("BeginScope")).findAny();
+        assertTrue(optionalBeginInterface.isPresent());
+        final Interface begin = optionalBeginInterface.get();
         Set<Method> methods = Set.of(
                 new Method("ImplScopeScope4", "component", new Argument("String", "string")),
                 new Method("ImplScopeScope4", "singleton", new Argument("String", "string"))
@@ -206,12 +228,16 @@ class AbstractInterfaceBuilderTest {
         assertEquals(methods, begin.getMethods());
         assertEquals(Collections.emptySet(), begin.getParents());
 
-        final Interface methodInterface = interfaces.stream().filter(i -> i.getName().equals("MethodScope")).findAny().get();
+        final Optional<Interface> optionalInterface = interfaces.stream().filter(i -> i.getName().equals("MethodScope")).findAny();
+        assertTrue(optionalInterface.isPresent());
+        final Interface methodInterface = optionalInterface.get();
         methods = Set.of(new Method("MethodScope", "method", new Argument("String", "string")));
         assertEquals(methods, methodInterface.getMethods());
         assertEquals(1, methodInterface.getParents().size());
 
-        final Interface fieldInterface = interfaces.stream().filter(i -> i.getName().equals("FieldScope")).findAny().get();
+        final Optional<Interface> optionalFieldInterface = interfaces.stream().filter(i -> i.getName().equals("FieldScope")).findAny();
+        assertTrue(optionalFieldInterface.isPresent());
+        final Interface fieldInterface = optionalFieldInterface.get();
         methods = Set.of(new Method("FieldScope", "field", new Argument("String", "string")));
         assertEquals(methods, fieldInterface.getMethods());
         assertEquals(Set.of("EndScope"), fieldInterface.getParents());
