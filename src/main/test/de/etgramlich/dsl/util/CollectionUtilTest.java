@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -43,5 +44,33 @@ class CollectionUtilTest {
         }
 
         assertTrue(CollectionUtil.containsDuplicates(strings));
+    }
+
+    @Test
+    void toMarkdownTable_emptyMap_onlyHeadlines() {
+        final String firstCol = "first";
+        final String secondCol = "second";
+        final String expected = firstCol + " | " + secondCol + System.lineSeparator()
+                + "------|------" + System.lineSeparator();
+
+        final String markdown = CollectionUtil.toMarkdownTable(Collections.emptyMap(), firstCol, secondCol);
+        assertEquals(expected, markdown);
+    }
+
+    @Test
+    void toMarkdownTable() {
+        final String firstCol = "first";
+        final String secondCol = "second";
+        final Map<String, String> map = Map.of("A0", "B0", "A1", "B1", "A2", "B2");
+        final String expected = firstCol + " | " + secondCol + System.lineSeparator() + "------|------";
+        final List<String> lines = List.of("A0" + " | " + "B0" + System.lineSeparator(),
+                "A1" + " | " + "B1" + System.lineSeparator(),
+                "A2" + " | " + "B2" + System.lineSeparator());
+
+        final String markdown = CollectionUtil.toMarkdownTable(map, firstCol, secondCol);
+        assertTrue(markdown.startsWith(expected));
+        for (String line : lines) {
+            assertTrue(markdown.contains(line));
+        }
     }
 }
