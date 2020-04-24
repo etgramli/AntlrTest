@@ -241,7 +241,12 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
                     if (successors.stream().noneMatch(nodeEdge -> nodeEdge.getNode().getType().equals(NodeType.TYPE))) {
                         return lastEdge;
                     } else {
-                        throw new InvalidGraphException("One TYPE edge must have at most one successor NodeEdge!");
+                        final long typeCount = successors.stream()
+                                .filter(nodeEdge -> nodeEdge.getNode().getType().equals(NodeType.TYPE)).count();
+                        final long otherTypeCount = successors.size() - typeCount;
+                        throw new InvalidGraphException("One TYPE edge must have at most one successor NodeEdge"
+                                + "or only of other types! (found " + typeCount + "of TYPE and " + otherTypeCount
+                                + " of another type.");
                     }
             }
         }
