@@ -140,8 +140,7 @@ public final class Main {
     private static boolean testForHelp(final String[] args) throws ParseException {
         final Options options = new Options();
         options.addOption(HELP_OPTION);
-        final CommandLine commandLine = new DefaultParser().parse(options, args, true);
-        return commandLine.hasOption(HELP_OPTION.getOpt());
+        return new DefaultParser().parse(options, args, true).hasOption(HELP_OPTION.getOpt());
     }
 
     private static String prepareGrammar(final String filepath) throws IOException {

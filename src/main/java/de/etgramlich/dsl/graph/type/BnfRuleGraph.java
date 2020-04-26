@@ -228,16 +228,16 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
         while (true) {
             successors = outGoingNodeEdges(currentScope, false);
             switch (successors.size()) {
-                case 0:
+                case 0:     // No following edges representing method or argument
                     return lastEdge;
-                case 1:
+                case 1:     // One following edge, if another TYPE the edge is skipped, else the edge will be returned
                     if (!successors.iterator().next().getNode().getType().equals(NodeType.TYPE)) {
                         return lastEdge;
                     }
                     lastEdge = successors.iterator().next();
                     currentScope = lastEdge.getTarget();
                     break;
-                default:
+                default:    // If multiple successors exist, all must not be of type TYPE
                     if (successors.stream().noneMatch(nodeEdge -> nodeEdge.getNode().getType().equals(NodeType.TYPE))) {
                         return lastEdge;
                     } else {
@@ -378,7 +378,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
             throw new IllegalArgumentException("Start scope must not be null!");
         }
         if (!containsVertex(newStartScope)) {
-            throw new IllegalArgumentException("Start scope must not be null!");
+            throw new IllegalArgumentException("Start scope must be present in the graph!");
         }
         startScope = newStartScope;
     }
@@ -401,7 +401,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
             throw new IllegalArgumentException("End scope must not be null!");
         }
         if (!containsVertex(newEndScope)) {
-            throw new IllegalArgumentException("End scope must not be null!");
+            throw new IllegalArgumentException("End scope must be present in the graph!");
         }
         endScope = newEndScope;
     }
@@ -531,9 +531,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
      * @return Set of Nodes, not null, may be empty.
      */
     public Set<Node> getNonTerminalNodes() {
-        return getNonTerminalNodeEdges().stream()
-                .map(NodeEdge::getNode)
-                .collect(Collectors.toUnmodifiableSet());
+        return getNonTerminalNodeEdges().stream().map(NodeEdge::getNode).collect(Collectors.toUnmodifiableSet());
     }
 
     /**
