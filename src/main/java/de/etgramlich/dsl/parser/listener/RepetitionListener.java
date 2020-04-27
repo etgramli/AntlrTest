@@ -36,11 +36,6 @@ public final class RepetitionListener extends BnfBaseListener {
     }
 
     @Override
-    public void exitZeroormore(final BnfParser.ZeroormoreContext ctx) {
-        super.exitZeroormore(ctx);
-    }
-
-    @Override
     public void enterOptional(final BnfParser.OptionalContext ctx) {
         AlternativeListener listener = new AlternativeListener();
         listener.enterAlternatives(ctx.alternatives());
@@ -48,19 +43,9 @@ public final class RepetitionListener extends BnfBaseListener {
     }
 
     @Override
-    public void exitOptional(final BnfParser.OptionalContext ctx) {
-        super.exitOptional(ctx);
-    }
-
-    @Override
     public void enterPrecedence(final BnfParser.PrecedenceContext ctx) {
         AlternativeListener listener = new AlternativeListener();
         listener.enterAlternatives(ctx.alternatives());
         repetition = new Precedence(listener.getAlternatives());
-    }
-
-    @Override
-    public void exitPrecedence(final BnfParser.PrecedenceContext ctx) {
-        super.exitPrecedence(ctx);
     }
 }

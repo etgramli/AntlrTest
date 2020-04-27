@@ -34,28 +34,13 @@ public final class NonTerminalListener extends BnfBaseListener {
     }
 
     @Override
-    public void exitKeyword(final BnfParser.KeywordContext ctx) {
-        super.exitKeyword(ctx);
-    }
-
-    @Override
     public void enterType(final BnfParser.TypeContext ctx) {
         textElement = new Type(ctx.getText().trim());
     }
 
     @Override
-    public void exitType(final BnfParser.TypeContext ctx) {
-        super.exitType(ctx);
-    }
-
-    @Override
     public void enterNt(final BnfParser.NtContext ctx) {
         textElement = new NonTerminal(stripLTGT(ctx.getText()));
-    }
-
-    @Override
-    public void exitNt(final BnfParser.NtContext ctx) {
-        super.exitNt(ctx);
     }
 
     /**

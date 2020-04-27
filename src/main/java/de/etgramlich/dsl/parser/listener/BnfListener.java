@@ -40,9 +40,4 @@ public final class BnfListener extends BnfBaseListener {
         }
         bnf = new Bnf(bnfRules);
     }
-
-    @Override
-    public void exitBnf(final BnfParser.BnfContext ctx) {
-        super.exitBnf(ctx);
-    }
 }

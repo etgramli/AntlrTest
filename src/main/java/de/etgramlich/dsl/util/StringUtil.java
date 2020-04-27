@@ -62,7 +62,7 @@ public final class StringUtil extends StringUtils {
      * @return True if all Strings are blank.
      */
     public static boolean isAllBlank(final Collection<String> lines) {
-        return isAllBlank(lines.toArray(new String[0]));
+        return isAllBlank(lines.toArray(new String[lines.size()]));
     }
 
     /**

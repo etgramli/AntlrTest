@@ -55,14 +55,4 @@ public final class AlternativeListener extends BnfBaseListener {
         }
         sequence = new Sequence(elements);
     }
-
-    @Override
-    public void exitSequence(final BnfParser.SequenceContext ctx) {
-        super.exitSequence(ctx);
-    }
-
-    @Override
-    public void exitAlternatives(final BnfParser.AlternativesContext ctx) {
-        super.exitAlternatives(ctx);
-    }
 }

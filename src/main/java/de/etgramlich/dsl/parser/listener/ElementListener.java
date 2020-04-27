@@ -53,9 +53,4 @@ public final class ElementListener extends BnfBaseListener {
             element = repetitionListener.getRepetition();
         }
     }
-
-    @Override
-    public void exitElement(final BnfParser.ElementContext ctx) {
-        super.exitElement(ctx);
-    }
 }
