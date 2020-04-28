@@ -243,7 +243,7 @@ public abstract class AbstractInterfaceBuilder implements InterfaceBuilder {
             throw new IllegalArgumentException("The KEYWORD edge must be followed by exactly one edge!");
         }
 
-        final Map<String, Integer> argumentMap = new HashMap<>();
+        final Map<String, Integer> nameIndices = new HashMap<>();
         while (!outgoingTypeEdges.isEmpty()) {
             if (outgoingTypeEdges.size() > 1) {
                 throw new IllegalArgumentException("TYPE edge must be followed by exactly one TYPE edge!");
@@ -251,14 +251,30 @@ public abstract class AbstractInterfaceBuilder implements InterfaceBuilder {
 
             final String nextType = outgoingTypeEdges.iterator().next().getNode().getName();
             final String nextName = getArgumentName(nextType);
-            final int index = argumentMap.getOrDefault(nextName, 0);
-            argumentMap.put(nextName, index + 1);
+            nameIndices.put(nextName,  nameIndices.getOrDefault(nextName, 0) + 1);
 
-            arguments.add(new Argument(nextType, nextName + index));
+            arguments.add(new Argument(nextType, nextName));
 
             outgoingTypeEdges = graph.outGoingNodeEdges(outgoingTypeEdges.iterator().next().getTarget(), NodeType.TYPE);
         }
-        return arguments;
+        if (nameIndices.values().stream().anyMatch(integer -> integer > 1)) {
+            return indexArgumentNames(arguments);
+        } else {
+            return arguments;
+        }
+    }
+
+    private static List<Argument> indexArgumentNames(final List<Argument> arguments) {
+        final List<Argument> indexed = new ArrayList<>(arguments.size());
+        final Map<String, Integer> nameIndices = new HashMap<>();
+
+        for (Argument argument : arguments) {
+            final String name = argument.getName();
+            final int index = nameIndices.getOrDefault(name, 0);
+            nameIndices.put(name, index + 1);
+            indexed.add(new Argument(argument.getType(), name + index));
+        }
+        return indexed;
     }
 
     private String getArgumentName(final String typeName) {
