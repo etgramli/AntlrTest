@@ -243,13 +243,18 @@ public abstract class AbstractInterfaceBuilder implements InterfaceBuilder {
             throw new IllegalArgumentException("The KEYWORD edge must be followed by exactly one edge!");
         }
 
+        final Map<String, Integer> argumentMap = new HashMap<>();
         while (!outgoingTypeEdges.isEmpty()) {
             if (outgoingTypeEdges.size() > 1) {
                 throw new IllegalArgumentException("TYPE edge must be followed by exactly one TYPE edge!");
             }
 
             final String nextType = outgoingTypeEdges.iterator().next().getNode().getName();
-            arguments.add(new Argument(nextType, getArgumentName(nextType)));
+            final String nextName = getArgumentName(nextType);
+            final int index = argumentMap.getOrDefault(nextName, 0);
+            argumentMap.put(nextName, index + 1);
+
+            arguments.add(new Argument(nextType, nextName + index));
 
             outgoingTypeEdges = graph.outGoingNodeEdges(outgoingTypeEdges.iterator().next().getTarget(), NodeType.TYPE);
         }
