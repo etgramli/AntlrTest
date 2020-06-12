@@ -70,4 +70,9 @@ public final class Node implements Serializable {
     public int hashCode() {
         return 31 * name.hashCode() + type.hashCode();
     }
+
+    @Override
+    public String toString() {
+        return "Node(name:" + name + ", type:" + type + ");";
+    }
 }

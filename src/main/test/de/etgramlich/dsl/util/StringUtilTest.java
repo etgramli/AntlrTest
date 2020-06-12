@@ -37,13 +37,7 @@ class StringUtilTest {
 
     @Test
     void stripBlankLines_noBlankLines_returnsListWithSameElements() {
-        final List<String> original = List.of(
-                "First",
-                "Second",
-                "Third",
-                "4",
-                "Fünf"
-        );
+        final List<String> original = List.of("First", "Second", "Third", "4", "Fünf");
 
         final List<String> noDuplicates = StringUtil.stripBlankLines(original);
         assertNotSame(noDuplicates, original);
@@ -52,13 +46,7 @@ class StringUtilTest {
 
     @Test
     void stripBlankLines_onlyBlankLines_returnsEmptyList() {
-        final List<String> original = List.of(
-                " ",
-                "",
-                "\t",
-                "  ",
-                ""
-        );
+        final List<String> original = List.of(" ", "", "\t", "  ", "");
 
         final List<String> noDuplicates = StringUtil.stripBlankLines(original);
         assertNotSame(noDuplicates, original);
@@ -67,13 +55,7 @@ class StringUtilTest {
 
     @Test
     void trimBlankLines_noBlankLines_returnsListWithSameElements() {
-        final List<String> original = List.of(
-                "First",
-                "Second",
-                "Third",
-                "4",
-                "Fünf"
-        );
+        final List<String> original = List.of("First", "Second", "Third", "4", "Fünf");
 
         final List<String> noDuplicates = StringUtil.trimBlankLines(original);
         assertNotSame(noDuplicates, original);
@@ -82,13 +64,7 @@ class StringUtilTest {
 
     @Test
     void trimBlankLines_blankLinesInMiddle_returnsListWithSameElements() {
-        final List<String> original = List.of(
-                "First",
-                "Second",
-                "",
-                "",
-                "Fünf"
-        );
+        final List<String> original = List.of("First", "Second", "", "", "Fünf");
 
         final List<String> noDuplicates = StringUtil.trimBlankLines(original);
         assertNotSame(noDuplicates, original);
@@ -97,18 +73,8 @@ class StringUtilTest {
 
     @Test
     void trimBlankLines_blankLinesAtMiddleAndEnd_removeOnlyLinesAtEnd() {
-        final List<String> expected = List.of(
-                "First",
-                "",
-                "Third"
-        );
-        final List<String> original = List.of(
-                "First",
-                "",
-                "Third",
-                " ",
-                ""
-        );
+        final List<String> expected = List.of("First", "", "Third");
+        final List<String> original = List.of("First", "", "Third", " ", "");
 
         final List<String> noDuplicates = StringUtil.trimBlankLines(original);
         assertNotSame(noDuplicates, original);
@@ -117,18 +83,8 @@ class StringUtilTest {
 
     @Test
     void trimBlankLines_blankLinesAtBegin_returnsListWithoutBlankLines() {
-        final List<String> expected = List.of(
-                "Third",
-                "4",
-                "Fünf"
-        );
-        final List<String> original = List.of(
-                "",
-                "",
-                "Third",
-                "4",
-                "Fünf"
-        );
+        final List<String> expected = List.of("Third", "4", "Fünf");
+        final List<String> original = List.of("", "", "Third", "4", "Fünf");
 
         final List<String> noDuplicates = StringUtil.trimBlankLines(original);
         assertNotSame(noDuplicates, original);
@@ -137,13 +93,7 @@ class StringUtilTest {
 
     @Test
     void trimBlankLines_onlyBlankLines_returnsEmptyList() {
-        final List<String> original = List.of(
-                " ",
-                "",
-                "\t",
-                "  ",
-                ""
-        );
+        final List<String> original = List.of(" ", "", "\t", "  ", "");
 
         final List<String> noDuplicates = StringUtil.trimBlankLines(original);
         assertNotSame(noDuplicates, original);
@@ -152,36 +102,21 @@ class StringUtilTest {
 
     @Test
     void isAllBlank_noBlankLines_returnsFalse() {
-        final List<String> lines = List.of(
-                "First line",
-                " - ",
-                "Ingrid Third",
-                "Totoro"
-        );
+        final List<String> lines = List.of("First line", " - ", "Ingrid Third", "Totoro");
 
         assertFalse(StringUtil.isAllBlank(lines));
     }
 
     @Test
     void isAllBlank_notAllBlankLines_returnsFalse() {
-        final List<String> lines = List.of(
-                "",
-                "  ",
-                "Ingrid Third",
-                "-"
-        );
+        final List<String> lines = List.of("", "  ", "Ingrid Third", "-");
 
         assertFalse(StringUtil.isAllBlank(lines));
     }
 
     @Test
     void isAllBlank_allBlankLines_returnsTrue() {
-        final List<String> lines = List.of(
-                "",
-                "  ",
-                "",
-                "\t"
-        );
+        final List<String> lines = List.of("", "  ", "", "\t");
 
         assertTrue(StringUtil.isAllBlank(lines));
     }
@@ -228,9 +163,7 @@ class StringUtilTest {
 
     @Test
     void startsWithUpperCase_null_returnsFalse() {
-        final String string = null;
-
-        assertFalse(StringUtil.startsWithUpperCase(string));
+        assertFalse(StringUtil.startsWithUpperCase(null));
     }
 
     @Test
@@ -277,9 +210,7 @@ class StringUtilTest {
 
     @Test
     void startsWithLowerCase_null_returnsFalse() {
-        final String string = null;
-
-        assertFalse(StringUtil.startsWithLowerCase(string));
+        assertFalse(StringUtil.startsWithLowerCase(null));
     }
 
     @Test

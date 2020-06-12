@@ -20,6 +20,10 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toSet;
+import static java.util.stream.Collectors.toUnmodifiableSet;
+
 /**
  * Builds a graph according to the rules of a EBNF (has to care about optional elements and repetitions).
  */
@@ -164,7 +168,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
         return outgoingEdgesOf(scope).stream()
                 .filter(edge -> edge.getSource() != edge.getTarget())
                 .map(ScopeEdge::getTarget)
-                .collect(Collectors.toUnmodifiableSet());
+                .collect(toUnmodifiableSet());
     }
 
     /**
@@ -177,7 +181,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
     public Set<Scope> getSuccessors(final Scope scope) {
         return outGoingNodeEdges(scope, false).stream()
                 .map(ScopeEdge::getTarget)
-                .collect(Collectors.toUnmodifiableSet());
+                .collect(toUnmodifiableSet());
     }
 
     /**
@@ -261,7 +265,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
     public Set<Scope> getInGoingScopes(final Scope scope) {
         return incomingEdgesOf(scope).stream()
                 .map(ScopeEdge::getSource)
-                .collect(Collectors.toUnmodifiableSet());
+                .collect(toUnmodifiableSet());
     }
 
     /**
@@ -276,7 +280,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
                 .filter(edge -> edge.getSource() != edge.getTarget())
                 .filter(edge -> edge instanceof NodeEdge)
                 .map(ScopeEdge::getSource)
-                .collect(Collectors.toUnmodifiableSet());
+                .collect(toUnmodifiableSet());
     }
 
     /**
@@ -288,7 +292,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
     public Set<Node> getOutGoingNodes(final Scope scope, final boolean selfEdges) {
         return outGoingNodeEdges(scope, selfEdges).stream()
                 .map(NodeEdge::getNode)
-                .collect(Collectors.toUnmodifiableSet());
+                .collect(toUnmodifiableSet());
     }
 
     /**
@@ -312,7 +316,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
                 .filter(scopeEdge -> scopeEdge instanceof NodeEdge)
                 .map(scopeEdge -> ((NodeEdge) scopeEdge))
                 .filter(edge -> selfEdges || edge.getSource() != edge.getTarget())
-                .collect(Collectors.toUnmodifiableSet());
+                .collect(toUnmodifiableSet());
     }
 
     /**
@@ -333,7 +337,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
     public Set<NodeEdge> outGoingNodeEdges(final Scope scope, final NodeType type) {
         return outGoingNodeEdges(scope).stream()
                 .filter(nodeEdge -> nodeEdge.getNode().getType().equals(type))
-                .collect(Collectors.toUnmodifiableSet());
+                .collect(toUnmodifiableSet());
     }
     /**
      * Query the OptionalEdges that have the scope as source.
@@ -344,7 +348,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
         return outgoingEdgesOf(scope).stream()
                 .filter(scopeEdge -> scopeEdge instanceof OptionalEdge)
                 .map(scopeEdge -> (OptionalEdge) scopeEdge)
-                .collect(Collectors.toUnmodifiableSet());
+                .collect(toUnmodifiableSet());
     }
 
     /**
@@ -357,7 +361,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
         return incomingEdgesOf(scope).stream()
                 .filter(scopeEdge -> scopeEdge instanceof NodeEdge)
                 .map(nodeEdge -> ((NodeEdge) nodeEdge).getNode())
-                .collect(Collectors.toUnmodifiableSet());
+                .collect(toUnmodifiableSet());
     }
 
     /**
@@ -415,7 +419,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
         return vertexSet().stream()
                 .filter(scope -> outDegreeOf(scope) == 0)
                 .flatMap(scope -> incomingEdgesOf(scope).stream())
-                .collect(Collectors.toUnmodifiableSet());
+                .collect(toUnmodifiableSet());
     }
 
     /**
@@ -430,7 +434,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
         } else {
             return getDanglingNodesOf(root, new HashSet<>()).stream()
                     .flatMap(scope -> incomingEdgesOf(scope).stream())
-                    .collect(Collectors.toUnmodifiableSet());
+                    .collect(toUnmodifiableSet());
         }
     }
 
@@ -508,7 +512,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
         return Collections.unmodifiableSet(edgeSet().stream()
                 .filter(edge -> edge instanceof NodeEdge)
                 .map(edge -> ((NodeEdge) edge))
-                .collect(Collectors.toSet()));
+                .collect(toSet()));
     }
 
     /**
@@ -522,7 +526,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
         // collect(Collectors.toUnmodifiableSet())
         return Collections.unmodifiableSet(getNodeEdges().stream()
                 .filter(nodeEdge -> nodeEdge.getNode().getType().equals(NodeType.NON_TERMINAL))
-                .collect(Collectors.toSet()));
+                .collect(toSet()));
     }
 
     /**
@@ -531,7 +535,9 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
      * @return Set of Nodes, not null, may be empty.
      */
     public Set<Node> getNonTerminalNodes() {
-        return getNonTerminalNodeEdges().stream().map(NodeEdge::getNode).collect(Collectors.toUnmodifiableSet());
+        return getNonTerminalNodeEdges().stream()
+                .map(NodeEdge::getNode)
+                .collect(toUnmodifiableSet());
     }
 
     /**
@@ -563,12 +569,12 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
                 .map(edge -> (NodeEdge) edge)
                 .filter(edge -> edge.getNode().getType().equals(NodeType.KEYWORD))
                 .map(edge -> edge.getNode().getName())
-                .collect(Collectors.toUnmodifiableSet());
+                .collect(toUnmodifiableSet());
         if (!nodeEdgeKeywordNames.isEmpty()) {
             return nodeEdgeKeywordNames.stream()
                     .map(StringUtil::firstCharToUpperCase)
                     .sorted()
-                    .collect(Collectors.joining())
+                    .collect(joining())
                     + "Scope";
         } else {
             return scope.getName();

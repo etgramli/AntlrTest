@@ -64,8 +64,11 @@ public final class Argument {
 
     @Override
     public int hashCode() {
-        int result = type.hashCode();
-        result = 31 * result + name.hashCode();
-        return result;
+        return 31 * type.hashCode() + name.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "Argument(type:" + type + ";name:" + name + ")";
     }
 }

@@ -27,8 +27,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.*;
 
 /**
  * Builds a Graph with Scopes as vertices and Node as edges.
@@ -105,7 +106,7 @@ public final class GraphBuilder {
         if (!graph.vertexSet().containsAll(scopes)) {
             throw new IllegalArgumentException("Graph must contain all scopes to be replaced! (missing: "
                     + Sets.difference(scopes, graph.vertexSet()).stream().map(Scope::getName)
-                    .collect(Collectors.joining(", ")));
+                    .collect(joining(", ")));
         }
         final Set<ScopeEdge> ingoingEdges = new HashSet<>();
         final Set<ScopeEdge> outgoingEdges = new HashSet<>();
@@ -115,7 +116,7 @@ public final class GraphBuilder {
         }
         final Set<ScopeEdge> selfEdges = Stream.concat(ingoingEdges.stream(), outgoingEdges.stream())
                 .filter(edge -> scopes.contains(edge.getSource()) && scopes.contains(edge.getTarget()))
-                .collect(Collectors.toSet());
+                .collect(toSet());
         ingoingEdges.removeAll(selfEdges);
         outgoingEdges.removeAll(selfEdges);
 
@@ -224,7 +225,7 @@ public final class GraphBuilder {
         final Set<ScopeEdge> lastEdges =
                 new AllDirectedPaths<>(graph.copyWithoutBackwardEdges()).getAllPaths(start, end, true, null).stream()
                         .map(path -> path.getEdgeList().get(path.getEdgeList().size() - 1))
-                        .collect(Collectors.toUnmodifiableSet());
+                        .collect(toUnmodifiableSet());
         if (lastEdges.isEmpty()) {
             throw new IllegalArgumentException("There must be at least one path between " + start + " and " + end);
         }
@@ -235,7 +236,7 @@ public final class GraphBuilder {
         final Set<ScopeEdge> firstEdges =
                 new AllDirectedPaths<>(graph.copyWithoutBackwardEdges()).getAllPaths(start, end, true, null).stream()
                 .map(path -> path.getEdgeList().get(0))
-                .collect(Collectors.toUnmodifiableSet());
+                .collect(toUnmodifiableSet());
         if (firstEdges.isEmpty()) {
             throw new InvalidGraphException("There must be at least one path between " + start + " and " + end);
         }
@@ -249,9 +250,11 @@ public final class GraphBuilder {
      */
     public void replaceNonTerminals(final Set<BnfRuleGraph> forest) {
         final Set<String> nonTerminals = graph.getNonTerminalNodes().stream()
-                .map(Node::getName).collect(Collectors.toUnmodifiableSet());
+                .map(Node::getName)
+                .collect(toUnmodifiableSet());
         final Set<String> forestRuleNames = forest.stream()
-                .map(BnfRuleGraph::getName).collect(Collectors.toUnmodifiableSet());
+                .map(BnfRuleGraph::getName)
+                .collect(toUnmodifiableSet());
         if (!forestRuleNames.containsAll(nonTerminals)) {
             throw new IllegalArgumentException("Forest does not contain all required non-terminals!");
         }
@@ -299,7 +302,7 @@ public final class GraphBuilder {
                 .filter(scope -> graph.inDegreeOf(scope) == 1 && graph.outDegreeOf(scope) == 1)
                 .filter(scope -> graph.incomingEdgesOf(scope).iterator().next() instanceof OptionalEdge)
                 .filter(scope -> graph.outgoingEdgesOf(scope).iterator().next() instanceof OptionalEdge)
-                .collect(Collectors.toUnmodifiableSet());
+                .collect(toUnmodifiableSet());
         for (Scope scope : toRemove) {
             Scope source = graph.incomingEdgesOf(scope).iterator().next().getSource();
             Scope target = graph.outgoingEdgesOf(scope).iterator().next().getTarget();

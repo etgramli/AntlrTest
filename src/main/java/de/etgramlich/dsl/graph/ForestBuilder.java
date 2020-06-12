@@ -14,7 +14,8 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.*;
 
 /**
  * Builds a forest of BnfRuleGraphs, one for each BNF rule.
@@ -42,7 +43,7 @@ public final class ForestBuilder {
         }
         final List<BnfRule> startBnfRules = bnf.getBnfRules().stream()
                 .filter(BnfRule::isStartRule)
-                .collect(Collectors.toUnmodifiableList());
+                .collect(toUnmodifiableList());
         if (startBnfRules.size() != 1) {
             throw new IllegalArgumentException("Rule-list must have exactly one Start rule");
         }
@@ -50,7 +51,7 @@ public final class ForestBuilder {
         startRule = startBnfRules.get(0);
         forest = bnf.getBnfRules().stream()
                 .map(rule -> new GraphBuilder(rule).getGraph())
-                .collect(Collectors.toUnmodifiableSet());
+                .collect(toUnmodifiableSet());
 
         if (hasCircularDependencies()) {
             throw new IllegalArgumentException("BNF must not have circular dependencies in its rules!");
@@ -58,11 +59,11 @@ public final class ForestBuilder {
 
         final Set<String> ruleNames = forest.stream()
                 .map(BnfRuleGraph::getName)
-                .collect(Collectors.toUnmodifiableSet());
+                .collect(toUnmodifiableSet());
         final String notDefinedNonTerminals = forest.stream()
                 .flatMap(graph -> graph.getNonTerminalNodes().stream())
                 .map(Node::getName).filter(Predicate.not(ruleNames::contains))
-                .collect(Collectors.joining(", "));
+                .collect(joining(", "));
         if (!StringUtils.isBlank(notDefinedNonTerminals)) {
             throw new IllegalArgumentException("Bnf does not contain all rules to replace non-terminals: "
                     + notDefinedNonTerminals);

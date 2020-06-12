@@ -45,8 +45,8 @@ public final class StringUtil extends StringUtils {
      * @return List of Sting, not null, may be empty.
      */
     public static List<String> trimBlankLines(final List<String> lines) {
-        Optional<String> begin = lines.stream().filter(Predicate.not(StringUtils::isBlank)).findFirst();
-        Optional<String> end = Lists.reverse(lines).stream().filter(Predicate.not(StringUtils::isBlank)).findFirst();
+        final Optional<String> begin = findFirstNonBlankLine(lines);
+        final Optional<String> end = findLastNonBlankLine(lines);
 
         if (begin.isEmpty() && end.isEmpty()) { // Only blank lines
             return Collections.emptyList();
@@ -54,6 +54,14 @@ public final class StringUtil extends StringUtils {
         final int beginIndex = begin.map(lines::indexOf).orElse(0);
         final int endIndex = end.map(lines::indexOf).orElseGet(() -> lines.size() - 1);
         return lines.subList(beginIndex, endIndex + 1);
+    }
+
+    private static Optional<String> findFirstNonBlankLine(final List<String> lines) {
+        return lines.stream().filter(Predicate.not(StringUtils::isBlank)).findFirst();
+    }
+
+    private static Optional<String> findLastNonBlankLine(final List<String> lines) {
+        return findFirstNonBlankLine(Lists.reverse(lines));
     }
 
     /**

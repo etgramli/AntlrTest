@@ -1,9 +1,12 @@
 package de.etgramlich.dsl.generator;
 
+import de.etgramlich.dsl.util.CollectionUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Represents an interface. Used in an intermediate step before writing interfaces to files.
@@ -106,5 +109,21 @@ public final class Interface {
         result = 31 * result + parents.hashCode();
         result = 31 * result + methods.hashCode();
         return result;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Interface(");
+        sb.append("name:").append(name).append(';');
+        sb.append("parents(").append(String.join(",", parents));
+        sb.append("), methods(");
+        for (Iterator<Method> method = methods.iterator(); method.hasNext();) {
+            sb.append(method.next().toString());
+            if (method.hasNext()) {
+                sb.append(',');
+            }
+        }
+        sb.append("))");
+        return sb.toString();
     }
 }

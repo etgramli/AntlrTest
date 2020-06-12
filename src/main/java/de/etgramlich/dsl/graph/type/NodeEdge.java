@@ -66,6 +66,11 @@ public final class NodeEdge extends ScopeEdge {
     }
 
     @Override
+    public String toString() {
+        return "NodeEdge(" + node.toString() + ");";
+    }
+
+    @Override
     Map<String, Attribute> getAttributeMap() {
         final String labelValue = node.getName() + " [" + node.getType().toString() + "]";
         return Map.of("label", new DefaultAttribute<>(labelValue, AttributeType.STRING));

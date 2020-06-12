@@ -1,9 +1,17 @@
 package de.etgramlich.dsl.util;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.toUnmodifiableList;
+import static java.util.stream.Collectors.toUnmodifiableSet;
 
 public final class CollectionUtil {
     private CollectionUtil() { }
@@ -25,6 +33,79 @@ public final class CollectionUtil {
             }
         }
         return false;
+    }
+
+    /**
+     * Converts an array of Map.Entries to an immutable Map.
+     * @param entries Array of entries, may be null or empty.
+     * @param <K> Type of the keys.
+     * @param <V> Type of the values.
+     * @return Map, not null, may be empty.
+     */
+    public static <K, V> Map<K, V> asMap(final Map.Entry<K, V>... entries) {
+        if (entries == null || entries.length == 0) {
+            return Collections.emptyMap();
+        }
+        return Arrays.stream(entries).collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
+
+    /**
+     * Converts an Array of elements to an unmodifiable List.
+     * @param elements Array of elements, may be null or empty.
+     * @param <T> Type of the elements.
+     * @return List, not null, may be empty.
+     */
+    public static <T> List<T> asList(final T... elements) {
+        if (elements == null || elements.length == 0) {
+            return Collections.emptyList();
+        }
+        return Arrays.stream(elements).collect(toUnmodifiableList());
+    }
+
+    /**
+     * Converts an Array of elements to an unmodifiable Set.
+     * @param elements Array of elements, may be null or empty.
+     * @param <T> Type of the elements.
+     * @return Set, not null, may be empty.
+     */
+    public static <T> Set<T> asSet(final T... elements) {
+        if (elements == null || elements.length == 0) {
+            return Collections.emptySet();
+        }
+        return Arrays.stream(elements).collect(toUnmodifiableSet());
+    }
+
+    /**
+     * Concatenate strings of the set with the passed delimiter between two strings.
+     * @param delimiter Char used to separate two strings.
+     * @param strings Set of Strings, may be null or empty.
+     * @return String, not null, may be empty.
+     */
+    public static String join(final char delimiter, final Set<String> strings) {
+        return join(String.valueOf(delimiter), strings);
+    }
+
+    /**
+     * Concatenate strings of the set with the passed delimiter between two strings.
+     * @param delimiter Char sequence, must not be null nor be blank.
+     * @param strings Set of String, may be null or empty.
+     * @return String, not null, may be empty.
+     */
+    public static String join(final CharSequence delimiter, final Set<String> strings) {
+        if (delimiter == null || StringUtil.isBlank(delimiter)) {
+            throw new IllegalArgumentException("Delimiter must not be blank!)");
+        }
+        if (strings == null || strings.isEmpty()) {
+            return StringUtil.EMPTY;
+        }
+        final StringBuilder sb = new StringBuilder();
+        for (Iterator<String> string = strings.iterator(); string.hasNext();) {
+            sb.append(string.next());
+            if (string.hasNext()) {
+                sb.append(delimiter);
+            }
+        }
+        return sb.toString();
     }
 
     /**
@@ -84,7 +165,8 @@ public final class CollectionUtil {
             sb.append(entry.getKey())
                     .append(separator)
                     .append(entry.getValue())
-                    .append(endLine).append(System.lineSeparator());
+                    .append(endLine)
+                    .append(System.lineSeparator());
         }
         return sb.toString();
     }

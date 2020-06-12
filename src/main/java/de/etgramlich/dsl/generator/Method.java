@@ -3,6 +3,7 @@ package de.etgramlich.dsl.generator;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -113,5 +114,18 @@ public final class Method {
         result = 31 * result + name.hashCode();
         result = 31 * result + arguments.hashCode();
         return result;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Method(returnType:");
+        sb.append(returnType).append(";name:").append(name).append(";");
+        for (Iterator<Argument> argument = arguments.iterator(); argument.hasNext();) {
+            sb.append(argument.next().toString());
+            if (argument.hasNext()) {
+                sb.append(",");
+            }
+        }
+        return sb.toString();
     }
 }

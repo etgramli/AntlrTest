@@ -54,6 +54,6 @@ public final class Scope implements Serializable {
 
     @Override
     public String toString() {
-        return "Scope:(" + name + ")";
+        return "Scope(name:" + name + ")";
     }
 }
