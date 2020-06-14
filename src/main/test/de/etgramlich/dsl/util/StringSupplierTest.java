@@ -2,33 +2,45 @@ package de.etgramlich.dsl.util;
 
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Field;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class StringSupplierTest {
+    private static final String PREFIX = "ABC";
 
     @Test
     void test_constructorWithNullArgument_throwsException() {
-        final String prefix = null;
-
-        assertThrows(IllegalArgumentException.class, () -> new StringSupplier(prefix));
+        assertThrows(IllegalArgumentException.class, () -> new StringSupplier(null));
     }
 
     @Test
     void test_constructorWithBlankArgument_throwsException() {
-        final String prefix = "   \t";
-
-        assertThrows(IllegalArgumentException.class, () -> new StringSupplier(prefix));
+        assertThrows(IllegalArgumentException.class, () -> new StringSupplier("   \t"));
     }
 
     @Test
-    void get() {
-        final String prefix = "ABC";
-        final StringSupplier supplier = new StringSupplier(prefix);
+    void test_get_continuousCalls() {
+        final int numberOfTests = 1_000;
+        final StringSupplier supplier = new StringSupplier(PREFIX);
 
-        assertEquals("ABC0", supplier.get());
-        assertEquals("ABC1", supplier.get());
-        for (int i = 2; i < 100; ++i) {
-            assertEquals("ABC" + i, supplier.get());
+        for (long i = 0; i < numberOfTests; ++i) {
+            assertEquals(PREFIX + i, supplier.get());
+        }
+    }
+
+    @Test
+    void test_get_overflow() {
+        final StringSupplier supplier = new StringSupplier(PREFIX);
+
+        try {
+            final Field counterField = supplier.getClass().getDeclaredField("counter");
+            counterField.setAccessible(true);
+            counterField.setLong(supplier, Long.MAX_VALUE);
+            assertEquals(PREFIX + Long.MAX_VALUE, supplier.get());
+            assertEquals(PREFIX + Long.MIN_VALUE, supplier.get());
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            fail(e.getMessage());
         }
     }
 }

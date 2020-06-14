@@ -17,7 +17,7 @@ public final class StringSupplier implements Supplier<String> {
     /**
      * Counter to be incremented to create new strings.
      */
-    private int counter;
+    private long counter;
 
     /**
      * Creates a new StringSupplier with the specified prefix.

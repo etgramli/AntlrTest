@@ -25,8 +25,6 @@ public final class Method {
      */
     private final List<Argument> arguments;
 
-    // ToDo: Add method body
-
     /**
      * Creates new Method from return type, name and arguments.
      * @param returnType String, must not be blank.
