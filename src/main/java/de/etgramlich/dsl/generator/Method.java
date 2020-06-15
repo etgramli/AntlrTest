@@ -1,5 +1,6 @@
 package de.etgramlich.dsl.generator;
 
+import de.etgramlich.dsl.util.CollectionUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collections;
@@ -116,14 +117,6 @@ public final class Method {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("Method(returnType:");
-        sb.append(returnType).append(";name:").append(name).append(";");
-        for (Iterator<Argument> argument = arguments.iterator(); argument.hasNext();) {
-            sb.append(argument.next().toString());
-            if (argument.hasNext()) {
-                sb.append(",");
-            }
-        }
-        return sb.toString();
+        return "Method(returnType:" + returnType + ";name:" + name + ";" + CollectionUtil.join(',', arguments);
     }
 }

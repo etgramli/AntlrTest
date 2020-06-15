@@ -47,6 +47,21 @@ class CollectionUtilTest {
     }
 
     @Test
+    void join_listAsCollectionWithString_joinsStringsInOrder() {
+        final List<String> strings = List.of("Hello ", "World", "!");
+
+        assertThrows(IllegalArgumentException.class, () -> CollectionUtil.join("", strings));
+    }
+
+    @Test
+    void join_listAsCollectionWithChar_joinsStringsInOrder() {
+        final List<String> strings = List.of("Hello ", "World", "!");
+        final String expected = "Hello -World-!";
+
+        assertEquals(expected, CollectionUtil.join('-', strings));
+    }
+
+    @Test
     void toMarkdownTable_emptyMap_onlyHeadlines() {
         final String firstCol = "first";
         final String secondCol = "second";

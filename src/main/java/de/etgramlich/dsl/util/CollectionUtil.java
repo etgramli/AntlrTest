@@ -109,6 +109,41 @@ public final class CollectionUtil {
     }
 
     /**
+     * Concatenate the string representation of the objects in the collection using the delimiter.
+     * @param delimiter Character between two elements.
+     * @param collection Collection of elements, may be mull or empty.
+     * @param <T> Some type overriding toString().
+     * @return String, not null.
+     */
+    public static <T> String join(final char delimiter, final Collection<T> collection) {
+        return join(String.valueOf(delimiter), collection);
+    }
+
+    /**
+     * Concatenate the string representation of the objects (call to toString()) using the delimiter.
+     * @param delimiter CharSequence, must not be blank.
+     * @param collection Collection of elements, may be null or empty.
+     * @param <T> Some type, that should override toString().
+     * @return String, may be empty, is not null.
+     */
+    public static <T> String join(final CharSequence delimiter, final Collection<T> collection) {
+        if (StringUtil.isBlank(delimiter)) {
+            throw new IllegalArgumentException("Delimiter must not be blank!");
+        }
+        if (collection == null || collection.isEmpty()) {
+            return StringUtil.EMPTY;
+        }
+        final StringBuilder sb = new StringBuilder();
+        for (Iterator<T> iterator = collection.iterator(); iterator.hasNext();) {
+            sb.append(iterator.next().toString());
+            if (iterator.hasNext()) {
+                sb.append(delimiter);
+            }
+        }
+        return sb.toString();
+    }
+
+    /**
      * Generates a markdown representation of the passed map and the strings as headlines for the columns.
      * @param map Map of String to String, must not be null.
      * @param firstColumn String, must not be blank.
