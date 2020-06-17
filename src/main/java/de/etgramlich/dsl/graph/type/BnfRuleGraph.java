@@ -88,8 +88,8 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
      * Tests whether the graph is consistent. It must:
      * - have one start vertex,
      * - have one end vertex,
-     * - have a parallel connection to any optional edge
-     * - have a parallel connection to any repetition edge (in reverse direction)
+     * - have a parallel connection to every optional edge
+     * - have a parallel connection to every repetition edge (in reverse direction)
      *
      * @return True if the graph is consistent or empty.
      */
@@ -126,20 +126,18 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
         final GraphPath<Scope, ScopeEdge> path = DijkstraShortestPath.findPathBetween(this, startScope, scope);
         final List<ScopeEdge> edgesReversed = Lists.reverse(path.getEdgeList());
 
-        path: for (ScopeEdge edge : edgesReversed) {
-            if (edge instanceof NodeEdge) {
-                NodeEdge nodeEdge = (NodeEdge) edge;
-                switch (nodeEdge.getNode().getType()) {
-                    case TYPE:
-                        continue;
-                    case KEYWORD:
-                        return Optional.of(nodeEdge);
-                    case NON_TERMINAL:
-                    default:
-                        break path;
-                }
-            } else {
-                break path;
+        for (ScopeEdge edge : edgesReversed) {
+            if (!(edge instanceof NodeEdge)) {
+                return Optional.empty();
+            }
+            final NodeEdge nodeEdge = (NodeEdge) edge;
+            switch (nodeEdge.getNode().getType()) {
+                case TYPE:
+                    continue;
+                case KEYWORD:
+                    return Optional.of(nodeEdge);
+                default:
+                    return Optional.empty();
             }
         }
         return Optional.empty();
