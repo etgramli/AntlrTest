@@ -564,9 +564,9 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
         }
         final Set<String> nodeEdgeKeywordNames = outgoingEdgesOf(scope).stream()
                 .filter(edge -> edge instanceof NodeEdge)
-                .map(edge -> (NodeEdge) edge)
-                .filter(edge -> edge.getNode().getType().equals(NodeType.KEYWORD))
-                .map(edge -> edge.getNode().getName())
+                .map(edge -> ((NodeEdge) edge).getNode())
+                .filter(node -> node.getType().equals(NodeType.KEYWORD))
+                .map(Node::getName)
                 .collect(toUnmodifiableSet());
         if (!nodeEdgeKeywordNames.isEmpty()) {
             return nodeEdgeKeywordNames.stream()
@@ -584,6 +584,7 @@ public final class BnfRuleGraph extends DirectedPseudograph<Scope, ScopeEdge> {
         final DOTExporter<Scope, ScopeEdge> exporter = new DOTExporter<>(Scope::getName);
         exporter.setEdgeIdProvider(edge -> edge.getAttributeMap().get("label").getValue());
         exporter.setEdgeAttributeProvider(ScopeEdge::getAttributeMap);
+
         final StringWriter writer = new StringWriter();
         exporter.exportGraph(this, writer);
         return writer.toString();
