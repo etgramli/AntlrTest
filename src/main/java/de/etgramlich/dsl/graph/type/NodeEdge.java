@@ -59,8 +59,8 @@ public final class NodeEdge extends ScopeEdge {
 
     @Override
     public int hashCode() {
-        int hashCode = getSource().hashCode();
-        hashCode = 31 * hashCode + getTarget().hashCode();
+        int hashCode = getSource() != null ? getSource().hashCode() : 0;
+        hashCode = 31 * hashCode + (getTarget() != null ? getTarget().hashCode() : 0);
         hashCode = 31 * hashCode + node.hashCode();
         return hashCode;
     }

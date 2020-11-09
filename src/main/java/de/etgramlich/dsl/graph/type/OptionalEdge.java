@@ -25,6 +25,8 @@ public final class OptionalEdge extends ScopeEdge {
 
     @Override
     public int hashCode() {
-        return 31 * getSource().hashCode() + getTarget().hashCode();
+        int hashCode = getSource() != null ? getSource().hashCode() : 0;
+        hashCode = 31 * hashCode + (getTarget() != null ? getTarget().hashCode() : 0);
+        return hashCode;
     }
 }
